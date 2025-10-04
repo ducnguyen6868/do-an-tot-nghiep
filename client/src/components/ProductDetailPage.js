@@ -9,10 +9,10 @@ const productData = {
   originalPrice: 3299,
   stock: 15,
   images: [
-    'https://via.placeholder.com/600x600/1a1a2e/ffd700?text=Watch+Front',
-    'https://via.placeholder.com/600x600/1a1a2e/ffd700?text=Watch+Side',
-    'https://via.placeholder.com/600x600/1a1a2e/ffd700?text=Watch+Back',
-    'https://via.placeholder.com/600x600/1a1a2e/ffd700?text=Watch+Detail'
+    'https://placehold.co/600x600/1a1a2e/ffd700?text=Watch+Front',
+    'https://placehold.co/600x600/1a1a2e/ffd700?text=Watch+Side',
+    'https://placehold.co/600x600/1a1a2e/ffd700?text=Watch+Back',
+    'https://placehold.co/600x600/1a1a2e/ffd700?text=Watch+Detail'
   ],
   brand: 'Timepiece',
   target_audience: 'Male',
@@ -171,10 +171,10 @@ export default function ProductDetailPage() {
               <span className="reviews-count">({productData.totalReviews} Reviews)</span>
             </div>
 
-            <div className="price-section">
+            <div className="price-section-detail">
               <span className="current-price">${productData.price.toLocaleString()}</span>
               <span className="original-price">${productData.originalPrice.toLocaleString()}</span>
-              <span className="discount-badge">Save ${productData.originalPrice - productData.price}</span>
+              <span className="discount-badge-detail">Save ${productData.originalPrice - productData.price}</span>
             </div>
 
             <p className="product-description">{productData.description}</p>

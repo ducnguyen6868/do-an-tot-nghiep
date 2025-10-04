@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import '../css/Footer.css';
+import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -63,11 +65,21 @@ export default function Footer() {
                 Your premier destination for luxury watches. We bring together the finest timepieces from around the world, offering exceptional quality and timeless elegance.
               </p>
               <div className="social-icons">
-                <a href="#" className="social-icon">📘</a>
-                <a href="#" className="social-icon">📷</a>
-                <a href="#" className="social-icon">🐦</a>
-                <a href="#" className="social-icon">📺</a>
-                <a href="#" className="social-icon">💼</a>
+                <Link to="#" className="social-icon">
+                  <Icon icon="skill-icons:gmail-light" width="256" height="256" />
+                </Link>
+                <Link to="#" className="social-icon">
+                  <Icon icon="logos:youtube-icon" width="256" height="180" />
+                </Link>
+                <Link to="#" className="social-icon">
+                  <Icon icon="logos:messenger" width="256" height="256" />
+                </Link>
+                <Link to="#" className="social-icon">
+                  <Icon icon="logos:tiktok-icon" width="256" height="290" />
+                </Link>
+                <Link to="#" className="social-icon">
+                  <Icon icon="fa7-brands:square-x-twitter" width="448" height="512" />
+                </Link>
               </div>
             </div>
 
@@ -75,12 +87,12 @@ export default function Footer() {
             <div className="footer-column">
               <h4 className="footer-heading">Quick Links</h4>
               <ul className="footer-links">
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Our Story</a></li>
-                <li><a href="#">Careers</a></li>
-                <li><a href="#">Press & Media</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Testimonials</a></li>
+                <li><Link to="#">About Us</Link></li>
+                <li><Link to="#">Our Story</Link></li>
+                <li><Link to="#">Careers</Link></li>
+                <li><Link to="#">Press & Media</Link></li>
+                <li><Link to="#">Blog</Link></li>
+                <li><Link to="#">Testimonials</Link></li>
               </ul>
             </div>
 
@@ -88,12 +100,12 @@ export default function Footer() {
             <div className="footer-column">
               <h4 className="footer-heading">Customer Service</h4>
               <ul className="footer-links">
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Shipping Info</a></li>
-                <li><a href="#">Returns & Exchanges</a></li>
-                <li><a href="#">Track Your Order</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Size Guide</a></li>
+                <li><Link to="#">Contact Us</Link></li>
+                <li><Link to="#">Shipping Info</Link></li>
+                <li><Link to="#">Returns & Exchanges</Link></li>
+                <li><Link to="#">Track Your Order</Link></li>
+                <li><Link to="#">FAQ</Link></li>
+                <li><Link to="#">Size Guide</Link></li>
               </ul>
             </div>
 
@@ -101,19 +113,19 @@ export default function Footer() {
             <div className="footer-column">
               <h4 className="footer-heading">Shop</h4>
               <ul className="footer-links">
-                <li><a href="#">Men's Watches</a></li>
-                <li><a href="#">Women's Watches</a></li>
-                <li><a href="#">Luxury Collection</a></li>
-                <li><a href="#">New Arrivals</a></li>
-                <li><a href="#">Best Sellers</a></li>
-                <li><a href="#">Sale Items</a></li>
+                <li><Link to="#">Men's Watches</Link></li>
+                <li><Link to="#">Women's Watches</Link></li>
+                <li><Link to="#">Luxury Collection</Link></li>
+                <li><Link to="#">New Arrivals</Link></li>
+                <li><Link to="#">Best Sellers</Link></li>
+                <li><Link to="#">Sale Items</Link></li>
               </ul>
             </div>
           </div>
         </div>
       </div>
 
- 
+
 
       {/* Bottom Footer */}
       <div className="footer-bottom">
@@ -121,10 +133,10 @@ export default function Footer() {
           <div className="bottom-content">
             <p className="copyright">© 2025 Timepiece Collection. All rights reserved.</p>
             <div className="bottom-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Cookie Policy</a>
-              <a href="#">Sitemap</a>
+              <Link to="#">Privacy Policy</Link>
+              <Link to="#">Terms of Service</Link>
+              <Link to="#">Cookie Policy</Link>
+              <Link to="#">Sitemap</Link>
             </div>
           </div>
         </div>
@@ -136,8 +148,8 @@ export default function Footer() {
         className="back-to-top"
         aria-label="Back to top"
       >
-        ⬆️
+        <Icon icon="marketeq:top-circle" width="50" height="50" />
       </button>
-      </footer>
+    </footer>
   )
 }

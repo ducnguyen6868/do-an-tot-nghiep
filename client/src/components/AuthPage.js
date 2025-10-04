@@ -1,13 +1,22 @@
 import { useState } from 'react';
 import '../css/AuthPage.css';
 import { Icon } from "@iconify/react";
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
+import {useContext} from 'react';
+import {UserContext} from '../UserContext';
 
 
 export default function AuthPage({ onClose }) {
+    const {getInfoUser} = useContext(UserContext);
+
     const [isLogin, setIsLogin] = useState(true);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [showResetPassword, setShowResetPassword] = useState(false);
+    const [isHiddenPassword, setIsHiddenPassword] = useState(true);
 
+    const navigate= useNavigate();
     // Login state
     const [loginData, setLoginData] = useState({
         email: '',
@@ -48,7 +57,7 @@ export default function AuthPage({ onClose }) {
         setErrors({ ...errors, [name]: '' });
     };
 
-    const handleLoginSubmit = (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
         const newErrors = {};
 
@@ -60,9 +69,33 @@ export default function AuthPage({ onClose }) {
             return;
         }
 
-        // API call would go here
-        console.log('Login data:', loginData);
-        alert('Login successful! Welcome back.');
+        // API login
+        try {
+            const response = await axios.post("http://localhost:5000/login", loginData);
+            // console.log(response.data);
+            if (response.data.status === "completed") {
+                if(response.data.token){
+                    //Save token to localstorage 
+                    localStorage.setItem("token", response.data.token);
+                }
+                toast.success(response.data.message);
+                setTimeout(() => onClose(), 1000);
+                await getInfoUser();
+                navigate("/");
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (err) {
+            if (err.response) {
+                toast.error(err.response.data.message || "Server error")
+            } else if (err.request) {
+                toast.error("No reponse from server")
+            } else {
+                toast.error("Request error :", err.message);
+            }
+        }
+
+        // alert('Login successful! Welcome back.');
     };
 
     // Handle register
@@ -87,7 +120,9 @@ export default function AuthPage({ onClose }) {
         }
     };
 
-    const handleRegisterSubmit = (e) => {
+    //Submit form register
+
+    const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         const newErrors = {};
 
@@ -105,9 +140,50 @@ export default function AuthPage({ onClose }) {
             return;
         }
 
-        // API call would go here
-        console.log('Register data:', registerData);
-        alert('Registration successful! Please check your email to activate your account.');
+        // API regigter
+        // console.log('Register data:', registerData);
+        // alert('Registration successful! Please check your email to activate your account.');
+
+        try {
+            const formData = new FormData();
+            formData.append("name", registerData.name);
+            formData.append("email", registerData.email);
+            formData.append("password", registerData.password);
+            formData.append("avatar", registerData.avatar); // avatar là file (File object)
+
+            const response = await axios.post("http://localhost:5000/register", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            // console.log(response.data);
+            if (response.data.status === "completed") {
+                toast.success(response.data.message);
+                setTimeout(() =>
+                    setIsLogin(true),
+                    setRegisterData({
+                        name: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: '',
+                        avatar: null,
+                        agreeTerms: false
+                    }, setAvatarPreview(null)),
+                    setLoginData({
+                        email: registerData.email,
+                        password: registerData.password,
+                        rememberMe: true
+                    })
+                    , 2000);
+
+            } else {
+                toast.error(response.data.message);
+            }
+            // console.log(formData);
+            // console.log(response.data);
+        } catch (err) {
+            console.log("Cann`t connect with database ", err);
+        }
     };
 
     // Handle forgot password
@@ -156,8 +232,8 @@ export default function AuthPage({ onClose }) {
                 <div className="auth-branding">
                     <div className="branding-content">
                         <div className="logo">
-                            <span className="logo-icon">⌚</span>
-                            <span className="logo-text">TIMEPIECE</span>
+                            <span className="logo-icon1">⌚</span>
+                            <span className="logo-text1">TIMEPIECE</span>
                         </div>
                         <h2 className="branding-title">Luxury Watches Collection</h2>
                         <p className="branding-desc">
@@ -214,7 +290,7 @@ export default function AuthPage({ onClose }) {
 
                                     <div className="login-form">
                                         <div className="form-group">
-                                            <label>Email Address</label>
+                                            <label htmlFor="emailLogin">Email Address</label>
                                             <input
                                                 type="email"
                                                 name="email"
@@ -222,28 +298,37 @@ export default function AuthPage({ onClose }) {
                                                 onChange={handleLoginChange}
                                                 placeholder="your@email.com"
                                                 className={errors.email ? 'error' : ''}
+                                                id="emailLogin"
                                             />
                                             {errors.email && <span className="error-text">{errors.email}</span>}
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Password</label>
-                                            <input
-                                                type="password"
-                                                name="password"
-                                                value={loginData.password}
-                                                onChange={handleLoginChange}
-                                                placeholder="••••••••"
-                                                className={errors.password ? 'error' : ''}
-                                            />
+                                            <label htmlFor="passwordLogin">Password</label>
+                                            <div style={{ position: "relative" }}>
+                                                <input
+                                                    type={isHiddenPassword ? 'password' : 'text'}
+                                                    name="password"
+                                                    value={loginData.password}
+                                                    onChange={handleLoginChange}
+                                                    placeholder="••••••••"
+                                                    className={errors.password ? 'error' : ''}
+                                                    id="passwordLogin"
+                                                />
+                                                <span onClick={() => setIsHiddenPassword(!isHiddenPassword)} style={{ position: 'absolute', right: '10px', top: 0, bottom: 0, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                                    {isHiddenPassword ? <Icon icon="noto:see-no-evil-monkey" width="40" height="40" /> : <Icon icon="noto:hear-no-evil-monkey" width="40" height="40" />}
+                                                </span>
+                                            </div>
+
                                             {errors.password && <span className="error-text">{errors.password}</span>}
                                         </div>
 
                                         <div className="form-options">
-                                            <label className="checkbox-label">
+                                            <label htmlFor="rememberMe" className="checkbox-label">
                                                 <input
                                                     type="checkbox"
                                                     name="rememberMe"
+                                                    id="rememberMe"
                                                     checked={loginData.rememberMe}
                                                     onChange={handleLoginChange}
                                                 />
@@ -292,66 +377,82 @@ export default function AuthPage({ onClose }) {
                                                     <span className="avatar-placeholder">👤</span>
                                                 )}
                                             </div>
-                                            <label className="upload-btn">
+                                            <label htmlFor="file" className="upload-btn">
                                                 Upload Photo
                                                 <input
                                                     type="file"
                                                     accept="image/*"
                                                     onChange={handleAvatarChange}
                                                     style={{ display: 'none' }}
+                                                    id="file"
                                                 />
                                             </label>
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Full Name</label>
+                                            <label htmlFor="nameRegister">Full Name</label>
                                             <input
                                                 type="text"
                                                 name="name"
                                                 value={registerData.name}
                                                 onChange={handleRegisterChange}
                                                 placeholder="John Doe"
+                                                id="nameRegister"
                                                 className={errors.name ? 'error' : ''}
+
                                             />
                                             {errors.name && <span className="error-text">{errors.name}</span>}
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Email Address</label>
+                                            <label htmlFor="emailRegister">Email Address</label>
                                             <input
                                                 type="email"
                                                 name="email"
                                                 value={registerData.email}
                                                 onChange={handleRegisterChange}
                                                 placeholder="your@email.com"
+                                                id="emailRegister"
                                                 className={errors.email ? 'error' : ''}
                                             />
                                             {errors.email && <span className="error-text">{errors.email}</span>}
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Password</label>
-                                            <input
-                                                type="password"
-                                                name="password"
-                                                value={registerData.password}
-                                                onChange={handleRegisterChange}
-                                                placeholder="••••••••"
-                                                className={errors.password ? 'error' : ''}
-                                            />
+                                            <label htmlFor="passwordReigister">Password</label>
+                                            <div style={{ position: "relative" }}>
+                                                <input
+                                                    type={isHiddenPassword ? "password" : "text"}
+                                                    name="password"
+                                                    value={registerData.password}
+                                                    onChange={handleRegisterChange}
+                                                    placeholder="••••••••"
+                                                    id="passwordRegister"
+                                                    className={errors.password ? 'error' : ''}
+                                                />
+                                                <span onClick={() => setIsHiddenPassword(!isHiddenPassword)} style={{ position: 'absolute', right: '10px', top: 0, bottom: 0, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                                    {isHiddenPassword ? <Icon icon="noto:see-no-evil-monkey" width="40" height="40" /> : <Icon icon="noto:hear-no-evil-monkey" width="40" height="40" />}
+                                                </span>
+                                            </div>
                                             {errors.password && <span className="error-text">{errors.password}</span>}
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Confirm Password</label>
-                                            <input
-                                                type="password"
-                                                name="confirmPassword"
-                                                value={registerData.confirmPassword}
-                                                onChange={handleRegisterChange}
-                                                placeholder="••••••••"
-                                                className={errors.confirmPassword ? 'error' : ''}
-                                            />
+                                            <label htmlFor="confirmPasswordRegister">Confirm Password</label>
+                                            <div style={{ position: "relative" }}>
+                                                <input
+                                                    type={isHiddenPassword ? "password" : "text"}
+                                                    name="confirmPassword"
+                                                    value={registerData.confirmPassword}
+                                                    onChange={handleRegisterChange}
+                                                    placeholder="••••••••"
+                                                    id="confirmPasswordRegister"
+                                                    className={errors.confirmPassword ? 'error' : ''}
+                                                />
+                                                <span onClick={() => setIsHiddenPassword(!isHiddenPassword)} style={{ position: 'absolute', right: '10px', top: 0, bottom: 0, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                                    {isHiddenPassword ? <Icon icon="noto:see-no-evil-monkey" width="40" height="40" /> : <Icon icon="noto:hear-no-evil-monkey" width="40" height="40" />}
+                                                </span>
+                                            </div>
                                             {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
                                         </div>
 
@@ -363,6 +464,7 @@ export default function AuthPage({ onClose }) {
                                                 onChange={handleRegisterChange}
                                             />
                                             <span>I agree to the Terms and Conditions</span>
+
                                         </label>
                                         {errors.agreeTerms && <span className="error-text">{errors.agreeTerms}</span>}
 

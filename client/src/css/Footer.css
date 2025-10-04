@@ -139,7 +139,6 @@
 .social-icon {
     width: 40px;
     height: 40px;
-    background: #2a2a3e;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -150,7 +149,6 @@
 }
 
 .social-icon:hover {
-    background: #ffd700;
     transform: translateY(-3px);
 }
 

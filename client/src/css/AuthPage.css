@@ -31,9 +31,9 @@
 .auth-branding {
     background: linear-gradient(135deg, #1a1a2e 0%, #302b63 100%);
     padding: 60px;
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     position: relative;
     overflow: hidden;
 }
@@ -74,7 +74,7 @@
     margin-bottom: 40px;
 }
 
-.logo-icon {
+.logo-icon1 {
     width: 60px;
     height: 60px;
     background: linear-gradient(135deg, #ffd700, #ffed4e);
@@ -85,7 +85,7 @@
     font-size: 32px;
 }
 
-.logo-text {
+.logo-text1 {
     font-size: 32px;
     font-weight: bold;
     color: white;

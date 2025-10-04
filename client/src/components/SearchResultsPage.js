@@ -213,7 +213,7 @@ export default function SearchResultsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
             />
-            <button className="search-btn" onClick={() => handleSearch(searchQuery)}>
+            <button className="search-btn1" onClick={() => handleSearch(searchQuery)}>
               🔍 Search
             </button>
           </div>
@@ -410,7 +410,7 @@ export default function SearchResultsPage() {
                     <div className="product-image">
                       <img src={product.images[0]} alt={product.name} />
                       {product.originalPrice && (
-                        <div className="discount-badge">
+                        <div className="discount-badge ">
                           -{Math.round((1 - product.price / product.originalPrice) * 100)}%
                         </div>
                       )}
