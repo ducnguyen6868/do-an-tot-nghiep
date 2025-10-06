@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
     });
     const getInfoUser = async () => {
 
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token")||sessionStorage.getItem("token");
         if (token) {
             axios.get("http://localhost:5000/profile", {
                 headers: { Authorization: `Bearer ${token}` },

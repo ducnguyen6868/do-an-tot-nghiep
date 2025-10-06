@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../UserContext';
+import PasswordChangeModal from './comon/PasswordChangeModal';
 
 // Mock user data
 const userData = {
@@ -73,6 +74,8 @@ export default function CustomerProfilePage() {
 
     const checkInRewards = [200, 200, 200, 200, 200, 200, 500];
     const nextDayReward = checkInRewards[userData.checkInStreak] || 200;
+
+    const[isPasswordChangeModal , setIsPasswordChangeModal]=useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -263,7 +266,7 @@ export default function CustomerProfilePage() {
                                             <span style={{ marginRight: "10px" }}>Security Settings</span>
                                             <Icon icon="noto:gear" width="30" height="30" />
                                         </h3>
-                                        <button className="action-button primary">
+                                        <button className="action-button primary" onClick={()=>setIsPasswordChangeModal(true)}>
                                             <span style={{ marginRight: "10px" }}>Change Password</span>
                                             <Icon icon="noto:key" width="24" height="24" />
                                         </button>
@@ -470,6 +473,7 @@ export default function CustomerProfilePage() {
                     </div>
                 </div>
             </div>
+
             {/* Logout Confirmation Modal */}
             {showLogoutModal && (
                 <div className="modal-overlay" onClick={() => setShowLogoutModal(false)}>
@@ -516,6 +520,10 @@ export default function CustomerProfilePage() {
                     </div>
                 </div>
             )}
+
+            {/* Change password modal */}
+            {isPasswordChangeModal&&<PasswordChangeModal/>}
+
             {/* {Loadding effect} */
                 isLoading && (
                     <div className="modal-overlay" >

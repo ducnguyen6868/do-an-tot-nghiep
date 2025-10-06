@@ -135,10 +135,13 @@
 
 /* Forms Side */
 .auth-forms {
-    padding: 40px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     position:relative;
+}
+.auth-forms-hidden {
+    display:none;
 }
 
 .close-btn {

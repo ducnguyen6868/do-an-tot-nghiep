@@ -3,25 +3,25 @@ import '../css/AuthPage.css';
 import { Icon } from "@iconify/react";
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
-import {useContext} from 'react';
-import {UserContext} from '../UserContext';
-
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../UserContext';
+import ForgotPasswordModal from './comon/ForgotPasswordModal';
 
 export default function AuthPage({ onClose }) {
-    const {getInfoUser} = useContext(UserContext);
+    const { getInfoUser } = useContext(UserContext);
 
     const [isLogin, setIsLogin] = useState(true);
-    const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const [showResetPassword, setShowResetPassword] = useState(false);
+    const [isForgotPasswordModal, setIsForgotPasswordModal] = useState(false);
+
     const [isHiddenPassword, setIsHiddenPassword] = useState(true);
 
-    const navigate= useNavigate();
+    const navigate = useNavigate();
     // Login state
     const [loginData, setLoginData] = useState({
         email: '',
         password: '',
-        rememberMe: false
+        rememberMe: true
     });
 
     // Register state
@@ -32,16 +32,6 @@ export default function AuthPage({ onClose }) {
         confirmPassword: '',
         avatar: null,
         agreeTerms: false
-    });
-
-    // Forgot password state
-    const [forgotEmail, setForgotEmail] = useState('');
-
-    // Reset password state
-    const [resetData, setResetData] = useState({
-        otp: '',
-        newPassword: '',
-        confirmNewPassword: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -74,9 +64,11 @@ export default function AuthPage({ onClose }) {
             const response = await axios.post("http://localhost:5000/login", loginData);
             // console.log(response.data);
             if (response.data.status === "completed") {
-                if(response.data.token){
+                if (loginData.rememberMe) {
                     //Save token to localstorage 
                     localStorage.setItem("token", response.data.token);
+                } else {
+                    sessionStorage.setItem("token", response.data.token);
                 }
                 toast.success(response.data.message);
                 setTimeout(() => onClose(), 1000);
@@ -183,46 +175,12 @@ export default function AuthPage({ onClose }) {
             // console.log(response.data);
         } catch (err) {
             console.log("Cann`t connect with database ", err);
+            if (err.response) {
+                toast.error(err.response.data.message);
+            } else {
+                toast.error(err.message);
+            }
         }
-    };
-
-    // Handle forgot password
-    const handleForgotPasswordSubmit = (e) => {
-        e.preventDefault();
-        if (!forgotEmail) {
-            setErrors({ forgotEmail: 'Email is required' });
-            return;
-        }
-
-        // API call would go here
-        console.log('Forgot password email:', forgotEmail);
-        alert('OTP has been sent to your email!');
-        setShowForgotPassword(false);
-        setShowResetPassword(true);
-    };
-
-    // Handle reset password
-    const handleResetPasswordSubmit = (e) => {
-        e.preventDefault();
-        const newErrors = {};
-
-        if (!resetData.otp) newErrors.otp = 'OTP is required';
-        if (!resetData.newPassword) newErrors.newPassword = 'New password is required';
-        if (resetData.newPassword.length < 6) newErrors.newPassword = 'Password must be at least 6 characters';
-        if (resetData.newPassword !== resetData.confirmNewPassword) {
-            newErrors.confirmNewPassword = 'Passwords do not match';
-        }
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
-        // API call would go here
-        console.log('Reset password data:', resetData);
-        alert('Password reset successful! You can now login with your new password.');
-        setShowResetPassword(false);
-        setIsLogin(true);
     };
 
     return (
@@ -261,11 +219,10 @@ export default function AuthPage({ onClose }) {
                 </div>
 
                 {/* Right Side - Forms */}
-                <div className="auth-forms">
-                    {!showForgotPassword && !showResetPassword && (
-                        <>
-                            <button onClick={onClose} style={{ top: '10px', right: '10px', fontSize: '18px' }} className='close-btn'>X</button>
-
+                <div className='auth-forms' >
+                    <div className={isForgotPasswordModal ? 'auth-forms-hidden' : ''} >
+                        <button onClick={onClose} style={{ top: '10px', right: '10px', fontSize: '18px' }} className='close-btn'>X</button>
+                        <div className="auth-toggle-box">
                             {/* Toggle Buttons */}
                             <div className="auth-toggle">
                                 <button
@@ -337,7 +294,7 @@ export default function AuthPage({ onClose }) {
                                             <button
                                                 type="button"
                                                 className="forgot-link"
-                                                onClick={() => setShowForgotPassword(true)}
+                                                onClick={() => setIsForgotPasswordModal(true)}
                                             >
                                                 Forgot Password?
                                             </button>
@@ -487,124 +444,16 @@ export default function AuthPage({ onClose }) {
                                     </div>
                                 </div>
                             )}
-                        </>
-
-                    )}
-
-                    {/* Forgot Password Form */}
-                    {showForgotPassword && !showResetPassword && (
-                        <div className="form-container">
-                            <h2 className="form-title">Forgot Password?</h2>
-                            <p className="form-subtitle">Enter your email to receive OTP</p>
-
-                            <div className="forgot-form">
-                                <div className="form-group">
-                                    <label>Email Address</label>
-                                    <input
-                                        type="email"
-                                        value={forgotEmail}
-                                        onChange={(e) => {
-                                            setForgotEmail(e.target.value);
-                                            setErrors({});
-                                        }}
-                                        placeholder="your@email.com"
-                                        className={errors.forgotEmail ? 'error' : ''}
-                                    />
-                                    {errors.forgotEmail && <span className="error-text">{errors.forgotEmail}</span>}
-                                </div>
-
-                                <button className="submit-btn" onClick={handleForgotPasswordSubmit}>
-                                    Send OTP
-                                </button>
-
-                                <button
-                                    className="back-btn"
-                                    onClick={() => {
-                                        setShowForgotPassword(false);
-                                        setErrors({});
-                                    }}
-                                >
-                                    ← Back to Login
-                                </button>
-                            </div>
                         </div>
-                    )}
-
-                    {/* Reset Password Form */}
-                    {showResetPassword && (
-                        <div className="form-container">
-                            <h2 className="form-title">Reset Password</h2>
-                            <p className="form-subtitle">Enter OTP and your new password</p>
-
-                            <div className="reset-form">
-                                <div className="form-group">
-                                    <label>OTP Code</label>
-                                    <input
-                                        type="text"
-                                        name="otp"
-                                        value={resetData.otp}
-                                        onChange={(e) => {
-                                            setResetData({ ...resetData, otp: e.target.value });
-                                            setErrors({ ...errors, otp: '' });
-                                        }}
-                                        placeholder="Enter 6-digit OTP"
-                                        maxLength="6"
-                                        className={errors.otp ? 'error' : ''}
-                                    />
-                                    {errors.otp && <span className="error-text">{errors.otp}</span>}
-                                </div>
-
-                                <div className="form-group">
-                                    <label>New Password</label>
-                                    <input
-                                        type="password"
-                                        name="newPassword"
-                                        value={resetData.newPassword}
-                                        onChange={(e) => {
-                                            setResetData({ ...resetData, newPassword: e.target.value });
-                                            setErrors({ ...errors, newPassword: '' });
-                                        }}
-                                        placeholder="••••••••"
-                                        className={errors.newPassword ? 'error' : ''}
-                                    />
-                                    {errors.newPassword && <span className="error-text">{errors.newPassword}</span>}
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Confirm New Password</label>
-                                    <input
-                                        type="password"
-                                        name="confirmNewPassword"
-                                        value={resetData.confirmNewPassword}
-                                        onChange={(e) => {
-                                            setResetData({ ...resetData, confirmNewPassword: e.target.value });
-                                            setErrors({ ...errors, confirmNewPassword: '' });
-                                        }}
-                                        placeholder="••••••••"
-                                        className={errors.confirmNewPassword ? 'error' : ''}
-                                    />
-                                    {errors.confirmNewPassword && <span className="error-text">{errors.confirmNewPassword}</span>}
-                                </div>
-
-                                <button className="submit-btn" onClick={handleResetPasswordSubmit}>
-                                    Reset Password
-                                </button>
-
-                                <button
-                                    className="back-btn"
-                                    onClick={() => {
-                                        setShowResetPassword(false);
-                                        setIsLogin(true);
-                                        setErrors({});
-                                    }}
-                                >
-                                    ← Back to Login
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                    </div>
+                    {/* Forgot password modal */}
+                    {isForgotPasswordModal && <ForgotPasswordModal onCloseForgotModal={()=>{
+                        setIsForgotPasswordModal(false)
+                    }} />}
                 </div>
+
             </div>
+
 
         </div>
     );
