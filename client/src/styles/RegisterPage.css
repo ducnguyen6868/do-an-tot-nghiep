@@ -1,0 +1,48 @@
+.register-section {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #fffdf7, #f7f3eb);
+  min-height: 100vh;
+  color: #333;
+  background-image: url('../assets/bg-image\ \(3\).jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height:100vh;
+}
+
+/* Container chính */
+.register-container {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 35px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  margin-left: 20vh;
+}
+
+.register-container:hover {
+  transform: translateY(-3px);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .register-container {
+    padding: 25px 20px;
+  }
+  .form-title {
+    font-size: 1.6rem;
+  }
+  .submit-btn {
+    font-size: 0.95rem;
+  }
+}

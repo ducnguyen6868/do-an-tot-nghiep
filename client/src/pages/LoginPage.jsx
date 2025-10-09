@@ -1,0 +1,190 @@
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import "../styles/LoginPage.css";
+import { isValidEmail } from '../utils/isValidEmail';
+import ForgotPasswordModal from '../components/comon/ForgotPasswordModal';
+import authApi from '../api/authApi';
+
+export default function LoginPage() {
+
+  const { infoUser, getInfoUser } = useContext(UserContext);
+
+  const [isModal, setIsModal] = useState(false);
+  const navigate = useNavigate();
+
+  const [loginData, setLoginData] = useState({
+    email: infoUser.email || '',
+    password: infoUser.password || '',
+    rememberMe: true,
+  });
+
+  const [isHiddenPassword, setIsHiddenPassword] = useState(true);
+  const [errors, setErrors] = useState({});
+  const [focusedField, setFocusedField] = useState("");
+
+
+  const handleLoginChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setLoginData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    const newErrors = {};
+
+    if (!loginData.email) newErrors.email = 'Email is required';
+    if (!(isValidEmail(loginData.email))) newErrors.email = 'Email format isn`t correct';
+    if (!loginData.password) newErrors.password = 'Password is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    // API login
+    try {
+      const response = await authApi.login(loginData);      
+      if (loginData.rememberMe) {
+        //Save token to localstorage 
+        localStorage.setItem("token", response.token);
+      } else {
+        sessionStorage.setItem("token", response.token);
+      }
+      toast.success(response.message);
+      await getInfoUser();
+      navigate('/');
+
+    } catch (err) {
+      toast.error(err.response.data.message || err.message);
+    }
+  };
+
+  return (
+    <>
+      <div className="login-section">
+        <div className="login-container">
+          <div className="login-header">
+            <h2 className="form-title">Welcome back !</h2>
+            <p className="form-subtitle">Get ready for hundreds of hot deals and exciting discounts!</p>
+          </div>
+
+          {/* Email */}
+          <div className="form-group">
+            <label className="input-label" htmlFor="email">
+              <Icon icon="mdi:email-outline" width="18" />
+              <span>Email Address</span>
+            </label>
+            <div
+              className={`input-wrapper ${focusedField === "email" ? "focused" : ""
+                } ${errors.email ? "error" : ""}`}
+            >
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={loginData.email}
+                onChange={handleLoginChange}
+                onFocus={() => setFocusedField("email")}
+                onBlur={() => setFocusedField("")}
+                placeholder="your@email.com"
+                className="form-input"
+                autoComplete='on'
+              />
+            </div>
+            {errors.email && <span className="error-text">{errors.email}</span>}
+          </div>
+
+          {/* Password */}
+          <div className="form-group">
+            <label className="input-label" htmlFor="password">
+              <Icon icon="mdi:lock-outline" width="18" />
+              <span>Password</span>
+            </label>
+            <div
+              className={`input-wrapper ${focusedField === "password" ? "focused" : ""
+                } ${errors.password ? "error" : ""}`}
+            >
+              <input
+                type={isHiddenPassword ? "password" : "text"}
+                name="password"
+                id="password"
+                value={loginData.password}
+                onChange={handleLoginChange}
+                onFocus={() => setFocusedField("password")}
+                onBlur={() => setFocusedField("")}
+                placeholder="••••••••"
+                className="form-input"
+                autoComplete='current-password'
+              />
+              <button
+                type="button"
+                onClick={() => setIsHiddenPassword(!isHiddenPassword)}
+                className="eye-btn"
+              >
+                <Icon
+                  icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"}
+                  width="20"
+                />
+              </button>
+            </div>
+            {errors.password && <span className="error-text">{errors.password}</span>}
+          </div>
+
+          {/* Checkboxes */}
+          <div className="checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={loginData.rememberMe}
+                onChange={handleLoginChange}
+              />
+              <span>
+                Remember me
+              </span>
+            </label>
+            <button className="forgot-btn"onClick={() => setIsModal(true)}>Forgot password ?</button>
+          </div>
+
+          {/* Submit */}
+          <button className="submit-btn" onClick={handleLoginSubmit}>
+            Login
+          </button>
+
+          {/* Divider */}
+          <div className="divider">
+            <div className="line" />
+            <span>Or continue with</span>
+            <div className="line" />
+          </div>
+
+          {/* Social buttons */}
+          <div className="social-buttons">
+            <button className="social-btn google">
+              <Icon icon="logos:google-icon" width="20" />
+              <span>Google</span>
+            </button>
+            <button className="social-btn facebook">
+              <Icon icon="logos:facebook" width="20" />
+              <span>Facebook</span>
+            </button>
+          </div>
+
+          <p className="login-text">
+            No account? <Link to="../register" className="link">Sign Up</Link>
+          </p>
+        </div>
+      </div>
+      {/* Forgot password modal */}
+      {isModal && <ForgotPasswordModal onClose={()=>setIsModal(false)}/>}
+    </>
+
+  );
+}

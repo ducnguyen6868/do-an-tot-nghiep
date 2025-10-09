@@ -1,0 +1,26 @@
+/* CSS Variables */
+:root {
+  --primary-color: #007BFF; /* Màu xanh dương cho watch brand */
+  --secondary-color: #6C757D; /* Xám cho text */
+  --bg-color: #f8f9fa; /* Nền sáng */
+  --box-bg: rgba(255, 255, 255, 0.95); /* Nền box trong suốt nhẹ */
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --border-radius: 10px;
+  --transition: all 0.3s ease;
+}
+/* Reset và base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+font-family: "Poppins", sans-serif;
+background: var(--bg-color);
+}
+input.error{
+  border-color: rgb(231, 13, 13);
+}
+input:focus{
+  border-color: #00e0ff;
+}
