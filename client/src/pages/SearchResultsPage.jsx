@@ -206,262 +206,241 @@ export default function SearchResultsPage() {
     <>
       <Header />
       <div className="search-results-page">
-        {/* Search Header */}
-        <div className="search-header">
-          <div className="container">
-            <div className="search-bar-wrapper">
-              <input
-                type="text"
-                className="search-input2"
-                placeholder="Search for watches, brands, collections..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
-              />
-              <button className="search-btn1" onClick={() => handleSearch(searchQuery)}>
-                🔍 Search
-              </button>
+        <div className="results-layout">
+          {/* Sidebar Filters */}
+          <aside className="filters-sidebar">
+            <div className="filters-header">
+              <h3>Filters</h3>
+              <button className="clear-btn" onClick={clearFilters}>Clear All</button>
             </div>
-          </div>
-        </div>
 
-        <div className="container">
-          <div className="results-layout">
-            {/* Sidebar Filters */}
-            <aside className="filters-sidebar">
-              <div className="filters-header">
-                <h3>Filters</h3>
-                <button className="clear-btn" onClick={clearFilters}>Clear All</button>
+            {/* Price Range */}
+            <div className="filter-group">
+              <h4>Price Range</h4>
+              <div className="price-inputs">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  value={filters.priceMin}
+                  onChange={(e) => handleFilterChange('priceMin', e.target.value)}
+                />
+                <span>-</span>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  value={filters.priceMax}
+                  onChange={(e) => handleFilterChange('priceMax', e.target.value)}
+                />
               </div>
+            </div>
 
-              {/* Price Range */}
-              <div className="filter-group">
-                <h4>Price Range</h4>
-                <div className="price-inputs">
+            {/* Brand Filter */}
+            <div className="filter-group">
+              <h4>Brand</h4>
+              <select
+                value={filters.brand}
+                onChange={(e) => handleFilterChange('brand', e.target.value)}
+              >
+                <option value="all">All Brands</option>
+                <option value="Timepiece">Timepiece</option>
+                <option value="Rolex">Rolex</option>
+                <option value="Omega">Omega</option>
+              </select>
+            </div>
+
+            {/* Target Audience */}
+            <div className="filter-group">
+              <h4>For</h4>
+              <div className="radio-group">
+                <label>
                   <input
-                    type="number"
-                    placeholder="Min"
-                    value={filters.priceMin}
-                    onChange={(e) => handleFilterChange('priceMin', e.target.value)}
+                    type="radio"
+                    name="audience"
+                    value="all"
+                    checked={filters.audience === 'all'}
+                    onChange={(e) => handleFilterChange('audience', e.target.value)}
                   />
-                  <span>-</span>
+                  All
+                </label>
+                <label>
                   <input
-                    type="number"
-                    placeholder="Max"
-                    value={filters.priceMax}
-                    onChange={(e) => handleFilterChange('priceMax', e.target.value)}
+                    type="radio"
+                    name="audience"
+                    value="Male"
+                    checked={filters.audience === 'Male'}
+                    onChange={(e) => handleFilterChange('audience', e.target.value)}
                   />
-                </div>
+                  Men
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="audience"
+                    value="Female"
+                    checked={filters.audience === 'Female'}
+                    onChange={(e) => handleFilterChange('audience', e.target.value)}
+                  />
+                  Women
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="audience"
+                    value="Unisex"
+                    checked={filters.audience === 'Unisex'}
+                    onChange={(e) => handleFilterChange('audience', e.target.value)}
+                  />
+                  Unisex
+                </label>
               </div>
+            </div>
 
-              {/* Brand Filter */}
-              <div className="filter-group">
-                <h4>Brand</h4>
-                <select
-                  value={filters.brand}
-                  onChange={(e) => handleFilterChange('brand', e.target.value)}
-                >
-                  <option value="all">All Brands</option>
-                  <option value="Timepiece">Timepiece</option>
-                  <option value="Rolex">Rolex</option>
-                  <option value="Omega">Omega</option>
-                </select>
-              </div>
+            {/* Movement Type */}
+            <div className="filter-group">
+              <h4>Movement Type</h4>
+              <select
+                value={filters.movement}
+                onChange={(e) => handleFilterChange('movement', e.target.value)}
+              >
+                <option value="all">All Types</option>
+                <option value="Automatic">Automatic</option>
+                <option value="Quartz">Quartz</option>
+                <option value="Mechanical">Mechanical</option>
+              </select>
+            </div>
 
-              {/* Target Audience */}
-              <div className="filter-group">
-                <h4>For</h4>
-                <div className="radio-group">
-                  <label>
+            {/* Rating Filter */}
+            <div className="filter-group">
+              <h4>Minimum Rating</h4>
+              <div className="rating-filter">
+                {[4, 3, 2, 1].map(rating => (
+                  <label key={rating} className="rating-option">
                     <input
                       type="radio"
-                      name="audience"
-                      value="all"
-                      checked={filters.audience === 'all'}
-                      onChange={(e) => handleFilterChange('audience', e.target.value)}
+                      name="rating"
+                      checked={filters.minRating === rating}
+                      onChange={() => handleFilterChange('minRating', rating)}
                     />
-                    All
+                    <span>{renderStars(rating)} and up</span>
                   </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="audience"
-                      value="Male"
-                      checked={filters.audience === 'Male'}
-                      onChange={(e) => handleFilterChange('audience', e.target.value)}
-                    />
-                    Men
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="audience"
-                      value="Female"
-                      checked={filters.audience === 'Female'}
-                      onChange={(e) => handleFilterChange('audience', e.target.value)}
-                    />
-                    Women
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="audience"
-                      value="Unisex"
-                      checked={filters.audience === 'Unisex'}
-                      onChange={(e) => handleFilterChange('audience', e.target.value)}
-                    />
-                    Unisex
-                  </label>
-                </div>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="results-content">
+            {/* Results Header */}
+            <div className="results-header">
+              <div className="results-info">
+                <h2>Search Results for "{searchQuery}"</h2>
+                <p>{filteredResults.length} products found</p>
               </div>
 
-              {/* Movement Type */}
-              <div className="filter-group">
-                <h4>Movement Type</h4>
-                <select
-                  value={filters.movement}
-                  onChange={(e) => handleFilterChange('movement', e.target.value)}
-                >
-                  <option value="all">All Types</option>
-                  <option value="Automatic">Automatic</option>
-                  <option value="Quartz">Quartz</option>
-                  <option value="Mechanical">Mechanical</option>
-                </select>
-              </div>
-
-              {/* Rating Filter */}
-              <div className="filter-group">
-                <h4>Minimum Rating</h4>
-                <div className="rating-filter">
-                  {[4, 3, 2, 1].map(rating => (
-                    <label key={rating} className="rating-option">
-                      <input
-                        type="radio"
-                        name="rating"
-                        checked={filters.minRating === rating}
-                        onChange={() => handleFilterChange('minRating', rating)}
-                      />
-                      <span>{renderStars(rating)} and up</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className="results-content">
-              {/* Results Header */}
-              <div className="results-header">
-                <div className="results-info">
-                  <h2>Search Results for "{searchQuery}"</h2>
-                  <p>{filteredResults.length} products found</p>
-                </div>
-
-                <div className="results-controls">
-                  <div className="view-toggle">
-                    <button
-                      className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                      onClick={() => setViewMode('grid')}
-                    >
-                      ⊞
-                    </button>
-                    <button
-                      className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-                      onClick={() => setViewMode('list')}
-                    >
-                      ☰
-                    </button>
-                  </div>
-
-                  <select
-                    className="sort-select"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+              <div className="results-controls">
+                <div className="view-toggle">
+                  <button
+                    className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                    onClick={() => setViewMode('grid')}
                   >
-                    <option value="relevance">Most Relevant</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Highest Rated</option>
-                    <option value="newest">Newest First</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Loading State */}
-              {isLoading && (
-                <div className="loading-state">
-                  <div className="spinner"></div>
-                  <p>Searching...</p>
-                </div>
-              )}
-
-              {/* No Results */}
-              {!isLoading && filteredResults.length === 0 && (
-                <div className="no-results">
-                  <div className="no-results-icon">🔍</div>
-                  <h3>No products found</h3>
-                  <p>Try adjusting your filters or search query</p>
-                  <button className="clear-filters-btn" onClick={clearFilters}>
-                    Clear All Filters
+                    ⊞
+                  </button>
+                  <button
+                    className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                    onClick={() => setViewMode('list')}
+                  >
+                    ☰
                   </button>
                 </div>
-              )}
 
-              {/* Results Grid/List */}
-              {!isLoading && filteredResults.length > 0 && (
-                <div className={`results-${viewMode}`}>
-                  {filteredResults.map(product => (
-                    <div key={product._id} className="product-card">
-                      <div className="product-image">
-                        <img src={product.images[0]} alt={product.name} />
-                        {product.originalPrice && (
-                          <div className="discount-badge ">
-                            -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                          </div>
-                        )}
-                        <div className="quick-actions">
-                          <button className="action-btn">👁️</button>
-                          <button className="action-btn">❤️</button>
+                <select
+                  className="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="relevance">Most Relevant</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="newest">Newest First</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Loading State */}
+            {isLoading && (
+              <div className="loading-state">
+                <div className="spinner"></div>
+                <p>Searching...</p>
+              </div>
+            )}
+
+            {/* No Results */}
+            {!isLoading && filteredResults.length === 0 && (
+              <div className="no-results">
+                <div className="no-results-icon">🔍</div>
+                <h3>No products found</h3>
+                <p>Try adjusting your filters or search query</p>
+                <button className="clear-filters-btn" onClick={clearFilters}>
+                  Clear All Filters
+                </button>
+              </div>
+            )}
+
+            {/* Results Grid/List */}
+            {!isLoading && filteredResults.length > 0 && (
+              <div className={`results-${viewMode}`}>
+                {filteredResults.map(product => (
+                  <div key={product._id} className="product-card-search">
+                    <div className="product-image">
+                      <img src={product.images[0]} alt={product.name} />
+                      {product.originalPrice && (
+                        <div className="discount-badge ">
+                          -{Math.round((1 - product.price / product.originalPrice) * 100)}%
                         </div>
-                      </div>
-
-                      <div className="product-info">
-                        <div className="product-brand">{product.brand}</div>
-                        <h3 className="product-name">{product.name}</h3>
-                        <p className="product-description">{product.description}</p>
-
-                        <div className="product-rating">
-                          <span className="stars">{renderStars(product.ratings)}</span>
-                          <span className="rating-value">{product.ratings}</span>
-                          <span className="reviews">({product.totalReviews})</span>
-                        </div>
-
-                        <div className="product-specs">
-                          <span className="spec-badge">{product.movement_type}</span>
-                          <span className="spec-badge">{product.water_resistance}</span>
-                          <span className="spec-badge">{product.target_audience}</span>
-                        </div>
-
-                        <div className="product-footer1">
-                          <div className="price-section">
-                            <span className="current-price">${product.price.toLocaleString()}</span>
-                            {product.originalPrice && (
-                              <span className="original-price">${product.originalPrice.toLocaleString()}</span>
-                            )}
-                          </div>
-                          <button className="add-cart-btn">🛒 Add to Cart</button>
-                        </div>
-
-                        {product.stock < 10 && (
-                          <div className="stock-warning">Only {product.stock} left in stock!</div>
-                        )}
+                      )}
+                      <div className="quick-actions">
+                        <button className="action-btn">👁️</button>
+                        <button className="action-btn">❤️</button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </main>
-          </div>
+
+                    <div className="product-info">
+                      <div className="product-brand-detail">{product.brand}</div>
+                      <h3 className="product-name-detail">{product.name}</h3>
+                      <p className="product-description-search">{product.description}</p>
+
+                      <div className="product-rating-search">
+                        <span className="stars">{renderStars(product.ratings)}</span>
+                        <span className="rating-value">{product.ratings}</span>
+                        <span className="reviews">({product.totalReviews})</span>
+                      </div>
+
+                      <div className="product-specs">
+                        <span className="spec-badge">{product.movement_type}</span>
+                        <span className="spec-badge">{product.water_resistance}</span>
+                        <span className="spec-badge">{product.target_audience}</span>
+                      </div>
+
+                      <div className="product-footer1">
+                        <div className="price-section">
+                          <span className="current-price">${product.price.toLocaleString()}</span>
+                          {product.originalPrice && (
+                            <span className="original-price">${product.originalPrice.toLocaleString()}</span>
+                          )}
+                        </div>
+                        <button className="add-cart-btn">🛒 Add to Cart</button>
+                      </div>
+
+                      {product.stock < 10 && (
+                        <div className="stock-warning">Only {product.stock} left in stock!</div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </main>
         </div>
       </div>
       <Footer />

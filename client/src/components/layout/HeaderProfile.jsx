@@ -44,7 +44,7 @@ export default function HeaderProfile() {
                             <div className="avatar-section">
                                 <div className="avatar">
                                     <img className="avatar-profile" src={`http://localhost:5000/` + infoUser.avatar} alt="avatar" title="avatar" />
-                                    <div className="avatar-ring"></div>
+                                    <div className="avatar-rotate"></div>
                                 </div>
                                 <div className="level-badge">{userData.level} Member</div>
                             </div>

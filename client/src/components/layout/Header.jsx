@@ -4,19 +4,20 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
+import ThemToggle from '../comon/ThemeToggle';
 
 export default function Header() {
   //Get info User
-  const { infoUser ,getInfoUser } = useContext(UserContext);
+  const { infoUser, getInfoUser } = useContext(UserContext);
 
-  const [keyword , setKeyword ]= useState('');
+  const [keyword, setKeyword] = useState('');
 
-  const [isLogged ,setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   //Check login
-  useEffect(()=>{
+  useEffect(() => {
     getInfoUser();
-  },[]);
-  
+  }, []);
+
   useEffect(() => {
     if (infoUser && infoUser.name !== '') {
       setIsLogged(true);
@@ -65,6 +66,7 @@ export default function Header() {
               <Link to="#">English ▼</Link>
               <Link to="#">USD $ ▼</Link>
             </div>
+            <ThemToggle/>
           </div>
         </div>
 
@@ -90,10 +92,9 @@ export default function Header() {
             {/* <!-- Search Bar --> */}
             <div className="search-container">
               <div className="search-bar">
-                <input type="text" className="search-input" value ={keyword} onChange={(e)=>setKeyword(e)}placeholder="Search for watches, brands, collections..." />
+                <input type="text" className="search-input" value={keyword} onChange={(e) => setKeyword(e)} placeholder="Search for watches, brands, collections..." />
                 <button className="search-btn">
                   <Icon icon="noto:magnifying-glass-tilted-left" width="24" height="24" />
-                  <span style={{margin:"0px 5px"}}>Search</span>
                 </button>
               </div>
             </div>
@@ -102,28 +103,31 @@ export default function Header() {
             {isLogged ? (<div className="header-actions">
               <div className="header-action">
                 <Link to="/profile">
-                  <div className="action-icon"  >
-                    <img src={`http://localhost:5000/` + infoUser.avatar} alt="avatar" title="avatar" style={{
-                      width: "40px", height: "40px", borderRadius:"50%",objectFit: "cover", objectPosition: "center"
+                  <div className="action-icon avatar-wave"  >
+                    <img src={`http://localhost:5000/` + infoUser.avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
+                      width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"
                     }} />
-                    <div className="avatar-ring1"></div>
                   </div>
                 </Link>
 
                 <div className="action-label">{infoUser.name}</div>
               </div>
               <div className="header-action">
-                <div className="action-icon">
-                  <Icon icon="noto:red-heart" width="32" height="32" />
-                </div>
-                <div className="action-badge">3</div>
+                <Link to="#">
+                  <div className="action-icon">
+                    <Icon icon="noto:red-heart" width="40" height="40" />
+                  </div>
+                  <div className="action-badge">3</div>
+                </Link>
                 <div className="action-label">Wishlist</div>
               </div>
               <div className="header-action">
-                <div className="action-icon">
-                  <Icon icon="noto:shopping-cart" width="32" height="32" />
-                </div>
-                <div className="action-badge">2</div>
+                <Link to="#">
+                  <div className="action-icon">
+                    <Icon icon="noto:shopping-cart" width="40" height="40" />
+                  </div>
+                  <div className="action-badge">2</div>
+                </Link>
                 <div className="action-label">Cart</div>
               </div>
             </div>
@@ -131,11 +135,11 @@ export default function Header() {
               <div className="header-actions">
                 <Link to='login'>
                   <div className="header-action">
-                  <div className="action-icon">
-                    <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
+                    <div className="action-icon">
+                      <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
+                    </div>
+                    <div className="action-label">Account</div>
                   </div>
-                  <div className="action-label">Account</div>
-                </div>
                 </Link>
                 <div className="header-action">
                   <div className="action-icon">
@@ -169,17 +173,6 @@ export default function Header() {
             <ul className="nav-menu">
               <li className="nav-item">
                 <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:house" width="28" height="28" />
-                  </span>
-                  <span className="nav-text">Home</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:watch" width="24" height="24" />
-                  </span>
                   <span className="nav-text">Men's Watches</span>
                   <span>▼</span>
                 </Link>
@@ -192,9 +185,6 @@ export default function Header() {
               </li>
               <li className="nav-item">
                 <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:gem-stone" width="24" height="24" />
-                  </span>
                   <span className="nav-text">Women's Watches</span>
                   <span>▼</span>
                 </Link>
@@ -206,9 +196,6 @@ export default function Header() {
               </li>
               <li className="nav-item">
                 <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:label" width="24" height="24" />
-                  </span>
                   <span className="nav-text">Brands</span>
                   <span>▼</span>
                 </Link>
@@ -221,33 +208,23 @@ export default function Header() {
               </li>
               <li className="nav-item">
                 <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:glowing-star" width="24" height="24" />
-                  </span>
                   <span className="nav-text">New Arrivals</span>
                   <span className="badge">Hot</span>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:bookmark-tabs" width="24" height="24" />
-                  </span>
                   <span className="nav-text">About</span>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="#" className="nav-link">
-                  <span className="nav-icon">
-                    <Icon icon="noto:link" width="24" height="24" />
-                  </span>
                   <span className="nav-text">Contact</span>
                 </Link>
               </li>
             </ul>
           </div>
         </nav>
-        <div style={{ height: '10px' }}></div>
       </header>
     </>
 

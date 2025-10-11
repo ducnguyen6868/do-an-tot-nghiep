@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import "../styles/RegisterPage.css";
 import { isValidEmail } from '../utils/isValidEmail';
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/authApi";
@@ -19,8 +18,6 @@ export default function RegisterPage() {
     const [isHiddenPassword, setIsHiddenPassword] = useState(true);
     const [isHiddenConfirm, setIsHiddenConfirm] = useState(true);
     const [errors, setErrors] = useState({});
-    const [focusedField, setFocusedField] = useState("");
-
     const [step, setStep] = useState(1);
 
     const handleRegisterChange = (e) => {
@@ -54,7 +51,7 @@ export default function RegisterPage() {
             if (!registerData.email) {
                 newErrors.email = "Please enter your email";
             } else {
-                if(!(isValidEmail(registerData.email))) newErrors.email = "Invalid email.";
+                if (!(isValidEmail(registerData.email))) newErrors.email = "Invalid email.";
             }
             setErrors(newErrors);
             if (Object.keys(newErrors).length === 0) {
@@ -78,9 +75,9 @@ export default function RegisterPage() {
     }
     return (
         <>
-            <div className="register-section">
-                <div className="register-container">
-                    <div className="register-header">
+            <div className="login-section register-section">
+                <div className="login-container register-container">
+                    <div className="login-header register-header">
                         <h2 className="form-title">Create Your Account</h2>
                         <p className="form-subtitle">Join our exclusive community of watch enthusiasts</p>
                     </div>
@@ -93,20 +90,20 @@ export default function RegisterPage() {
                                     <Icon icon="mdi:account-outline" width="18" />
                                     <span>Full Name</span>
                                 </label>
-                                <div className={`input-wrapper ${focusedField === "name" ? "focused" : ""} ${errors.name ? "error" : ""}`} >
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={registerData.name}
-                                        onChange={handleRegisterChange}
-                                        onFocus={() => setFocusedField("name")}
-                                        onBlur={() => setFocusedField("")}
-                                        placeholder="John Doe"
-                                        className="form-input"
-                                    />
-                                </div>
-                                {errors.name && <span className="error-text">{errors.name}</span>}
-
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={registerData.name}
+                                    onChange={handleRegisterChange}
+                                    placeholder="John Doe"
+                                    className={errors.name ? "error" : ""}
+                                />
+                                {errors.name && (
+                                    <div className="form-error">
+                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
+                                        <span>{errors.name}</span>
+                                    </div>
+                                )}
 
                             </div>
                             {/* Email */}
@@ -115,22 +112,22 @@ export default function RegisterPage() {
                                     <Icon icon="mdi:email-outline" width="18" />
                                     <span>Email Address</span>
                                 </label>
-                                <div
-                                    className={`input-wrapper ${focusedField === "email" ? "focused" : ""
-                                        } ${errors.email ? "error" : ""}`}
-                                >
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={registerData.email}
-                                        onChange={handleRegisterChange}
-                                        onFocus={() => setFocusedField("email")}
-                                        onBlur={() => setFocusedField("")}
-                                        placeholder="your@email.com"
-                                        className="form-input"
-                                    />
-                                </div>
-                                {errors.email && <span className="error-text">{errors.email}</span>}
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={registerData.email}
+                                    onChange={handleRegisterChange}
+                                    placeholder="your@email.com"
+                                    className={errors.email ? "error" : ""}
+
+                                />
+                                {errors.email && (
+                                    <div className="form-error">
+                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
+                                        <span>{errors.email}</span>
+                                    </div>
+                                )}
                             </div>
                         </>
 
@@ -144,19 +141,14 @@ export default function RegisterPage() {
                                     <Icon icon="mdi:lock-outline" width="18" />
                                     <span>Password</span>
                                 </label>
-                                <div
-                                    className={`input-wrapper ${focusedField === "password" ? "focused" : ""
-                                        } ${errors.password ? "error" : ""}`}
-                                >
+                                <div className="form-input">
                                     <input
                                         type={isHiddenPassword ? "password" : "text"}
                                         name="password"
                                         value={registerData.password}
                                         onChange={handleRegisterChange}
-                                        onFocus={() => setFocusedField("password")}
-                                        onBlur={() => setFocusedField("")}
                                         placeholder="••••••••"
-                                        className="form-input"
+                                        className={errors.password ? "error" : ""}
                                     />
                                     <button
                                         type="button"
@@ -169,7 +161,12 @@ export default function RegisterPage() {
                                         />
                                     </button>
                                 </div>
-                                {errors.password && <span className="error-text">{errors.password}</span>}
+                                {errors.password && (
+                                    <div className="form-error">
+                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
+                                        <span>{errors.password}</span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Confirm Password */}
@@ -178,19 +175,14 @@ export default function RegisterPage() {
                                     <Icon icon="mdi:shield-lock-outline" width="18" />
                                     <span>Confirm Password</span>
                                 </label>
-                                <div
-                                    className={`input-wrapper ${focusedField === "confirmPassword" ? "focused" : ""
-                                        } ${errors.confirmPassword ? "error" : ""}`}
-                                >
+                                <div className="form-input">
                                     <input
                                         type={isHiddenConfirm ? "password" : "text"}
                                         name="confirmPassword"
                                         value={registerData.confirmPassword}
                                         onChange={handleRegisterChange}
-                                        onFocus={() => setFocusedField("confirmPassword")}
-                                        onBlur={() => setFocusedField("")}
                                         placeholder="••••••••"
-                                        className="form-input"
+                                        className={errors.confirmPassword ? "error" : ""}
                                     />
                                     <button
                                         type="button"
@@ -204,7 +196,10 @@ export default function RegisterPage() {
                                     </button>
                                 </div>
                                 {errors.confirmPassword && (
-                                    <span className="error-text">{errors.confirmPassword}</span>
+                                    <div className="form-error">
+                                        <Icon icon="mdi:alert-circle" width="16" height="16" />
+                                        <span>{errors.confirmPassword}</span>
+                                    </div>
                                 )}
                             </div>
 

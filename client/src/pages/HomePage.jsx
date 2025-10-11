@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import '../styles/HomePage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { Icon } from '@iconify/react';
+
 // Mock product data
 const mockProducts = [
   {
@@ -226,7 +228,7 @@ export default function HomePage() {
         {/* Flash Sale Section */}
         {flashSaleProducts.length > 0 && (
           <section className="flash-sale-section">
-            <div className="container">
+            <div className="flash-sale-container">
               <div className="flash-sale-header">
                 <div className="flash-sale-title">
                   <span className="lightning-icon">⚡</span>
@@ -265,12 +267,11 @@ export default function HomePage() {
                       <div className="product-brand">{product.brand}</div>
                       <h3 className="product-name">{product.name}</h3>
                       <div className="product-rating">
-                        <span className="stars">⭐ {product.ratings}</span>
+                        <span className="stars">
+                          ⭐
+                           {product.ratings}
+                           </span>
                         <span className="stock-info">Stock: {product.stock}</span>
-                      </div>
-                      <div className="product-specs">
-                        <span className="spec-badge">{product.movement_type}</span>
-                        <span className="spec-badge">{product.water_resistance}</span>
                       </div>
                       <div className="product-pricing">
                         <div className="price-info">

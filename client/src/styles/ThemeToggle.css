@@ -1,0 +1,109 @@
+/* Toggle Switch Container */
+.theme-btn {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 0;
+  overflow: visible;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Light theme background */
+.theme-btn {
+  background: linear-gradient(135deg, #ffd89b 0%, #ff8c42 100%);
+}
+
+/* Dark theme background */
+.theme-btn.dark {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+/* Sliding Circle/Knob */
+.theme-btn::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Slide the knob to the right when dark */
+.theme-btn.dark::before {
+  transform: translateX(30px);
+}
+
+/* Icon Container */
+.theme-btn-inner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Light icon position (left side) */
+.theme-btn .theme-btn-inner.light-icon {
+  left: 3px;
+  opacity: 1;
+}
+
+.theme-btn.dark .theme-btn-inner.light-icon {
+  left: -10px;
+  opacity: 0;
+}
+
+/* Dark icon position (right side) */
+.theme-btn .theme-btn-inner.dark-icon {
+  right: -10px;
+  opacity: 0;
+}
+
+.theme-btn.dark .theme-btn-inner.dark-icon {
+  right: 3px;
+  opacity: 1;
+}
+
+/* Hover effect */
+.theme-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
+}
+
+/* Active/Click effect */
+.theme-btn:active {
+  transform: scale(0.98);
+}
+
+/* Optional: Add a subtle glow */
+.theme-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.theme-btn:hover::after {
+  opacity: 1;
+}

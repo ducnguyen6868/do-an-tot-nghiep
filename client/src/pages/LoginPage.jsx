@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
@@ -25,7 +24,6 @@ export default function LoginPage() {
 
   const [isHiddenPassword, setIsHiddenPassword] = useState(true);
   const [errors, setErrors] = useState({});
-  const [focusedField, setFocusedField] = useState("");
 
 
   const handleLoginChange = (e) => {
@@ -50,7 +48,7 @@ export default function LoginPage() {
     }
     // API login
     try {
-      const response = await authApi.login(loginData);      
+      const response = await authApi.login(loginData);
       if (loginData.rememberMe) {
         //Save token to localstorage 
         localStorage.setItem("token", response.token);
@@ -81,24 +79,23 @@ export default function LoginPage() {
               <Icon icon="mdi:email-outline" width="18" />
               <span>Email Address</span>
             </label>
-            <div
-              className={`input-wrapper ${focusedField === "email" ? "focused" : ""
-                } ${errors.email ? "error" : ""}`}
-            >
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value={loginData.email}
-                onChange={handleLoginChange}
-                onFocus={() => setFocusedField("email")}
-                onBlur={() => setFocusedField("")}
-                placeholder="your@email.com"
-                className="form-input"
-                autoComplete='on'
-              />
-            </div>
-            {errors.email && <span className="error-text">{errors.email}</span>}
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={loginData.email}
+              onChange={handleLoginChange}
+              placeholder="your@email.com"
+              autoComplete='on'
+              className={errors.email ? "error" : ""}
+
+            />
+            {errors.email && (
+              <div className="form-error">
+                <Icon icon="mdi:alert-circle" width="16" height="16" />
+                <span>{errors.email}</span>
+              </div>
+            )}
           </div>
 
           {/* Password */}
@@ -107,21 +104,16 @@ export default function LoginPage() {
               <Icon icon="mdi:lock-outline" width="18" />
               <span>Password</span>
             </label>
-            <div
-              className={`input-wrapper ${focusedField === "password" ? "focused" : ""
-                } ${errors.password ? "error" : ""}`}
-            >
+            <div className="form-input">
               <input
                 type={isHiddenPassword ? "password" : "text"}
                 name="password"
                 id="password"
                 value={loginData.password}
                 onChange={handleLoginChange}
-                onFocus={() => setFocusedField("password")}
-                onBlur={() => setFocusedField("")}
                 placeholder="••••••••"
-                className="form-input"
                 autoComplete='current-password'
+                className={errors.password ? "error" : ""}
               />
               <button
                 type="button"
@@ -134,9 +126,14 @@ export default function LoginPage() {
                 />
               </button>
             </div>
-            {errors.password && <span className="error-text">{errors.password}</span>}
-          </div>
 
+            {errors.password && (
+              <div className="form-error">
+                <Icon icon="mdi:alert-circle" width="16" height="16" />
+                <span>{errors.password}</span>
+              </div>
+            )}
+          </div>
           {/* Checkboxes */}
           <div className="checkbox-group">
             <label className="checkbox-label">
@@ -150,7 +147,7 @@ export default function LoginPage() {
                 Remember me
               </span>
             </label>
-            <button className="forgot-btn"onClick={() => setIsModal(true)}>Forgot password ?</button>
+            <button className="forgot-btn" onClick={() => setIsModal(true)}>Forgot password ?</button>
           </div>
 
           {/* Submit */}
@@ -183,7 +180,7 @@ export default function LoginPage() {
         </div>
       </div>
       {/* Forgot password modal */}
-      {isModal && <ForgotPasswordModal onClose={()=>setIsModal(false)}/>}
+      {isModal && <ForgotPasswordModal onClose={() => setIsModal(false)} />}
     </>
 
   );

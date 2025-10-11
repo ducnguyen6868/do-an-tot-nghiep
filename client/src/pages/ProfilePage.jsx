@@ -132,14 +132,16 @@ export default function ProfilePage() {
                                             <span style={{ marginRight: "10px" }}>Security Settings</span>
                                             <Icon icon="noto:gear" width="30" height="30" />
                                         </h3>
-                                        <button className="action-button primary" onClick={() => setIsPasswordChangeModal(true)}>
+                                        <div className='security-box'>
+                                            <button className="action-button primary" onClick={() => setIsPasswordChangeModal(true)}>
                                             <span style={{ marginRight: "10px" }}>Change Password</span>
                                             <Icon icon="noto:key" width="24" height="24" />
                                         </button>
                                         <button className="action-button secondary">
                                             <span style={{ marginRight: "10px" }}>Enable Two-Factor Authentication</span>
-                                            <Icon icon="noto:shield" width="30" height="30" />
+                                            <Icon icon="noto:shield" width="24" height="24" />
                                         </button>
+                                        </div>
                                     </div>
                                 </div>)}
 

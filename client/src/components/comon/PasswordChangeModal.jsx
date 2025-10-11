@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import '../../styles/PasswordChangeModal.css';
 import { toast } from 'react-toastify';
 import { Icon } from "@iconify/react";
 import '../../styles/PasswordChangeModal.css';
@@ -112,11 +111,11 @@ export default function PasswordChangeModal({ onClose }) {
       }
     }
   };
-
+  console.log(passwords.newPassword);
   return (
     <>
       <div className="forgot-password-overlay" >
-        <div className="forgot-password-modal" >
+        <div className="forgot-password-modal change-password-modal" >
           <div className="step-info ">
             <div className="step-info-title change-password-modal-title">
               <Icon icon="noto:locked-with-key" width="50" height="50" />
@@ -262,8 +261,8 @@ export default function PasswordChangeModal({ onClose }) {
                   <Icon icon={/[A-Z]/.test(passwords.newPassword) ? "mdi:check-circle" : "mdi:circle-outline"} width="16" height="16" />
                   <span>One uppercase letter</span>
                 </div>
-                <div className={`requirement-item ${/[a-z]/.test(passwords.newPassword) ? 'met' : ''}`}>
-                  <Icon icon={/[a-z]/.test(passwords.newPassword) ? "mdi:check-circle" : "mdi:circle-outline"} width="16" height="16" />
+                <div className={`requirement-item ${/[a-z]/.test(passwords.newPassword||"") ? 'met' : ''}`}>
+                  <Icon icon={/[a-z]/.test(passwords.newPassword||"") ? "mdi:check-circle" : "mdi:circle-outline"} width="16" height="16" />
                   <span>One lowercase letter</span>
                 </div>
                 <div className={`requirement-item ${/[0-9]/.test(passwords.newPassword) ? 'met' : ''}`}>

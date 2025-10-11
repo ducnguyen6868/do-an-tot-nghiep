@@ -2,7 +2,7 @@
 /* Hero Section */
 .hero-section {
     position: relative;
-    padding: 40px 0 60px;
+    padding: 40px 2rem 60px;
     overflow: hidden;
 }
 
@@ -12,7 +12,7 @@
     left: 0;
     right: 0;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--announcement-bg);
     clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
 }
 
@@ -57,20 +57,12 @@
     border-radius: 50%;
 }
 
-.avatar-ring {
+.avatar-rotate {
     position: absolute;
     inset: -8px;
     border: 3px dashed #ffd700;
     border-radius: 50%;
     animation: rotate 20s linear infinite;
-}
-
-.avatar-ring1 {
-    position: absolute;
-    inset: -8px;
-    border: 3px solid #ffd700;
-    border-radius: 50%;
-    border-bottom: none;
 }
 
 @keyframes rotate {
@@ -84,7 +76,7 @@
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #667eea, var(--brand-color));
     color: white;
     padding: 8px 20px;
     border-radius: 20px;
@@ -145,7 +137,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #667eea, var(--brand-color));
     padding: 12px 18px;
     border-radius: 20px;
     color: white;

@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Product Info */}
-            <div className="product-info">
+            <div className="product-info-detail">
               <div className="product-badge">✨ Limited Edition</div>
               <h1 className="product-title">{productData.name}</h1>
 
@@ -177,7 +177,7 @@ export default function ProductDetailPage() {
               </div>
 
               <div className="price-section-detail">
-                <span className="current-price">${productData.price.toLocaleString()}</span>
+                <span className="current-price-detail">${productData.price.toLocaleString()}</span>
                 <span className="original-price">${productData.originalPrice.toLocaleString()}</span>
                 <span className="discount-badge-detail">Save ${productData.originalPrice - productData.price}</span>
               </div>

@@ -36,7 +36,7 @@ function App() {
 
           </Route>
           {/* Các route dành cho admin */}
-          <Route path="admin/dashboard" element={<AdminDashboard />}></Route>
+          <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
         </Routes>
       </UserProvider>
     </BrowserRouter>

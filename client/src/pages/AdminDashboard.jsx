@@ -114,7 +114,7 @@ export default function AdminDashboard() {
           <button className="menu-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             ☰
           </button>
-          <div className="search-bar">
+          <div className="search-bar-dashboard">
             <span className="search-icon">🔍</span>
             <input 
               type="text" 
@@ -439,7 +439,7 @@ export default function AdminDashboard() {
                   <div key={index} className="product-row">
                     <div className="product-rank">{index + 1}</div>
                     <div className="product-details">
-                      <div className="product-name">{product.name}</div>
+                      <div className="product-name-dashboard">{product.name}</div>
                       <div className="product-stats">
                         <span>{product.sales} sales</span>
                         <span className="separator">•</span>

@@ -1,12 +1,57 @@
 /* CSS Variables */
 :root {
-  --primary-color: #007BFF; /* Màu xanh dương cho watch brand */
-  --secondary-color: #6C757D; /* Xám cho text */
-  --bg-color: #f8f9fa; /* Nền sáng */
-  --box-bg: rgba(255, 255, 255, 0.95); /* Nền box trong suốt nhẹ */
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  --border-radius: 10px;
-  --transition: all 0.3s ease;
+  /* Brand Colors */
+  --brand-color: #0030ff;
+  --brand-hover: #0025cc;
+  --brand-light: #3355ff;
+  
+  /* Light Mode Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-image:url('../assets/bg-image (1).jpg');
+  --bg-tertiary: #f1f3f5;
+  --position:0 0 0 60%;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --shadow-sm: rgba(0, 0, 0, 0.05);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
+  --announcement-bg: linear-gradient(135deg, var(--brand-color), #0050ff);
+  --announcement-text: #ffffff;
+  --header-bg: #ffffff;
+  --nav-bg: #f8f9fa;
+  --dropdown-bg: #ffffff;
+  --badge-bg: #ff4757;
+  --badge-text: #ffffff;
+  --input-bg: #f3f4f6;
+  --input-border: #e5e7eb;
+  --input-focus: var(--brand-color);
+  --avatar-ring: var(--brand-color);
+}
+[data-theme="dark"] {
+  /* Dark Mode Colors */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-image:url('../assets/bg-image (3).jpg');
+  --bg-tertiary: #334155;
+  --position:0 0 0 10%;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.4);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+  --announcement-bg: linear-gradient(135deg, #1a2744, var(--brand-color));
+  --header-bg: #1e293b;
+  --nav-bg: #0f172a;
+  --dropdown-bg: #1e293b;
+  --input-bg: #334155;
+  --input-border: #475569;
+  --input-focus: var(--brand-light);
+  --avatar-ring: var(--brand-light);
 }
 /* Reset và base */
 * {
@@ -16,7 +61,6 @@
 }
 body {
 font-family: "Poppins", sans-serif;
-background: var(--bg-color);
 }
 input.error{
   border-color: rgb(231, 13, 13);
