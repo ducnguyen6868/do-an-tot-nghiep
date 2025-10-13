@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const orderSchema = new Schema({
-  user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  recipient_id: { type: Schema.Types.ObjectId, ref: 'Recipient', required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  recipient: { type: Schema.Types.ObjectId, ref: 'Recipient', required: true },
   total_amount: { type: Number, required: true },// tổng tiền trước giảm giá
   discount_amount: { type: Number, default: 0 },    // số tiền giảm giá (nếu có)
   final_amount: { type: Number },   // tổng tiền sau khi áp dụng khuyến mãi
@@ -13,10 +13,10 @@ const orderSchema = new Schema({
     default: 'đang xử lý'
   },
   list_products: [{
-    product_id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     quantity: { type: Number, required: true }
   }],
-  promotion_id: { type: Schema.Types.ObjectId, ref: 'Promotion' }
+  promotion: { type: Schema.Types.ObjectId, ref: 'Promotion' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -23,12 +23,8 @@ const RecipientSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         trim: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
     }
-});
+},{timestamps});
 
 const Recipient = mongoose.model('Recipient', RecipientSchema);
 module.exports = Recipient;

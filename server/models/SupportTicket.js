@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+require('./User');
 
 const supportTicketSchema = new Schema({
-  user_id: { type: Schema.Types.ObjectId, ref: 'User' },
-  ho_ten: { type: String, required: true },
-  email: { type: String, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
   subject: { type: String, required: true },
   message: { type: String, required: true },
-  status: { type: String, enum: ['mới', 'đang xử lý', 'đã giải quyết'], default: 'mới' }
-}, { timestamps: { createdAt: 'created_at' } });
+  status: { type: String, enum: ['pending','resolved'], default: 'pending' }
+}, { timestamps });
 
 module.exports = mongoose.model('SupportTicket', supportTicketSchema);

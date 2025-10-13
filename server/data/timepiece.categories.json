@@ -1,0 +1,70 @@
+[{
+  "_id": {
+    "$oid": "68ea68599b9e5db9e147fec7"
+  },
+  "category_name": "Đồng hồ Nam",
+  "category_description": "Các mẫu đồng hồ thời trang và cao cấp dành cho nam giới. Phong cách mạnh mẽ, lịch lãm và sang trọng.",
+  "category_avatar": "/uploads/categories/men-watches.jpg",
+  "createdAt": {
+    "$date": "2025-10-11T10:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-11T10:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ea68599b9e5db9e147fec8"
+  },
+  "category_name": "Đồng hồ Nữ",
+  "category_description": "Bộ sưu tập đồng hồ nữ tinh tế, thanh lịch, phù hợp cho mọi phong cách thời trang.",
+  "category_avatar": "/uploads/categories/women-watches.jpg",
+  "createdAt": {
+    "$date": "2025-10-11T10:05:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-11T10:05:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ea68599b9e5db9e147fec9"
+  },
+  "category_name": "Đồng hồ Cặp Đôi",
+  "category_description": "Dành cho các cặp đôi yêu thích sự đồng điệu và ý nghĩa trong từng chi tiết thiết kế.",
+  "category_avatar": "/uploads/categories/couple-watches.jpg",
+  "createdAt": {
+    "$date": "2025-10-11T10:10:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-11T10:10:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ea68599b9e5db9e147feca"
+  },
+  "category_name": "Đồng hồ Thể Thao",
+  "category_description": "Các mẫu đồng hồ đa năng, chống nước, bền bỉ dành cho người yêu thích thể thao và khám phá.",
+  "category_avatar": "/uploads/categories/sport-watches.jpg",
+  "createdAt": {
+    "$date": "2025-10-11T10:15:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-11T10:15:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ea68599b9e5db9e147fecb"
+  },
+  "category_name": "Đồng hồ Thông Minh",
+  "category_description": "Những chiếc smartwatch hiện đại, tích hợp nhiều tính năng như đo nhịp tim, thông báo, theo dõi sức khỏe.",
+  "category_avatar": "/uploads/categories/smart-watches.jpg",
+  "createdAt": {
+    "$date": "2025-10-11T10:20:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-11T10:20:00.000Z"
+  }
+}]

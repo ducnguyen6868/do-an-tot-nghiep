@@ -2,178 +2,15 @@ import { useState, useEffect } from 'react';
 import '../styles/HomePage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import { Icon } from '@iconify/react';
-
-// Mock product data
-const mockProducts = [
-  {
-    _id: '1',
-    name: 'Classic Elegance Automatic',
-    description: 'Swiss precision meets timeless design',
-    price: 2499,
-    originalPrice: 3299,
-    stock: 15,
-    images: ['https://placehold.co/400x400/1a1a2e/ffd700?text=Watch+1'],
-    category_id: 'luxury',
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '10 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Leather',
-    dial_type: 'Analog',
-    thickness: 12,
-    power_reserve: '42 hours',
-    features: 'Date display, Exhibition case back',
-    ratings: 4.8,
-    isFlashSale: true,
-    flashSaleEnd: new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours from now
-  },
-  {
-    _id: '2',
-    name: 'Sport Chronograph Pro',
-    description: 'Built for performance and style',
-    price: 3299,
-    originalPrice: 4499,
-    stock: 8,
-    images: ['https://placehold.co/400x400/1a1a2e/60a5fa?text=Watch+2'],
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '20 ATM',
-    movement_type: 'Quartz',
-    glass_material: 'Sapphire',
-    strap_material: 'Stainless Steel',
-    dial_type: 'Analog',
-    thickness: 14,
-    power_reserve: 'Battery powered',
-    features: 'Chronograph, Tachymeter',
-    ratings: 4.9,
-    isFlashSale: true,
-    flashSaleEnd: new Date(Date.now() + 2 * 60 * 60 * 1000)
-  },
-  {
-    _id: '3',
-    name: 'Diamond Elegance Lady',
-    description: 'Sophisticated luxury for women',
-    price: 5999,
-    stock: 12,
-    images: ['https://placehold.co/400x400/1a1a2e/ff6b9d?text=Watch+3'],
-    brand: 'Timepiece',
-    target_audience: 'Female',
-    water_resistance: '5 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Leather',
-    dial_type: 'Analog',
-    thickness: 9,
-    power_reserve: '38 hours',
-    features: 'Diamond accents, Mother of pearl dial',
-    ratings: 5.0
-  },
-  {
-    _id: '4',
-    name: 'Minimalist Essence',
-    description: 'Clean design, maximum impact',
-    price: 1899,
-    stock: 25,
-    images: ['https://placehold.co/400x400/1a1a2e/34d399?text=Watch+4'],
-    brand: 'Timepiece',
-    target_audience: 'Unisex',
-    water_resistance: '3 ATM',
-    movement_type: 'Quartz',
-    glass_material: 'Mineral',
-    strap_material: 'Leather',
-    dial_type: 'Analog',
-    thickness: 8,
-    power_reserve: 'Battery powered',
-    features: 'Minimalist design, Date display',
-    ratings: 4.6
-  },
-  {
-    _id: '5',
-    name: 'Pilot Navigator GMT',
-    description: 'Aviation-inspired timepiece',
-    price: 4299,
-    stock: 6,
-    images: ['https://placehold.co/400x400/1a1a2e/fbbf24?text=Watch+5'],
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '10 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Nylon',
-    dial_type: 'Analog',
-    thickness: 13,
-    power_reserve: '48 hours',
-    features: 'GMT function, Luminous hands',
-    ratings: 4.7
-  },
-  {
-    _id: '6',
-    name: 'Ocean Diver Pro 300',
-    description: 'Professional diving watch',
-    price: 3799,
-    stock: 10,
-    images: ['https://placehold.co/400x400/1a1a2e/06b6d4?text=Watch+6'],
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '30 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Rubber',
-    dial_type: 'Analog',
-    thickness: 15,
-    power_reserve: '40 hours',
-    features: 'Diving bezel, Helium escape valve',
-    ratings: 4.9
-  }, {
-    _id: '7',
-    name: 'Classic Elegance Automatic',
-    description: 'Swiss precision meets timeless design',
-    price: 5499,
-    originalPrice: 3299,
-    stock: 15,
-    images: ['https://placehold.co/400x400/1a1a2e/ffd700?text=Watch+1'],
-    category_id: 'luxury',
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '10 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Leather',
-    dial_type: 'Analog',
-    thickness: 12,
-    power_reserve: '42 hours',
-    features: 'Date display, Exhibition case back',
-    ratings: 4.8,
-    isFlashSale: true,
-    flashSaleEnd: new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours from now
-  }, {
-    _id: '8',
-    name: 'Classic Elegance Automatic',
-    description: 'Swiss precision meets timeless design',
-    price: 2999,
-    originalPrice: 3299,
-    stock: 15,
-    images: ['https://placehold.co/400x400/1a1a2e/ffd700?text=Watch+1'],
-    category_id: 'luxury',
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '10 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Leather',
-    dial_type: 'Analog',
-    thickness: 12,
-    power_reserve: '42 hours',
-    features: 'Date display, Exhibition case back',
-    ratings: 4.9,
-    isFlashSale: true,
-    flashSaleEnd: new Date(Date.now() + 2 * 60 * 60 * 1000) // 2 hours from now
-  }
-];
+import { toast } from 'react-toastify';
+import productApi from '../api/productApi';
+import brandApi from '../api/brandApi';
+import LoadingAnimations from '../components/comon/LoadingAnimations';
 
 export default function HomePage() {
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [selectedFilters, setSelectedFilters] = useState({
@@ -182,24 +19,116 @@ export default function HomePage() {
     priceRange: 'all'
   });
 
-  const itemsPerPage = 5;
+  // Flash sale products - only active ones
+  const flashSaleProducts = products.filter(p => {
+    if (!p.flashSale) return false;
+    const endTime = new Date(p.flashSaleEnd);
+    return endTime > new Date();
+  });
 
-  // Flash sale products
-  const flashSaleProducts = mockProducts.filter(p => p.isFlashSale);
+  // Regular products with filters applied
+  const getFilteredProducts = () => {
+    let filtered = products.filter(p => {
+      // Exclude active flash sale products
+      if (p.flashSale) {
+        const endTime = new Date(p.flashSaleEnd);
+        if (endTime > new Date()) return false;
+      }
+      return true;
+    });
 
-  // Regular products with filters
-  const filteredProducts = mockProducts.filter(p => !p.isFlashSale);
+    // Apply brand filter
+    if (selectedFilters.brand !== 'all') {
+      filtered = filtered.filter(p => p.brand?.name === selectedFilters.brand);
+    }
+
+    // Apply audience filter
+    if (selectedFilters.audience !== 'all') {
+      filtered = filtered.filter(p => p.target_audience === selectedFilters.audience);
+    }
+
+    // Apply price range filter
+    if (selectedFilters.priceRange !== 'all') {
+      filtered = filtered.filter(p => {
+        const price = p.detail?.[0]?.price || 0;
+        switch (selectedFilters.priceRange) {
+          case 'under200':
+            return price < 200;
+          case '200to500':
+            return price >= 200 && price < 500;
+          case 'above500':
+            return price >= 500;
+          default:
+            return true;
+        }
+      });
+    }
+
+    return filtered;
+  };
+
+  const filteredProducts = getFilteredProducts();
 
   // Pagination
+  const itemsPerPage = 4;
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+  // Get products from API
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        setLoading(true);
+        await new Promise(resolve =>setTimeout(resolve,1000));
+
+        const response = await productApi.product();
+
+        const updated = response.products.map((product) => {
+          const soldCount = product.detail?.reduce((sum, d) => sum + (d.sold || 0), 0) || 0;
+          const quantityCount = product.detail?.reduce((sum, d) => sum + (d.quantity || 0), 0) || 0;
+          const stockCount = quantityCount - soldCount;
+          const reviewCount = product.reviews.length;
+          return {
+            ...product,
+            sold: soldCount,
+            stock: stockCount, reviewCount: reviewCount
+          };
+        });
+        setProducts(updated);
+      } catch (err) {
+        toast.error(err?.response?.data?.message || err.message);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  //Get Brand 
+  useEffect(() => {
+    const getBrands = async () => {
+      try {
+        const response = await brandApi.brand();
+        setBrands(response.brand);
+      } catch (err) {
+        toast.error(err.response?.data?.message || err.response);
+      }finally{
+        setLoading(false);
+      }
+    }
+    getBrands();
+  }, []);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedFilters]);
 
   // Countdown timer for flash sale
   useEffect(() => {
     const timer = setInterval(() => {
       if (flashSaleProducts.length > 0) {
-        const endTime = flashSaleProducts[0].flashSaleEnd;
+        const endTime = new Date(flashSaleProducts[0].flashSaleEnd);
         const now = new Date();
         const diff = endTime - now;
 
@@ -209,6 +138,8 @@ export default function HomePage() {
             minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
             seconds: Math.floor((diff % (1000 * 60)) / 1000)
           });
+        } else {
+          setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
         }
       }
     }, 1000);
@@ -219,6 +150,13 @@ export default function HomePage() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
   };
 
   return (
@@ -255,35 +193,46 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}><hr style={{ width: '80%' }} /></div>
+              <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+                <hr style={{ width: '80%' }} />
+              </div>
+              {loading && (
+                <div style={{ padding: '2rem', borderRadius: '2rem', backgroundColor: 'var(--bg-primary)' }}>
+
+                  <LoadingAnimations option="skeleton" />
+                </div>
+              )}
+
               <div className="flash-sale-grid">
-                {flashSaleProducts.map(product => (
+                {!loading && flashSaleProducts.map((product) => (
                   <div key={product._id} className="flash-sale-card">
-                    <div className="sale-badge">-{Math.round((1 - product.price / product.originalPrice) * 100)}%</div>
+                    <div className="sale-badge">
+                      -{Math.round((1 - product.detail[0].price / product.detail[0].originalPrice) * 100)}%
+                    </div>
                     <div className="product-image">
-                      <img src={product.images[0]} alt={product.name} />
+                      <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy"  alt={product.name} />
                     </div>
                     <div className="product-info">
-                      <div className="product-brand">{product.brand}</div>
+                      <div className="product-brand">{product.brand.name}</div>
                       <h3 className="product-name">{product.name}</h3>
                       <div className="product-rating">
-                        <span className="stars">
-                          ⭐
-                           {product.ratings}
-                           </span>
-                        <span className="stock-info">Stock: {product.stock}</span>
+                        <span className="stars">⭐⭐⭐⭐⭐ {product.ratings}</span>
+                        <span className="stock-info">Sold: {product.sold}</span>
                       </div>
                       <div className="product-pricing">
                         <div className="price-info">
-                          <span className="current-price">${product.price}</span>
-                          <span className="original-price">${product.originalPrice}</span>
+                          <span className="current-price">${product.detail[0].price}</span>
+                          <span className="original-price">${product.detail[0].originalPrice}</span>
                         </div>
                         <button className="add-to-cart-btn flash">
                           🛒 Buy Now
                         </button>
                       </div>
                       <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: `${(product.stock / 20) * 100}%` }}></div>
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${Math.min((product.stock / (product.stock + product.sold)) * 100, 100)}%` }}
+                        ></div>
                       </div>
                       <div className="sold-info">Hurry! Only {product.stock} left</div>
                     </div>
@@ -300,60 +249,76 @@ export default function HomePage() {
             <div className="section-header">
               <h2 className="section-title">All Watches</h2>
               <div className="filter-controls">
-                <select className="filter-select">
-                  <option>All Brands</option>
-                  <option>Timepiece</option>
-                  <option>Luxury</option>
+                <select
+                  className="filter-select"
+                  value={selectedFilters.brand}
+                  onChange={(e) => handleFilterChange('brand', e.target.value)}
+                >
+                  <option value="all">All Brands</option>
+                  {brands.map(brand =>
+                    <option key={brand._id} value={brand.name}>{brand.name}</option>
+                  )}
                 </select>
-                <select className="filter-select">
-                  <option>All Audiences</option>
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Unisex</option>
+                <select
+                  className="filter-select"
+                  value={selectedFilters.audience}
+                  onChange={(e) => handleFilterChange('audience', e.target.value)}
+                >
+                  <option value="all">All Audiences</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Unisex">Unisex</option>
                 </select>
-                <select className="filter-select">
-                  <option>All Prices</option>
-                  <option>Under $2000</option>
-                  <option>$2000 - $4000</option>
-                  <option>Above $4000</option>
+                <select
+                  className="filter-select"
+                  value={selectedFilters.priceRange}
+                  onChange={(e) => handleFilterChange('priceRange', e.target.value)}
+                >
+                  <option value="all">All Prices</option>
+                  <option value="under200">Under $200</option>
+                  <option value="200to500">$200 - $500</option>
+                  <option value="above500">Above $500</option>
                 </select>
               </div>
             </div>
 
+            {loading && <LoadingAnimations option="skeleton" />}
             <div className="product-grid">
-              {currentProducts.map(product => (
+              {!loading && currentProducts.map(product => (
                 <div key={product._id} className="product-card">
                   <div className="product-image">
-                    <img src={product.images[0]} alt={product.name} />
+                    <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
                     <div className="product-overlay">
                       <button className="quick-view-btn">👁️ Quick View</button>
                       <button className="wishlist-btn">❤️</button>
                     </div>
                   </div>
                   <div className="product-details">
-                    <div className="product-brand">{product.brand}</div>
+                    <div className="product-brand">{product.brand?.name || 'N/A'}</div>
                     <h3 className="product-name">{product.name}</h3>
                     <p className="product-description">{product.description}</p>
                     <div className="product-rating">
-                      <span className="stars">⭐ {product.ratings}</span>
-                      <span className="reviews">(248 reviews)</span>
+                      <span className="stars">⭐⭐⭐⭐⭐ {product.ratings}</span>
+                      <span className="reviews">({product.reviewCount} reviews)</span>
                     </div>
                     <div className="product-specs-list">
                       <div className="spec-item">
                         <span className="spec-icon">⚙️</span>
-                        <span>{product.movement_type}</span>
+                        <span>{product.movement_type || 'N/A'}</span>
                       </div>
                       <div className="spec-item">
                         <span className="spec-icon">💧</span>
-                        <span>{product.water_resistance}</span>
+                        <span>{product.water_resistance || 'N/A'}</span>
                       </div>
                       <div className="spec-item">
                         <span className="spec-icon">💎</span>
-                        <span>{product.glass_material}</span>
+                        <span>{product.glass_material || 'N/A'}</span>
                       </div>
                     </div>
                     <div className="product-footer">
-                      <div className="price">${product.price}</div>
+                      <div className="price">
+                        ${product.detail?.[0]?.price || 'N/A'}
+                      </div>
                       <button className="add-to-cart-btn">
                         🛒 Add to Cart
                       </button>
@@ -364,38 +329,39 @@ export default function HomePage() {
             </div>
 
             {/* Pagination */}
-            <div className="pagination">
-              <button
-                className="pagination-btn"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                ← Previous
-              </button>
+            {totalPages > 0 && (
+              <div className="pagination">
+                <button
+                  className="pagination-btn"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  ← Previous
+                </button>
 
-              <div className="page-numbers">
-                {[...Array(totalPages)].map((_, index) => (
-                  <button
-                    key={index + 1}
-                    className={`page-number ${currentPage === index + 1 ? 'active' : ''}`}
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
+                <div className="page-numbers">
+                  {[...Array(totalPages)].map((_, index) => (
+                    <button
+                      key={index + 1}
+                      className={`page-number ${currentPage === index + 1 ? 'active' : ''}`}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  className="pagination-btn"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next →
+                </button>
               </div>
-
-              <button
-                className="pagination-btn"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next →
-              </button>
-            </div>
+            )}
           </div>
         </section>
-
       </div>
       <Footer />
     </>

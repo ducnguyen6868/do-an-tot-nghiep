@@ -1,0 +1,166 @@
+[{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2cd"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a1"
+  },
+  "product": {
+    "$oid": "68ea84959b9e5db9e147feee"
+  },
+  "rating": 5,
+  "comment": "Thiết kế thể thao và mạnh mẽ, dây da rất chất lượng. Rất đáng tiền!",
+  "images": [
+    "/uploads/reviews/tissot-1.jpg"
+  ],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2ce"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a2"
+  },
+  "product": {
+    "$oid": "68ea84959b9e5db9e147feef"
+  },
+  "rating": 4,
+  "comment": "Đồng hồ đẹp, tinh tế. Tuy nhiên mặt hơi nhỏ hơn mong đợi.",
+  "images": [
+    "/uploads/reviews/omega-1.jpg"
+  ],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2cf"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a3"
+  },
+  "product": {
+    "$oid": "68ea84959b9e5db9e147fef0"
+  },
+  "rating": 5,
+  "comment": "Seiko Prospex cực kỳ bền bỉ, đi lặn thoải mái. Mặt sáng đẹp.",
+  "images": [],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d0"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a4"
+  },
+  "product": {
+    "$oid": "68ea84959b9e5db9e147fef1"
+  },
+  "rating": 4,
+  "comment": "Nhỏ gọn và nữ tính, tuy nhiên pin hơi yếu khi bật nhiều tính năng.",
+  "images": [
+    "/uploads/reviews/garmin-1.jpg"
+  ],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d1"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a5"
+  },
+  "product": {
+    "$oid": "68ea84959b9e5db9e147fef2"
+  },
+  "rating": 5,
+  "comment": "Rolex khỏi bàn, đẳng cấp và sang trọng. Giao hàng rất nhanh.",
+  "images": [
+    "/uploads/reviews/rolex-1.jpg"
+  ],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d2"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a6"
+  },
+  "product": {
+    "$oid": "68ea85049b9e5db9e147fef3"
+  },
+  "rating": 5,
+  "comment": "Citizen Eco-Drive chính xác và thân thiện môi trường, quá tuyệt!",
+  "images": [],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d3"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a7"
+  },
+  "product": {
+    "$oid": "68ea85049b9e5db9e147fef4"
+  },
+  "rating": 4,
+  "comment": "Casio Edifice nhìn rất nam tính, dây kim loại chắc chắn.",
+  "images": [
+    "/uploads/reviews/casio-1.jpg"
+  ],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d4"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a8"
+  },
+  "product": {
+    "$oid": "68ea85049b9e5db9e147fef5"
+  },
+  "rating": 5,
+  "comment": "Thiết kế tối giản đúng gu của tôi, dây da mềm, dễ phối đồ.",
+  "images": [],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d5"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45a9"
+  },
+  "product": {
+    "$oid": "68ea85049b9e5db9e147fef6"
+  },
+  "rating": 4,
+  "comment": "Longines rất thanh lịch, tuy nhiên mặt kính dễ bám vân tay.",
+  "images": [
+    "/uploads/reviews/longines-1.jpg"
+  ],
+  "videos": []
+},
+{
+  "_id": {
+    "$oid": "68eb21c54291f61f213bd2d6"
+  },
+  "user": {
+    "$oid": "6712fa8d8e9e2b00123a45aa"
+  },
+  "product": {
+    "$oid": "68ea85049b9e5db9e147fef7"
+  },
+  "rating": 5,
+  "comment": "Apple Watch Ultra đúng chất lượng cao cấp, pin khỏe và GPS chính xác.",
+  "images": [
+    "/uploads/reviews/apple-ultra-1.jpg"
+  ],
+  "videos": [
+    "/uploads/reviews/apple-ultra.mp4"
+  ]
+}]

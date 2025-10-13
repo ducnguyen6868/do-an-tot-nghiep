@@ -2,99 +2,32 @@ import { useState, useEffect } from 'react';
 import '../styles/SearchResultsPage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-
-// Mock search results data
-const mockSearchResults = [
-  {
-    _id: '1',
-    name: 'Classic Elegance Automatic',
-    description: 'Swiss precision meets timeless design',
-    price: 2499,
-    originalPrice: 3299,
-    stock: 15,
-    images: ['https://via.placeholder.com/300x300/1a1a2e/ffd700?text=Watch+1'],
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '10 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Leather',
-    ratings: 4.8,
-    totalReviews: 248
-  },
-  {
-    _id: '2',
-    name: 'Sport Chronograph Pro',
-    description: 'Built for performance and style',
-    price: 3299,
-    stock: 8,
-    images: ['https://via.placeholder.com/300x300/1a1a2e/60a5fa?text=Watch+2'],
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '20 ATM',
-    movement_type: 'Quartz',
-    glass_material: 'Sapphire',
-    strap_material: 'Stainless Steel',
-    ratings: 4.9,
-    totalReviews: 186
-  },
-  {
-    _id: '3',
-    name: 'Diamond Elegance Lady',
-    description: 'Sophisticated luxury for women',
-    price: 5999,
-    stock: 12,
-    images: ['https://via.placeholder.com/300x300/1a1a2e/ff6b9d?text=Watch+3'],
-    brand: 'Timepiece',
-    target_audience: 'Female',
-    water_resistance: '5 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Leather',
-    ratings: 5.0,
-    totalReviews: 142
-  },
-  {
-    _id: '4',
-    name: 'Minimalist Essence',
-    description: 'Clean design, maximum impact',
-    price: 1899,
-    stock: 25,
-    images: ['https://via.placeholder.com/300x300/1a1a2e/34d399?text=Watch+4'],
-    brand: 'Timepiece',
-    target_audience: 'Unisex',
-    water_resistance: '3 ATM',
-    movement_type: 'Quartz',
-    glass_material: 'Mineral',
-    strap_material: 'Leather',
-    ratings: 4.6,
-    totalReviews: 98
-  },
-  {
-    _id: '5',
-    name: 'Pilot Navigator GMT',
-    description: 'Aviation-inspired timepiece',
-    price: 4299,
-    stock: 6,
-    images: ['https://via.placeholder.com/300x300/1a1a2e/fbbf24?text=Watch+5'],
-    brand: 'Timepiece',
-    target_audience: 'Male',
-    water_resistance: '10 ATM',
-    movement_type: 'Automatic',
-    glass_material: 'Sapphire',
-    strap_material: 'Nylon',
-    ratings: 4.7,
-    totalReviews: 156
-  }
-];
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import productApi from '../api/productApi';
+import brandApi from '../api/brandApi';
+import LoadingAnimations from '../components/comon/LoadingAnimations';
 
 export default function SearchResultsPage() {
-  const [searchQuery, setSearchQuery] = useState('watch');
-  const [results, setResults] = useState(mockSearchResults);
-  const [filteredResults, setFilteredResults] = useState(mockSearchResults);
-  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const keyword = queryParams.get("keyword");
+
+  const [results, setResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [brands, setBrands] = useState([]);
+
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('relevance');
   const [viewMode, setViewMode] = useState('grid'); // grid or list
+
+  // Pagination
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentProducts = filteredResults.slice(startIndex, startIndex + itemsPerPage);
 
   // Filters
   const [filters, setFilters] = useState({
@@ -108,77 +41,108 @@ export default function SearchResultsPage() {
 
   useEffect(() => {
     // Simulate API call
-    setIsLoading(true);
+    setLoading(true);
+    const applyFiltersAndSort = () => {
+      let filtered = [...results];
+
+      // Apply price filter
+      if (filters.priceMin) {
+        filtered = filtered.filter(item => item.detail[0]?.price >= parseFloat(filters.priceMin));
+      }
+      if (filters.priceMax) {
+        filtered = filtered.filter(item => item.detail[0]?.price <= parseFloat(filters.priceMax));
+      }
+
+      // Apply brand filter
+      if (filters.brand !== 'all') {
+        filtered = filtered.filter(item => item.brand.name === filters.brand);
+      }
+
+      // Apply audience filter
+      if (filters.audience !== 'all') {
+        filtered = filtered.filter(item => item.target_audience === filters.audience);
+      }
+
+      // Apply movement filter
+      if (filters.movement !== 'all') {
+        filtered = filtered.filter(item => item.movement_type === filters.movement);
+      }
+
+      // Apply rating filter
+      if (filters.minRating > 0) {
+        filtered = filtered.filter(item => item.ratings >= filters.minRating);
+      }
+
+      // Apply sorting
+      switch (sortBy) {
+        case 'price-low':
+          filtered.sort((a, b) => a.detail[0]?.price - b.detail[0]?.price);
+          break;
+        case 'price-high':
+          filtered.sort((a, b) => b.detail[0]?.price - a.detail[0]?.price);
+          break;
+        case 'rating':
+          filtered.sort((a, b) => b.ratings - a.ratings);
+          break;
+        case 'newest':
+          filtered.sort((a, b) => a.createdAt < b.createdAt);
+          break;
+        default:
+          // relevance - keep as is
+          break;
+      }
+
+      setFilteredResults(filtered);
+    };
+
     setTimeout(() => {
       applyFiltersAndSort();
-      setIsLoading(false);
+      setLoading(false);
     }, 500);
-  }, [sortBy, filters]);
+  }, [sortBy, filters, results]);
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    setIsLoading(true);
-    // Simulate API search
-    setTimeout(() => {
-      // In real app, this would be an API call
-      setResults(mockSearchResults);
-      applyFiltersAndSort();
-      setIsLoading(false);
-    }, 500);
-  };
-
-  const applyFiltersAndSort = () => {
-    let filtered = [...results];
-
-    // Apply price filter
-    if (filters.priceMin) {
-      filtered = filtered.filter(item => item.price >= parseFloat(filters.priceMin));
+  useEffect(() => {
+    setFilteredResults([]);
+    const getProducts = async () => {
+      try {
+        setLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await productApi.search(keyword);
+        const update = response.product.map((pro) => {
+          const sold = pro.detail?.reduce((t, d) => t + d.sold, 0);
+          const total = pro.detail?.reduce((t, d) => t + d.quantity, 0);
+          const stock = total - sold;
+          const reviewCount = pro.reviews.length;
+          return { ...pro, sold, stock, reviewCount }
+        });
+        setResults(update);
+      } catch (err) {
+        toast.error(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
+      }
     }
-    if (filters.priceMax) {
-      filtered = filtered.filter(item => item.price <= parseFloat(filters.priceMax));
-    }
+    getProducts();
+  }, [keyword]);
 
-    // Apply brand filter
-    if (filters.brand !== 'all') {
-      filtered = filtered.filter(item => item.brand === filters.brand);
-    }
+  useEffect(() => {
+    const getBrands = async () => {
+      try {
+        const response = await brandApi.brand();
+        setBrands(response.brand);
 
-    // Apply audience filter
-    if (filters.audience !== 'all') {
-      filtered = filtered.filter(item => item.target_audience === filters.audience);
+      } catch (err) {
+        toast.err(err.response?.data?.message | err.message);
+      }
     }
+    getBrands();
+  }, []);
 
-    // Apply movement filter
-    if (filters.movement !== 'all') {
-      filtered = filtered.filter(item => item.movement_type === filters.movement);
-    }
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
 
-    // Apply rating filter
-    if (filters.minRating > 0) {
-      filtered = filtered.filter(item => item.ratings >= filters.minRating);
-    }
-
-    // Apply sorting
-    switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        filtered.sort((a, b) => b.ratings - a.ratings);
-        break;
-      case 'newest':
-        // Would sort by date in real app
-        break;
-      default:
-        // relevance - keep as is
-        break;
-    }
-
-    setFilteredResults(filtered);
-  };
 
   const handleFilterChange = (filterName, value) => {
     setFilters({
@@ -200,6 +164,10 @@ export default function SearchResultsPage() {
 
   const renderStars = (rating) => {
     return '⭐'.repeat(Math.floor(rating));
+  };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -241,10 +209,10 @@ export default function SearchResultsPage() {
                 value={filters.brand}
                 onChange={(e) => handleFilterChange('brand', e.target.value)}
               >
-                <option value="all">All Brands</option>
-                <option value="Timepiece">Timepiece</option>
-                <option value="Rolex">Rolex</option>
-                <option value="Omega">Omega</option>
+                <option value="All brand">All brand</option>
+                {brands.map(brand =>
+                  <option key={brand._id} value={brand.name}>{brand.name}</option>
+                )}
               </select>
             </div>
 
@@ -333,7 +301,7 @@ export default function SearchResultsPage() {
             {/* Results Header */}
             <div className="results-header">
               <div className="results-info">
-                <h2>Search Results for "{searchQuery}"</h2>
+                <h2>Search Results for "{keyword}"</h2>
                 <p>{filteredResults.length} products found</p>
               </div>
 
@@ -368,15 +336,12 @@ export default function SearchResultsPage() {
             </div>
 
             {/* Loading State */}
-            {isLoading && (
-              <div className="loading-state">
-                <div className="spinner"></div>
-                <p>Searching...</p>
-              </div>
+            {loading && (
+              <LoadingAnimations option="skeleton" />
             )}
 
             {/* No Results */}
-            {!isLoading && filteredResults.length === 0 && (
+            {!loading && filteredResults.length === 0 && (
               <div className="no-results">
                 <div className="no-results-icon">🔍</div>
                 <h3>No products found</h3>
@@ -388,32 +353,29 @@ export default function SearchResultsPage() {
             )}
 
             {/* Results Grid/List */}
-            {!isLoading && filteredResults.length > 0 && (
+            {!loading && currentProducts.length > 0 && (
               <div className={`results-${viewMode}`}>
-                {filteredResults.map(product => (
+                {currentProducts.map(product => (
                   <div key={product._id} className="product-card-search">
                     <div className="product-image">
-                      <img src={product.images[0]} alt={product.name} />
-                      {product.originalPrice && (
-                        <div className="discount-badge ">
-                          -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                        </div>
-                      )}
-                      <div className="quick-actions">
-                        <button className="action-btn">👁️</button>
-                        <button className="action-btn">❤️</button>
+                      <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
+                      <div className="discount-badge ">
+                        -{Math.round((1 - product.detail[0]?.price / product.detail[0]?.originalPrice) * 100)}%
+                      </div>
+                      <div className="product-overlay">
+                        <button className="quick-view-btn">👁️ Quick View</button>
+                        <button className="wishlist-btn">❤️</button>
                       </div>
                     </div>
 
                     <div className="product-info">
-                      <div className="product-brand-detail">{product.brand}</div>
+                      <div className="product-brand-detail">{product.brand.name}</div>
                       <h3 className="product-name-detail">{product.name}</h3>
                       <p className="product-description-search">{product.description}</p>
 
                       <div className="product-rating-search">
-                        <span className="stars">{renderStars(product.ratings)}</span>
-                        <span className="rating-value">{product.ratings}</span>
-                        <span className="reviews">({product.totalReviews})</span>
+                        <span className="stars">{renderStars(product.ratings)}{product.ratings}</span>
+                        <span className="reviews">({product.reviewCount} Reviews)</span>
                       </div>
 
                       <div className="product-specs">
@@ -424,9 +386,9 @@ export default function SearchResultsPage() {
 
                       <div className="product-footer1">
                         <div className="price-section">
-                          <span className="current-price">${product.price.toLocaleString()}</span>
+                          <span className="current-price price">${product.detail[0]?.price?.toLocaleString?.()}</span>
                           {product.originalPrice && (
-                            <span className="original-price">${product.originalPrice.toLocaleString()}</span>
+                            <span className="original-price">${product.detail[0]?.originalPrice?.toLocaleString?.()}</span>
                           )}
                         </div>
                         <button className="add-cart-btn">🛒 Add to Cart</button>
@@ -439,7 +401,41 @@ export default function SearchResultsPage() {
                   </div>
                 ))}
               </div>
+
             )}
+            {/* Pagination */}
+            {totalPages > 0 && (
+              <div className="pagination">
+                <button
+                  className="pagination-btn"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  ← Previous
+                </button>
+
+                <div className="page-numbers">
+                  {[...Array(totalPages)].map((_, index) => (
+                    <button
+                      key={index + 1}
+                      className={`page-number ${currentPage === index + 1 ? 'active' : ''}`}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  className="pagination-btn"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+
           </main>
         </div>
       </div>

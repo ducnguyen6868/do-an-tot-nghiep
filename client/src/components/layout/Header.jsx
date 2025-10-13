@@ -1,18 +1,24 @@
 import { useState, useEffect } from 'react';
 import '../../styles/Header.css';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
+import { toast } from 'react-toastify';
 import ThemToggle from '../comon/ThemeToggle';
+import categoryApi from '../../api/categoryApi';
 
 export default function Header() {
   //Get info User
   const { infoUser, getInfoUser } = useContext(UserContext);
 
-  const [keyword, setKeyword] = useState('');
+  const [category, setCategory] = useState([]);
+
+  const [keyword, setKeyword] = useState(null);
 
   const [isLogged, setIsLogged] = useState(false);
+  
+  const navigate= useNavigate();
   //Check login
   useEffect(() => {
     getInfoUser();
@@ -26,6 +32,23 @@ export default function Header() {
     }
   }, [infoUser]);
 
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+        const reponse = await categoryApi.category();
+        setCategory(reponse.category);
+      } catch (err) {
+        toast.error(err.reponse?.data?.message || err.message);
+      }
+    }
+    getCategory();
+  }, []);
+
+  const handleSearch = () => {
+    if (keyword && keyword.trim() !== "") {
+      navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+    }
+  };
   return (
     <>
       <div className="announcement-bar">
@@ -66,7 +89,7 @@ export default function Header() {
               <Link to="#">English ▼</Link>
               <Link to="#">USD $ ▼</Link>
             </div>
-            <ThemToggle/>
+            <ThemToggle />
           </div>
         </div>
 
@@ -92,8 +115,8 @@ export default function Header() {
             {/* <!-- Search Bar --> */}
             <div className="search-container">
               <div className="search-bar">
-                <input type="text" className="search-input" value={keyword} onChange={(e) => setKeyword(e)} placeholder="Search for watches, brands, collections..." />
-                <button className="search-btn">
+                <input type="text" className="search-input" value={keyword} onKeyDown={(e) => e.key === "Enter" && handleSearch()} onChange={(e) => setKeyword(e.target.value)} placeholder="Search for watches, brands, collections..." />
+                <button className="search-btn" onClick={handleSearch}>
                   <Icon icon="noto:magnifying-glass-tilted-left" width="24" height="24" />
                 </button>
               </div>
@@ -168,6 +191,12 @@ export default function Header() {
               <span className="category-icon">☰</span>
               <span className="category-text">ALL CATEGORIES</span>
               <span>▼</span>
+              <ul className='dropdown-menu'>
+                {category.map(cate =>
+                  <li key={cate._id} className='dropdown-item' >{cate.name}</li>
+                )}
+
+              </ul>
             </div>
 
             <ul className="nav-menu">

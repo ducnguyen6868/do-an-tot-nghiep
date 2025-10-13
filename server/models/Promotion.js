@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+require('./Product');
 
 const promotionSchema = new Schema({
-  promo_name: { type: String, required: true },
-  promo_avatar: { type: String, required: true },
-  promo_code: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  avatar: { type: String, required: true },
+  code: { type: String, required: true, unique: true },
   start_date: { type: Date, required: true },
   end_date: { type: Date, required: true },
   promo_count:{type:Number,required:true},

@@ -151,7 +151,7 @@
 .sale-badge {
   position: absolute;
   top: 15px;
-  left: 15px;
+  right: 15px;
   background-color: #ff4757;
   color: white;
   padding: 8px 16px;
@@ -455,8 +455,7 @@
 }
 
 .wishlist-btn {
-  padding: 12px 16px;
-  font-size: 18px;
+  padding: 12px;
 }
 
 .wishlist-btn:hover {

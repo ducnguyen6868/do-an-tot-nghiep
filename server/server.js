@@ -6,7 +6,9 @@ const app = express();
 
 const userRoutes = require('./routers/userRoutes');
 const profileRoutes = require('./routers/profileRoutes');
-
+const productRoutes = require('./routers/productRoutes');
+const categoryRoutes = require('./routers/categoryRoutes');
+const brandRoutes = require('./routers/brandRoutes');
 
 const connectDB = require('./config/db');
 connectDB();
@@ -21,6 +23,12 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/', userRoutes);
 
 app.use("/profile", profileRoutes);
+
+app.use("/product",productRoutes);
+
+app.use("/category",categoryRoutes);
+
+app.use("/brand",brandRoutes);
 
 app.listen(5000, (req, res) => {
     console.log("Server listen port 5000");

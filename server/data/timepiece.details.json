@@ -1,0 +1,100 @@
+[{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c1"
+  },
+  "price": 249.99,
+  "originalPrice": 299.99,
+  "color": "Silver",
+  "quantity": 25,
+  "saled": 5
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c2"
+  },
+  "price": 189.5,
+  "originalPrice": 220,
+  "color": "Black",
+  "quantity": 40,
+  "saled": 12
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c3"
+  },
+  "price": 325,
+  "originalPrice": 399,
+  "color": "Gold",
+  "quantity": 15,
+  "saled": 7
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c4"
+  },
+  "price": 275,
+  "originalPrice": 320,
+  "color": "Blue",
+  "quantity": 18,
+  "saled": 3
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c5"
+  },
+  "price": 150,
+  "originalPrice": 180,
+  "color": "Brown Leather",
+  "quantity": 30,
+  "saled": 10
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c6"
+  },
+  "price": 499.99,
+  "originalPrice": 599.99,
+  "color": "Rose Gold",
+  "quantity": 10,
+  "saled": 8
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c7"
+  },
+  "price": 210,
+  "originalPrice": 250,
+  "color": "Green",
+  "quantity": 22,
+  "saled": 4
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c8"
+  },
+  "price": 349,
+  "originalPrice": 420,
+  "color": "Black & Silver",
+  "quantity": 14,
+  "saled": 9
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2c9"
+  },
+  "price": 125,
+  "originalPrice": 160,
+  "color": "White",
+  "quantity": 35,
+  "saled": 6
+},
+{
+  "_id": {
+    "$oid": "68eb1d824291f61f213bd2ca"
+  },
+  "price": 279.99,
+  "originalPrice": 340,
+  "color": "Titanium Gray",
+  "quantity": 12,
+  "saled": 2
+}]

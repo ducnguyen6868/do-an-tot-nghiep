@@ -1,0 +1,70 @@
+[{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fecf"
+  },
+  "name": "Rolex",
+  "avatar": "/uploads/brands/rolex.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed0"
+  },
+  "name": "Omega",
+  "avatar": "/uploads/brands/omega.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed1"
+  },
+  "name": "Casio",
+  "avatar": "/uploads/brands/casio.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed2"
+  },
+  "name": "Tissot",
+  "avatar": "/uploads/brands/tissot.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed3"
+  },
+  "name": "Seiko",
+  "avatar": "/uploads/brands/seiko.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed4"
+  },
+  "name": "Citizen",
+  "avatar": "/uploads/brands/citizen.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed5"
+  },
+  "name": "Longines",
+  "avatar": "/uploads/brands/longines.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed6"
+  },
+  "name": "Apple",
+  "avatar": "/uploads/brands/apple-watch.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed7"
+  },
+  "name": "Garmin",
+  "avatar": "/uploads/brands/garmin.png"
+},
+{
+  "_id": {
+    "$oid": "68ea69849b9e5db9e147fed8"
+  },
+  "name": "Fossil",
+  "avatar": "/uploads/brands/fossil.png"
+}]

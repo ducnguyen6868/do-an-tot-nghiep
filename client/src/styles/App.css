@@ -1,8 +1,8 @@
 /* CSS Variables */
 :root {
   /* Brand Colors */
-  --brand-color: #0030ff;
-  --brand-hover: #0025cc;
+  --brand-color: #00bcd4;
+  --brand-hover: #0085cc;
   --brand-light: #3355ff;
   
   /* Light Mode Colors */
@@ -10,7 +10,7 @@
   --bg-secondary: #f8f9fa;
   --bg-image:url('../assets/bg-image (1).jpg');
   --bg-tertiary: #f1f3f5;
-  --position:0 0 0 60%;
+  --position:right;
   --text-primary: #1a1a1a;
   --text-secondary: #4a4a4a;
   --text-muted: #6b7280;
@@ -29,6 +29,7 @@
   --input-border: #e5e7eb;
   --input-focus: var(--brand-color);
   --avatar-ring: var(--brand-color);
+  --bg-shimmer:linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
 }
 [data-theme="dark"] {
   /* Dark Mode Colors */
@@ -36,7 +37,7 @@
   --bg-secondary: #1e293b;
   --bg-image:url('../assets/bg-image (3).jpg');
   --bg-tertiary: #334155;
-  --position:0 0 0 10%;
+  --position:left;
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
@@ -52,6 +53,7 @@
   --input-border: #475569;
   --input-focus: var(--brand-light);
   --avatar-ring: var(--brand-light);
+  --bg-shimmer:linear-gradient(90deg, #334155 25%, #475569 50%,  #334155 75% );
 }
 /* Reset và base */
 * {

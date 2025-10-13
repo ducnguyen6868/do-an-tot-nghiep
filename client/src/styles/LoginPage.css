@@ -5,11 +5,13 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding:2rem;
+  padding: 2rem 10rem;
   background: var(--bg-image) no-repeat;
-  background-size: contain;
+  background-size: 100% 100%;
   color: var(--text-primary);
-  transition:  all 2s ease;
+  transition: all 2s ease;
+  justify-content: var(--position);
+
 }
 
 .login-container {
@@ -21,7 +23,6 @@
   width: 100%;
   max-width: 420px;
   transition: all 0.3s ease;
-  margin:var(--position);
 }
 
 .login-header {
@@ -73,7 +74,7 @@
 
 /* Hiển thị lỗi */
 .form-group input.error {
-  border :2px solid rgb(209, 2, 2);
+  border: 2px solid rgb(209, 2, 2);
   box-shadow: 0 0 15px red;
 }
 

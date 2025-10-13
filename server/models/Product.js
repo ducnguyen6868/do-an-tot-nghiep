@@ -1,14 +1,20 @@
 const mongoose = require('mongoose');
+require('./Detail');
+require('./Brand');
+require('./Category');
+require('./Review');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-  name: { type: String, required: true },
+  code:{type:String , default:"TPxxxx"},
+  name: { type: String, required: true , unique:true },
   description: { type: String },
-  price: { type: Number, required: true },
-  stock: { type: Number, default: 0 },
+  detail:[{
+    type:Schema.Types.ObjectId , ref:"Detail"
+  }],
   images: [{ type: String }], // Danh sách đường dẫn hình ảnh
-  category_id: { type: Schema.Types.ObjectId, ref: 'Category' },
-  brand: { type: String },             // Thương hiệu
+  category: { type: Schema.Types.ObjectId, ref: 'Category' },
+  brand: { type: Schema.Types.ObjectId , ref:'Brand' },             // Thương hiệu
   target_audience: { type: String },     // Đối tượng sử dụng (nam, nữ, unisex, …)
   water_resistance: { type: String },    // Kháng nước (ví dụ: 5 ATM, 10 ATM, …)
   movement_type: { type: String },       // Loại máy (cơ, quartz, tự động, …)
@@ -18,7 +24,13 @@ const productSchema = new Schema({
   thickness: { type: Number },           // Độ dày (mm)
   power_reserve: { type: String },       // Khoảng trữ cót (ví dụ: 40 giờ, 50 giờ, …)
   features: { type: String },            // Tiện ích, tính năng bổ sung
-  ratings: { type: Number, default: 0 }
+  ratings: { type: Number, default: 0 },
+  flashSale:{type:Boolean},
+  flashSaleEnd:{type:Date},
+  reviews:[{
+    type:Schema.Types.ObjectId ,ref:"Review"
+  }]
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);
