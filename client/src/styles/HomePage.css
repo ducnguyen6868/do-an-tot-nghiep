@@ -219,6 +219,7 @@
   align-items: center;
   margin-bottom: 15px;
   font-size: 13px;
+  justify-content: space-between;
 }
 
 .stars {
@@ -446,6 +447,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   color: #1a1a1a;
+  text-decoration: none;
 }
 
 .quick-view-btn:hover {
@@ -510,6 +512,7 @@
   gap: 10px;
   margin-bottom: 15px;
   font-size: 14px;
+  justify-content: space-between;
 }
 
 .reviews {

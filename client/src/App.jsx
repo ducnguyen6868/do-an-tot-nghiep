@@ -7,10 +7,11 @@ import { UserProvider } from './contexts/UserProvider';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
-import ProductDetailPage from './pages/ProductDetailPage';
+import ProductPage from './pages/ProductPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilePage from './pages/ProfilePage';
+import AddressPage from './pages/AddressPage';
 import UserAuth from './hooks/userAuth';
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
           <Route index element={<HomePage />}></Route>
           <Route path="login" element={<LoginPage />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>
-          <Route path="product-detail" element={<ProductDetailPage />}></Route>
+          <Route path="product" element={<ProductPage />}></Route>
           <Route path="search" element={<SearchResultsPage />}></Route>
 
 
@@ -35,6 +36,12 @@ function App() {
             }>
 
           </Route>
+
+          <Route path='/profile/address' element={
+            <UserAuth>
+              <AddressPage/>
+            </UserAuth>
+          }></Route>
           {/* Các route dành cho admin */}
           <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
         </Routes>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/SearchResultsPage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -363,7 +364,7 @@ export default function SearchResultsPage() {
                         -{Math.round((1 - product.detail[0]?.price / product.detail[0]?.originalPrice) * 100)}%
                       </div>
                       <div className="product-overlay">
-                        <button className="quick-view-btn">👁️ Quick View</button>
+                        <Link to={`/product?code=${product.code}`} className="quick-view-btn">👁️ Quick View</Link>
                         <button className="wishlist-btn">❤️</button>
                       </div>
                     </div>

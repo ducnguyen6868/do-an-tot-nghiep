@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const RecipientSchema = new mongoose.Schema({
-    fullName: {
+    name: {
         type: String,
         required: true,
         trim: true
     },
-    phoneNumber: {
+    phone: {
         type: String,
         required: true,
         trim: true
@@ -16,15 +16,9 @@ const RecipientSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    notes: {
-        type: String,
-        trim: true
-    },
-    paymentMethod: {
-        type: String,
-        trim: true
-    }
-},{timestamps});
+    type:{type:String, default:"Home"},
+    isDefault:{type:Boolean , default:false}
+},{timestamps:true});
 
 const Recipient = mongoose.model('Recipient', RecipientSchema);
 module.exports = Recipient;

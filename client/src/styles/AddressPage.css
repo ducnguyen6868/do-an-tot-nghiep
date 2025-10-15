@@ -1,0 +1,155 @@
+/* ==== Container ==== */
+.tab-content {
+  background: var(--bg-primary);
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px var(--shadow-md);
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* ==== Header ==== */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.content-title {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.add-new-btn {
+  background: var(--brand-color);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-new-btn:hover {
+  background: var(--brand-hover);
+}
+
+/* ==== Addresses Container ==== */
+.addresses-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ==== Address Card ==== */
+.address-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px var(--shadow-sm);
+  padding: 1.2rem 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.address-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px var(--shadow-md);
+}
+
+/* ==== Header of Each Address ==== */
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.address-type-badge {
+  background: var(--brand-color);
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.default-tag {
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ==== Address Content ==== */
+.address-content {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.address-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.address-phone {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.address-text {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+/* ==== Footer Buttons ==== */
+.address-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.address-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.address-btn:hover {
+  border-color: var(--brand-color);
+  color: var(--brand-color);
+}
+
+.address-btn.danger {
+  background: #ffe6e6;
+  color: #ff3b3b;
+  border-color: #ffb3b3;
+}
+
+.address-btn.danger:hover {
+  background: #ff3b3b;
+  color: #fff;
+}
+
+/* ==== Animation ==== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

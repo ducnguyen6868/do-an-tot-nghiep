@@ -50,7 +50,7 @@
     height: 16px;
     background: #667eea;
     border-radius: 50%;
-    animation: bounce 1.4s infinite ease-in-out both;
+    animation: bouncee 1.4s infinite ease-in-out both;
 }
 
 .dot:nth-child(1) {
@@ -61,7 +61,7 @@
     animation-delay: -0.16s;
 }
 
-@keyframes bounce {
+@keyframes bouncee {
 
     0%,
     80%,

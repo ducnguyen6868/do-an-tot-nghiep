@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/HomePage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { toast } from 'react-toastify';
+import LoadingAnimations from '../components/comon/LoadingAnimations';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
-import LoadingAnimations from '../components/comon/LoadingAnimations';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageFlash, setCurrentPageFlash] = useState(1);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [selectedFilters, setSelectedFilters] = useState({
     brand: 'all',
@@ -70,17 +73,23 @@ export default function HomePage() {
   const filteredProducts = getFilteredProducts();
 
   // Pagination
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+
+  const itemsPerPageFlash = 4;
+  const totalPagesFlash = Math.ceil(flashSaleProducts.length / itemsPerPageFlash);
+  const startIndexFlash = (currentPageFlash - 1) * itemsPerPageFlash;
+  const flashProducts = flashSaleProducts.slice(startIndexFlash, startIndexFlash + itemsPerPageFlash);
 
   // Get products from API
   useEffect(() => {
     const getProducts = async () => {
       try {
         setLoading(true);
-        await new Promise(resolve =>setTimeout(resolve,1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const response = await productApi.product();
 
@@ -112,7 +121,7 @@ export default function HomePage() {
         setBrands(response.brand);
       } catch (err) {
         toast.error(err.response?.data?.message || err.response);
-      }finally{
+      } finally {
         setLoading(false);
       }
     }
@@ -151,6 +160,10 @@ export default function HomePage() {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+  const handlePageChangeFlash = (page) => {
+    setCurrentPageFlash(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleFilterChange = (filterType, value) => {
     setSelectedFilters(prev => ({
@@ -164,7 +177,7 @@ export default function HomePage() {
       <Header />
       <div className="product-page">
         {/* Flash Sale Section */}
-        {flashSaleProducts.length > 0 && (
+        {totalPagesFlash > 0 && (
           <section className="flash-sale-section">
             <div className="flash-sale-container">
               <div className="flash-sale-header">
@@ -204,13 +217,13 @@ export default function HomePage() {
               )}
 
               <div className="flash-sale-grid">
-                {!loading && flashSaleProducts.map((product) => (
+                {!loading && flashProducts.map((product) => (
                   <div key={product._id} className="flash-sale-card">
                     <div className="sale-badge">
                       -{Math.round((1 - product.detail[0].price / product.detail[0].originalPrice) * 100)}%
                     </div>
                     <div className="product-image">
-                      <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy"  alt={product.name} />
+                      <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
                     </div>
                     <div className="product-info">
                       <div className="product-brand">{product.brand.name}</div>
@@ -237,8 +250,42 @@ export default function HomePage() {
                       <div className="sold-info">Hurry! Only {product.stock} left</div>
                     </div>
                   </div>
+
+
                 ))}
               </div>
+                {/* Pagination */}
+                {totalPagesFlash > 0 && (
+                  <div className="pagination">
+                    <button
+                      className="pagination-btn"
+                      onClick={() => handlePageChangeFlash(currentPageFlash - 1)}
+                      disabled={currentPageFlash === 1}
+                    >
+                      ← Previous
+                    </button>
+
+                    <div className="page-numbers">
+                      {[...Array(totalPagesFlash)].map((_, index) => (
+                        <button
+                          key={index + 1}
+                          className={`page-number ${currentPageFlash === index + 1 ? 'active' : ''}`}
+                          onClick={() => handlePageChangeFlash(index + 1)}
+                        >
+                          {index + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      className="pagination-btn"
+                      onClick={() => handlePageChangeFlash(currentPageFlash + 1)}
+                      disabled={currentPageFlash === totalPagesFlash}
+                    >
+                      Next →
+                    </button>
+                  </div>
+                )}
             </div>
           </section>
         )}
@@ -285,11 +332,11 @@ export default function HomePage() {
             {loading && <LoadingAnimations option="skeleton" />}
             <div className="product-grid">
               {!loading && currentProducts.map(product => (
-                <div key={product._id} className="product-card">
+                <div key={product._id} className="product-card" >
                   <div className="product-image">
                     <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
                     <div className="product-overlay">
-                      <button className="quick-view-btn">👁️ Quick View</button>
+                      <Link to={`/product?code=${product.code}`} className="quick-view-btn">👁️ Quick View</Link>
                       <button className="wishlist-btn">❤️</button>
                     </div>
                   </div>

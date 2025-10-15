@@ -1,13 +1,11 @@
 import { Icon } from "@iconify/react";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import '../../styles/SidebarProfile.css';
 
-export default function SidebarProfile() {
+export default function SidebarProfile({ activeTab }) {
     const { getInfoUser } = useContext(UserContext);
-
-    const [activeTab, setActiveTab] = useState();
     const [logoutModal, setLogoutModal] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -19,31 +17,43 @@ export default function SidebarProfile() {
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
         await getInfoUser();
-        setTimeout(() =>navigate("/") , 500);
+        setTimeout(() => navigate("/"), 500);
     }
     return (
         <>
             {/* Sidebar */}
             <aside className="sidebar-profile">
                 <nav className="nav-menu-profile">
-                    {[
-                        { id: 'profile', icon: <Icon icon="noto:identification-card" width="30" height="30" />, label: 'Personal Info' },
-                        { id: 'points', icon: <Icon icon="noto:coin" width="30" height="30" />, label: 'Points History' },
-                        { id: 'vouchers', icon: <Icon icon="noto:wrapped-gift" width="30" height="30" />, label: 'My Vouchers' },
-                        { id: 'orders', icon: <Icon icon="noto:package" width="30" height="30" />, label: 'Order History' },
-                        { id: 'addresses', icon: <Icon icon="noto:round-pushpin" width="30" height="30" />, label: 'Addresses' },
-                        { id: 'support', icon: <Icon icon="noto:speech-balloon" width="30" height="30" />, label: 'Support message' }
-                    ].map(item => (
-                        <button
-                            key={item.id}
-                            className={`nav-button ${activeTab === item.id ? 'active' : ''}`}
-                            onClick={() => setActiveTab(item.id)}
-                        >
-                            <span className="nav-icon">{item.icon}</span>
-                            <span className="nav-label">{item.label}</span>
-                            <span className="nav-arrow">→</span>
-                        </button>
-                    ))}
+                    <Link to='../profile' className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}  >
+                        <span className="nav-icon"><Icon icon="noto:identification-card" width="30" height="30" /></span>
+                        <span className="nav-label">Personal Info</span>
+                        <span className="nav-arrow">→</span>
+                    </Link>
+                    <Link to="#" className={`nav-button ${activeTab === 'points' ? 'active' : ''}`}  >
+                        <span className="nav-icon"><Icon icon="noto:coin" width="30" height="30" /></span>
+                        <span className="nav-label">Points History</span>
+                        <span className="nav-arrow">→</span>
+                    </Link>
+                    <Link to='#' className={`nav-button ${activeTab === 'vouchers' ? 'active' : ''}`}  >
+                        <span className="nav-icon"><Icon icon="noto:wrapped-gift" width="30" height="30" /></span>
+                        <span className="nav-label">My Vouchers</span>
+                        <span className="nav-arrow">→</span>
+                    </Link>
+                    <Link to="#" className={`nav-button ${activeTab === 'orders' ? 'active' : ''}`}  >
+                        <span className="nav-icon"><Icon icon="noto:package" width="30" height="30" /></span>
+                        <span className="nav-label">Order History</span>
+                        <span className="nav-arrow">→</span>
+                    </Link>
+                    <Link to="/profile/address" className={`nav-button ${activeTab === 'address' ? 'active' : ''}`}  >
+                        <span className="nav-icon"><Icon icon="noto:round-pushpin" width="30" height="30" /></span>
+                        <span className="nav-label">Addresses</span>
+                        <span className="nav-arrow">→</span>
+                    </Link>
+                    <Link tp='#' className={`nav-button ${activeTab === 'chats' ? 'active' : ''}`}  >
+                        <span className="nav-icon"><Icon icon="noto:speech-balloon" width="30" height="30" /></span>
+                        <span className="nav-label">Support message</span>
+                        <span className="nav-arrow">→</span>
+                    </Link>
                     <button className="nav-button logout" onClick={() => setLogoutModal(true)}>
                         <span className="nav-icon">
                             <Icon icon="noto:door" width="30" height="30" />

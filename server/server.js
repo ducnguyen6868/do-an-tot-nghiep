@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 const path = require("path");
 
 const app = express();
@@ -9,8 +10,10 @@ const profileRoutes = require('./routers/profileRoutes');
 const productRoutes = require('./routers/productRoutes');
 const categoryRoutes = require('./routers/categoryRoutes');
 const brandRoutes = require('./routers/brandRoutes');
+const recipientRoutes = require('./routers/recipientRoutes');
 
 const connectDB = require('./config/db');
+const { url } = require('inspector');
 connectDB();
 
 // Middleware
@@ -24,11 +27,14 @@ app.use('/', userRoutes);
 
 app.use("/profile", profileRoutes);
 
-app.use("/product",productRoutes);
+app.use("/product", productRoutes);
 
-app.use("/category",categoryRoutes);
+app.use("/category", categoryRoutes);
 
-app.use("/brand",brandRoutes);
+app.use("/brand", brandRoutes);
+
+app.use('/recipient', recipientRoutes);
+
 
 app.listen(5000, (req, res) => {
     console.log("Server listen port 5000");

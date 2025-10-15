@@ -62,4 +62,30 @@ const search = async (req, res) => {
   }
 };
 
-module.exports = {product,search};
+const detail = async (req,res)=>{
+  const {code} = req.query;
+
+  try{
+    if(!code){
+      return res.status(401).json({
+        message:"Code is required."
+      });
+    }else{
+      const product= await Product.findOne({code}).populate("detail brand category reviews");
+      if(product){
+        return res.status(200).json({
+          message:"Get product successful.",product
+        });
+      }else{
+        return res.status(404).json({
+          message:"Product not found."
+        })
+      }
+    }
+  }catch(err){
+    return res.status(500).json({
+      message:"Server error: "+err.messgae
+    });
+  }
+}
+module.exports = {product,search,detail};

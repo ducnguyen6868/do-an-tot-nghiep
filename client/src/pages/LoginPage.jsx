@@ -32,6 +32,7 @@ export default function LoginPage() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    setErrors({...errors ,[name]:''});
   };
 
   const handleLoginSubmit = async (e) => {

@@ -47,11 +47,6 @@ const orderHistory = [
     { id: '#ORD-003', date: '2025-09-15', total: 5999, status: 'delivered', items: 1, product: 'Diamond Lady Watch', image: 'https://via.placeholder.com/80x80/1a1a2e/ff6b9d?text=Watch' }
 ];
 
-// Mock addresses
-const addresses = [
-    { id: 1, type: 'Home', name: 'John Doe', phone: '+1 234 567 8900', address: '123 Main Street, Apt 4B', city: 'New York', zipCode: '10001', country: 'USA', isDefault: true },
-    { id: 2, type: 'Office', name: 'John Doe', phone: '+1 234 567 8900', address: '456 Business Ave, Suite 200', city: 'New York', zipCode: '10002', country: 'USA', isDefault: false }
-];
 
 // Mock support messages
 const supportMessages = [
@@ -87,7 +82,7 @@ export default function ProfilePage() {
                 <div className="container">
                     <div className="content-layout">
                         {/* Sidebar */}
-                        <SidebarProfile />
+                        <SidebarProfile activeTab='profile' />
 
                         {/* Content Area */}
                         <main className="content-area">
@@ -246,40 +241,6 @@ export default function ProfilePage() {
                                                             <button className="order-btn secondary">Buy Again</button>
                                                         )}
                                                     </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Addresses */}
-                            {activeTab === 'addresses' && (
-                                <div className="tab-content">
-                                    <div className="content-header">
-                                        <h2 className="content-title">Delivery Addresses</h2>
-                                        <button className="add-new-btn">+ Add New Address</button>
-                                    </div>
-                                    <div className="addresses-container">
-                                        {addresses.map(address => (
-                                            <div key={address.id} className="address-item">
-                                                <div className="address-header">
-                                                    <div className="address-type-badge">{address.type}</div>
-                                                    {address.isDefault && <div className="default-tag">Default</div>}
-                                                </div>
-                                                <div className="address-content">
-                                                    <div className="address-name">{address.name}</div>
-                                                    <div className="address-phone">{address.phone}</div>
-                                                    <div className="address-text">
-                                                        {address.address}, {address.city}, {address.zipCode}, {address.country}
-                                                    </div>
-                                                </div>
-                                                <div className="address-footer">
-                                                    <button className="address-btn">Edit</button>
-                                                    <button className="address-btn danger">Delete</button>
-                                                    {!address.isDefault && (
-                                                        <button className="address-btn">Set Default</button>
-                                                    )}
                                                 </div>
                                             </div>
                                         ))}

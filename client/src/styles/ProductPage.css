@@ -1,11 +1,12 @@
 /* =========================
-   PRODUCT DETAIL PAGE
+   PRODUCT PAGE
    ========================= */
 .product-detail-page {
   background: var(--bg-secondary);
   color: var(--text-primary);
   padding: 2rem;
   transition: background 0.3s ease, color 0.3s ease;
+  position: relative;
 }
 
 /* ========== PRODUCT SECTION ========== */
@@ -104,7 +105,7 @@
 .price-section-detail {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: .5rem;
   margin-bottom: 1rem;
 }
 
@@ -167,7 +168,7 @@
 
 /* Options (color, strap) */
 .option-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .option-group label {
@@ -180,14 +181,18 @@
 .color-options {
   display: flex;
   gap: 10px;
+  margin-bottom: 1rem;
 }
 
 .color-option {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -320,10 +325,11 @@
 /* Trust Badges */
 .trust-badges {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   flex-wrap: wrap;
   color: var(--text-secondary);
   font-size: 0.9rem;
+  justify-self: center;
 }
 
 .trust-item {
@@ -393,6 +399,7 @@
 
 .stars-large {
   font-size: 1.4rem;
+  margin-bottom: .5rem;
 }
 
 .rating-bar {
@@ -427,9 +434,9 @@
   gap: 10px;
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
+.reviewer-avatar {
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   background: var(--brand-color);
   color: #fff;
@@ -438,21 +445,33 @@
   justify-content: center;
   font-weight: 600;
 }
-
+.reviewer-name{
+  font-size: 2rem;
+  padding: 5px 0;
+}
 .verified-badge {
-  color: #10b981;
   margin-left: 6px;
   font-size: 0.85rem;
+  background-color: var(--brand-color);
+  padding: 5px 10px;
+  font-size: .7rem;
+  border-radius: 10px;
+  color: var(--text-primary);
 }
-
+.reviewer-date{
+  font-size: smaller;
+  color:var(--text-secondary);
+}
 .review-title {
   font-weight: 600;
-  margin-top: 0.5rem;
+  margin: 1rem 0;
+  font-size: 1.5rem;
 }
 
 .review-comment {
   color: var(--text-secondary);
-  margin: 0.25rem 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
 }
 
 .helpful-btn {
@@ -462,6 +481,7 @@
   padding: 0.4rem 0.8rem;
   cursor: pointer;
   transition: background 0.2s ease;
+  color: var(--text-muted);
 }
 
 .helpful-btn:hover {
@@ -477,7 +497,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 9999;
   animation: fadeIn 0.3s ease;
 }
 
@@ -536,34 +556,6 @@
 /* Purchase Form */
 .form-section {
   margin-bottom: 1.5rem;
-}
-
-.form-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-
-.form-group input {
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid var(--input-border);
-  background: var(--input-bg);
-  color: var(--text-primary);
 }
 
 .payment-methods {
