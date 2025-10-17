@@ -111,7 +111,6 @@ export default function PasswordChangeModal({ onClose }) {
       }
     }
   };
-  console.log(passwords.newPassword);
   return (
     <>
       <div className="forgot-password-overlay" >

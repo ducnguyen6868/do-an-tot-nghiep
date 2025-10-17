@@ -1,6 +1,6 @@
 /* Announcement Bar */
 .announcement-bar {
-  background: linear-gradient(90deg, #00ff6e, var(--brand-color),red , purple);
+  background: linear-gradient(90deg, #00ff6e, var(--brand-color), red, purple);
   color: var(--announcement-text);
   padding: 12px 20px;
   text-align: center;
@@ -89,9 +89,6 @@
 
 /* Main Header */
 .main-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
   background-color: var(--header-bg);
   box-shadow: 0 2px 10px var(--shadow-sm);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -456,6 +453,7 @@
   visibility: visible;
   transform: translateY(0);
 }
+
 /* Animations */
 @keyframes slideIn {
   from {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -7,10 +7,10 @@ import { toast } from 'react-toastify';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
+import { formatCurrency } from '../utils/formatCurrency';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -234,8 +234,10 @@ export default function HomePage() {
                       </div>
                       <div className="product-pricing">
                         <div className="price-info">
-                          <span className="current-price">${product.detail[0].price}</span>
-                          <span className="original-price">${product.detail[0].originalPrice}</span>
+                          <span className="current-price">{formatCurrency(product.detail[0].price, 'en-US', 'USD')}</span>
+                          <span className="original-price">
+                            {formatCurrency(product.detail[0].originalPrice, 'en-US', 'USD')}
+                          </span>
                         </div>
                         <button className="add-to-cart-btn flash">
                           🛒 Buy Now
@@ -254,38 +256,38 @@ export default function HomePage() {
 
                 ))}
               </div>
-                {/* Pagination */}
-                {totalPagesFlash > 0 && (
-                  <div className="pagination">
-                    <button
-                      className="pagination-btn"
-                      onClick={() => handlePageChangeFlash(currentPageFlash - 1)}
-                      disabled={currentPageFlash === 1}
-                    >
-                      ← Previous
-                    </button>
+              {/* Pagination */}
+              {totalPagesFlash > 0 && (
+                <div className="pagination">
+                  <button
+                    className="pagination-btn"
+                    onClick={() => handlePageChangeFlash(currentPageFlash - 1)}
+                    disabled={currentPageFlash === 1}
+                  >
+                    ← Previous
+                  </button>
 
-                    <div className="page-numbers">
-                      {[...Array(totalPagesFlash)].map((_, index) => (
-                        <button
-                          key={index + 1}
-                          className={`page-number ${currentPageFlash === index + 1 ? 'active' : ''}`}
-                          onClick={() => handlePageChangeFlash(index + 1)}
-                        >
-                          {index + 1}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      className="pagination-btn"
-                      onClick={() => handlePageChangeFlash(currentPageFlash + 1)}
-                      disabled={currentPageFlash === totalPagesFlash}
-                    >
-                      Next →
-                    </button>
+                  <div className="page-numbers">
+                    {[...Array(totalPagesFlash)].map((_, index) => (
+                      <button
+                        key={index + 1}
+                        className={`page-number ${currentPageFlash === index + 1 ? 'active' : ''}`}
+                        onClick={() => handlePageChangeFlash(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
                   </div>
-                )}
+
+                  <button
+                    className="pagination-btn"
+                    onClick={() => handlePageChangeFlash(currentPageFlash + 1)}
+                    disabled={currentPageFlash === totalPagesFlash}
+                  >
+                    Next →
+                  </button>
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -364,7 +366,7 @@ export default function HomePage() {
                     </div>
                     <div className="product-footer">
                       <div className="price">
-                        ${product.detail?.[0]?.price || 'N/A'}
+                        {formatCurrency(product.detail?.[0]?.price,'en-US','USD') || 'N/A'}
                       </div>
                       <button className="add-to-cart-btn">
                         🛒 Add to Cart

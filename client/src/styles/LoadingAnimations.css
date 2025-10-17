@@ -11,6 +11,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-direction: column;
 }
 
 .loader-container.full-width {
@@ -19,7 +20,7 @@
 
 .loader-text {
     font-size: 12px;
-    color: #64748b;
+    color:var(--text-primary);
     font-weight: 500;
 }
 
@@ -84,7 +85,7 @@
 
 .bar-item {
     width: 8px;
-    background: linear-gradient(180deg, #667eea, #764ba2);
+    background: linear-gradient(180deg, #08b633, var(--brand-color));
     border-radius: 4px;
     animation: grow 1.2s infinite ease-in-out;
 }

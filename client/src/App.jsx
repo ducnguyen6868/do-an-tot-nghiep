@@ -12,6 +12,8 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ProfilePage from './pages/ProfilePage';
 import AddressPage from './pages/AddressPage';
+import CheckoutPage from './pages/CheckoutPage';
+import PaymentResultPage from './pages/PaymentResultPage';
 import UserAuth from './hooks/userAuth';
 
 function App() {
@@ -25,8 +27,8 @@ function App() {
           <Route path="register" element={<RegisterPage />}></Route>
           <Route path="product" element={<ProductPage />}></Route>
           <Route path="search" element={<SearchResultsPage />}></Route>
-
-
+          <Route path="product/checkout" element={<CheckoutPage/>}></Route>
+          <Route path="payment-result" element={<PaymentResultPage/>}></Route>
           {/* Profile */}
           <Route path="/profile" element=
             {

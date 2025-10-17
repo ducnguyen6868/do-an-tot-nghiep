@@ -11,9 +11,9 @@ const productRoutes = require('./routers/productRoutes');
 const categoryRoutes = require('./routers/categoryRoutes');
 const brandRoutes = require('./routers/brandRoutes');
 const recipientRoutes = require('./routers/recipientRoutes');
+const orderRoutes = require('./routers/orderRoutes');
 
 const connectDB = require('./config/db');
-const { url } = require('inspector');
 connectDB();
 
 // Middleware
@@ -35,6 +35,7 @@ app.use("/brand", brandRoutes);
 
 app.use('/recipient', recipientRoutes);
 
+app.use('/order',orderRoutes);
 
 app.listen(5000, (req, res) => {
     console.log("Server listen port 5000");

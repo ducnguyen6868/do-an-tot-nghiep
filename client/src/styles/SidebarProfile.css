@@ -189,6 +189,7 @@
   border: none;
   cursor: pointer;
   transition: transform 0.1s ease, background 0.2s ease;
+  flex:1;
 }
 
 .logout-cancel-btn {
@@ -202,10 +203,11 @@
 
 .logout-confirm-btn {
   background: var(--brand-color);
-  color: #fff;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 6px;
+  justify-content: center;
 }
 
 .logout-confirm-btn:hover {

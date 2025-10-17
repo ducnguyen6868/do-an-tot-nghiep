@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation ,useNavigate } from 'react-router-dom';
 import '../styles/ProductPage.css';
 import { toast } from "react-toastify";
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import productApi from '../api/productApi';
-import Recipient from '../components/comon/Recipient';
-import {formatCurrency} from '../utils/formatCurrency';
+import { formatCurrency } from '../utils/formatCurrency';
 
 export default function ProductPage() {
+  const navigate = useNavigate();
+
   const location = useLocation();
   const queyParams = new URLSearchParams(location.search);
   const code = queyParams.get("code");
@@ -16,15 +17,12 @@ export default function ProductPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedDetailIndex, setSelectedDetailIndex] = useState(0);
-  const [selectedStrap, setSelectedStrap] = useState('leather');
-  const [showPurchaseForm, setShowPurchaseForm] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [loading, setLoading] = useState(true);
 
   const [product, setProduct] = useState();
 
-  const [modal, setModal] = useState(false);
-
+  
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -38,11 +36,11 @@ export default function ProductPage() {
       }
     };
     getProduct();
-  }, []);
+  }, [code]);
 
   const handleQuantityChange = (action) => {
     const selectedDetail = product.detail?.[selectedDetailIndex];
-    const maxQuantity = selectedDetail?.quantity || product.stock;
+    const maxQuantity = selectedDetail?.quantity;
 
     if (action === 'increase' && quantity < maxQuantity) {
       setQuantity(quantity + 1);
@@ -82,8 +80,22 @@ export default function ProductPage() {
   }
 
   const selectedDetail = product.detail?.[selectedDetailIndex] || {};
-  const price = selectedDetail.price || 0;
 
+  const productData=[
+    {
+      id:product._id,
+      name:product.name,
+      code:product.code,
+      image:product.images[0],
+      price:selectedDetail.price,
+      color:selectedDetail.color,
+      quantity:quantity,
+      detailId:selectedDetail._id
+    }
+  ]
+  const handleOrder = ()=>{
+    navigate('../product/checkout',{state:{productData}});
+  }
   return (
     <>
       <Header />
@@ -123,12 +135,12 @@ export default function ProductPage() {
               </div>
 
               <div className="price-section-detail">
-                <span className="current-price-detail">{formatCurrency(selectedDetail.price)}</span>
+                <span className="current-price-detail">{formatCurrency(selectedDetail.price,'en-US','USD')}</span>
                 {selectedDetail.originalPrice > selectedDetail.price && (
                   <>
-                    <span className="original-price">{formatCurrency(selectedDetail.originalPrice)}</span>
+                    <span className="original-price">{formatCurrency(selectedDetail.originalPrice,'en-US','USD')}</span>
                     <span className="discount-badge-detail">
-                      Save {formatCurrency(selectedDetail.originalPrice - selectedDetail.price)}
+                      Save {formatCurrency(selectedDetail.originalPrice - selectedDetail.price,'en-US','USD')}
                     </span>
                   </>
                 )}
@@ -202,31 +214,6 @@ export default function ProductPage() {
                 </div>
               )}
 
-              {/* Strap Selection */}
-              <div className="option-group">
-                <label>Strap Type:</label>
-                <div className="strap-options">
-                  <div
-                    className={`strap-option ${selectedStrap === 'leather' ? 'selected' : ''}`}
-                    onClick={() => setSelectedStrap('leather')}
-                  >
-                    Leather
-                  </div>
-                  <div
-                    className={`strap-option ${selectedStrap === 'steel' ? 'selected' : ''}`}
-                    onClick={() => setSelectedStrap('steel')}
-                  >
-                    Steel Bracelet
-                  </div>
-                  <div
-                    className={`strap-option ${selectedStrap === 'nato' ? 'selected' : ''}`}
-                    onClick={() => setSelectedStrap('nato')}
-                  >
-                    NATO
-                  </div>
-                </div>
-              </div>
-
               {/* Quantity */}
               <div className="quantity-section">
                 <label>Quantity:</label>
@@ -243,7 +230,7 @@ export default function ProductPage() {
               {/* Action Buttons */}
               <div className="action-buttons">
                 <button className="btn-add-cart">🛒 Add to Cart</button>
-                <button className="btn-buy-now" onClick={() => setShowPurchaseForm(true)}>
+                <button  className="btn-buy-now" onClick={()=>handleOrder()}>
                   ⚡ Buy Now
                 </button>
                 <button className="btn-wishlist">❤️</button>
@@ -376,49 +363,6 @@ export default function ProductPage() {
             </div>
           </div>
         </div>
-
-        {/* Purchase Form Modal */}
-        {showPurchaseForm && (
-          <>
-            <div className="modal-overlay" onClick={() => setShowPurchaseForm(false)}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <h2 className="modal-title">Complete Your Purchase</h2>
-
-                <div className="order-summary">
-                  <h3>Order Summary</h3>
-                  <div className="summary-item">
-                    <span>{product.name} × {quantity}</span>
-                    <span>{formatCurrency(price * quantity)}</span>
-                  </div>
-                  <div className="summary-item">
-                    <span>Color: {selectedDetail.color}</span>
-                  </div>
-                  <div className="summary-item">
-                    <span>Shipping</span>
-                    <span className="free">Free</span>
-                  </div>
-                  <div className="summary-total">
-                    <span>Total</span>
-                    <span>{formatCurrency(price * quantity)}</span>
-                  </div>
-                </div>
-
-                <button onClick={() => setModal(true)}>+ Add address</button>
-
-              </div>
-            </div>
-          </>
-
-        )}
-        {modal && (
-          <div className="modal-overlay" onClick={() => setModal(false)}>
-            <div onClick={e => e.stopPropagation()}>
-
-              <Recipient />
-            </div>
-          </div>
-
-        )}
       </div>
 
       <Footer />

@@ -89,7 +89,6 @@
 /* ==== Address Content ==== */
 .address-content {
   color: var(--text-secondary);
-  margin-bottom: 1rem;
   line-height: 1.4;
 }
 

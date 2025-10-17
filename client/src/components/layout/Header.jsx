@@ -14,7 +14,7 @@ export default function Header() {
 
   const [category, setCategory] = useState([]);
 
-  const [keyword, setKeyword] = useState(null);
+  const [keyword, setKeyword] = useState('');
 
   const [isLogged, setIsLogged] = useState(false);
   

@@ -5,6 +5,7 @@ import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { formatCurrency } from '../utils/formatCurrency';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
@@ -387,9 +388,9 @@ export default function SearchResultsPage() {
 
                       <div className="product-footer1">
                         <div className="price-section">
-                          <span className="current-price price">${product.detail[0]?.price?.toLocaleString?.()}</span>
-                          {product.originalPrice && (
-                            <span className="original-price">${product.detail[0]?.originalPrice?.toLocaleString?.()}</span>
+                          <span className="current-price price">{formatCurrency(product.detail[0]?.price, 'en-US', 'USD')}</span>
+                          {product.detail[0]?.originalPrice && (
+                            <span className="original-price">{formatCurrency(product.detail[0]?.originalPrice, 'en-US', 'USD')}</span>
                           )}
                         </div>
                         <button className="add-cart-btn">🛒 Add to Cart</button>

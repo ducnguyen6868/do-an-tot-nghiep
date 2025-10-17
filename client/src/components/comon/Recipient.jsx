@@ -25,7 +25,7 @@ export default function Recipient({ onClose, onChange, recipientData }) {
         id:recipientData._id
       })
     }
-  }, []);
+  }, [recipientData]);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {

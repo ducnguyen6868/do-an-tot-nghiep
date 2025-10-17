@@ -30,6 +30,10 @@
   --input-focus: var(--brand-color);
   --avatar-ring: var(--brand-color);
   --bg-shimmer:linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+   /* Additional Payment Page Variables */
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
 }
 [data-theme="dark"] {
   /* Dark Mode Colors */

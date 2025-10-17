@@ -206,25 +206,6 @@
   transform: scale(1.1);
 }
 
-/* Strap Options */
-.strap-options {
-  display: flex;
-  gap: 10px;
-}
-
-.strap-option {
-  background: var(--bg-tertiary);
-  border-radius: 8px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.strap-option.selected {
-  background: var(--brand-color);
-  color: #fff;
-}
-
 /* Quantity Section */
 .quantity-section {
   display: flex;
@@ -301,6 +282,8 @@
 .btn-buy-now {
   background: #10b981;
   color: #fff;
+  text-align: center;
+  text-decoration: none;
 }
 
 .btn-buy-now:hover {
@@ -536,6 +519,7 @@
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .summary-item,
