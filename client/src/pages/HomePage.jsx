@@ -1,26 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
+import { Icon } from '@iconify/react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { toast } from 'react-toastify';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
+import Brand from '../components/comon/Brand';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
 import { formatCurrency } from '../utils/formatCurrency';
+import ListProduct from '../components/comon/ListProduct';
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [currentPageFlash, setCurrentPageFlash] = useState(1);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [selectedFilters, setSelectedFilters] = useState({
     brand: 'all',
     audience: 'all',
     priceRange: 'all'
   });
+
 
   // Flash sale products - only active ones
   const flashSaleProducts = products.filter(p => {
@@ -55,12 +59,12 @@ export default function HomePage() {
       filtered = filtered.filter(p => {
         const price = p.detail?.[0]?.price || 0;
         switch (selectedFilters.priceRange) {
-          case 'under200':
-            return price < 200;
-          case '200to500':
-            return price >= 200 && price < 500;
-          case 'above500':
-            return price >= 500;
+          case 'under100':
+            return price < 100;
+          case '100to200':
+            return price >= 100 && price < 200;
+          case 'above200':
+            return price >= 200;
           default:
             return true;
         }
@@ -69,15 +73,6 @@ export default function HomePage() {
 
     return filtered;
   };
-
-  const filteredProducts = getFilteredProducts();
-
-  // Pagination
-  const itemsPerPage = 3;
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
-
 
   const itemsPerPageFlash = 4;
   const totalPagesFlash = Math.ceil(flashSaleProducts.length / itemsPerPageFlash);
@@ -107,13 +102,15 @@ export default function HomePage() {
         setProducts(updated);
       } catch (err) {
         toast.error(err?.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     getProducts();
   }, []);
 
-  //Get Brand 
+  // Get Brand 
   useEffect(() => {
     const getBrands = async () => {
       try {
@@ -121,18 +118,10 @@ export default function HomePage() {
         setBrands(response.brand);
       } catch (err) {
         toast.error(err.response?.data?.message || err.response);
-      } finally {
-        setLoading(false);
       }
     }
     getBrands();
   }, []);
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedFilters]);
-
   // Countdown timer for flash sale
   useEffect(() => {
     const timer = setInterval(() => {
@@ -156,10 +145,11 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, [flashSaleProducts]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  useEffect(() => {
+
+    setFilteredProducts(getFilteredProducts());
+  }, [selectedFilters, products]);
+
   const handlePageChangeFlash = (page) => {
     setCurrentPageFlash(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -182,27 +172,21 @@ export default function HomePage() {
             <div className="flash-sale-container">
               <div className="flash-sale-header">
                 <div className="flash-sale-title">
-                  <span className="lightning-icon">⚡</span>
-                  <h2>FLASH SALE</h2>
-                  <span className="fire-icon">🔥</span>
+                  <Icon icon="noto:high-voltage" width="45" height="45" />
+                  <span>FLASH SALE
+                  </span>
                 </div>
                 <div className="countdown-timer">
-                  <span className="timer-label">Ends in:</span>
-                  <div className="timer-boxes">
-                    <div className="timer-box">
-                      <div className="timer-value">{String(timeLeft.hours).padStart(2, '0')}</div>
-                      <div className="timer-label">Hours</div>
-                    </div>
-                    <span className="timer-separator">:</span>
-                    <div className="timer-box">
-                      <div className="timer-value">{String(timeLeft.minutes).padStart(2, '0')}</div>
-                      <div className="timer-label">Mins</div>
-                    </div>
-                    <span className="timer-separator">:</span>
-                    <div className="timer-box">
-                      <div className="timer-value">{String(timeLeft.seconds).padStart(2, '0')}</div>
-                      <div className="timer-label">Secs</div>
-                    </div>
+                  <div className="timer-box">
+                    <div className="timer-value">{String(timeLeft.hours).padStart(2, '0')}</div>
+                  </div>
+                  <span className="timer-separator">:</span>
+                  <div className="timer-box">
+                    <div className="timer-value">{String(timeLeft.minutes).padStart(2, '0')}</div>
+                  </div>
+                  <span className="timer-separator">:</span>
+                  <div className="timer-box">
+                    <div className="timer-value">{String(timeLeft.seconds).padStart(2, '0')}</div>
                   </div>
                 </div>
               </div>
@@ -220,10 +204,10 @@ export default function HomePage() {
                 {!loading && flashProducts.map((product) => (
                   <div key={product._id} className="flash-sale-card">
                     <div className="sale-badge">
-                      -{Math.round((1 - product.detail[0].price / product.detail[0].originalPrice) * 100)}%
+                      - {Math.round((1 - product.detail[0].price / product.detail[0].originalPrice) * 100)}%
                     </div>
                     <div className="product-image">
-                      <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
+                      <img src={`http://localhost:5000` + product.images[0]} loading="lazy" alt={product.name} />
                     </div>
                     <div className="product-info">
                       <div className="product-brand">{product.brand.name}</div>
@@ -239,9 +223,9 @@ export default function HomePage() {
                             {formatCurrency(product.detail[0].originalPrice, 'en-US', 'USD')}
                           </span>
                         </div>
-                        <button className="add-to-cart-btn flash">
+                        <Link to={`/product?code=${product.code}`} className="add-to-cart-btn flash">
                           🛒 Buy Now
-                        </button>
+                        </Link>
                       </div>
                       <div className="progress-bar">
                         <div
@@ -291,14 +275,14 @@ export default function HomePage() {
             </div>
           </section>
         )}
-
+        {<Brand />}
         {/* Product List Section */}
         <section className="product-list-section">
           <div className="container">
             <div className="section-header">
-              <h2 className="section-title">All Watches</h2>
+              <h2 className="section-watch">All Watches</h2>
               <div className="filter-controls">
-                <select
+                <select name='brand'
                   className="filter-select"
                   value={selectedFilters.brand}
                   onChange={(e) => handleFilterChange('brand', e.target.value)}
@@ -309,6 +293,7 @@ export default function HomePage() {
                   )}
                 </select>
                 <select
+                  name='audience'
                   className="filter-select"
                   value={selectedFilters.audience}
                   onChange={(e) => handleFilterChange('audience', e.target.value)}
@@ -319,96 +304,23 @@ export default function HomePage() {
                   <option value="Unisex">Unisex</option>
                 </select>
                 <select
+                  name='price'
                   className="filter-select"
                   value={selectedFilters.priceRange}
                   onChange={(e) => handleFilterChange('priceRange', e.target.value)}
                 >
                   <option value="all">All Prices</option>
-                  <option value="under200">Under $200</option>
-                  <option value="200to500">$200 - $500</option>
-                  <option value="above500">Above $500</option>
+                  <option value="under100">Under $100</option>
+                  <option value="100to200">$100 - $200</option>
+                  <option value="above200">Above $200</option>
                 </select>
               </div>
             </div>
 
             {loading && <LoadingAnimations option="skeleton" />}
-            <div className="product-grid">
-              {!loading && currentProducts.map(product => (
-                <div key={product._id} className="product-card" >
-                  <div className="product-image">
-                    <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
-                    <div className="product-overlay">
-                      <Link to={`/product?code=${product.code}`} className="quick-view-btn">👁️ Quick View</Link>
-                      <button className="wishlist-btn">❤️</button>
-                    </div>
-                  </div>
-                  <div className="product-details">
-                    <div className="product-brand">{product.brand?.name || 'N/A'}</div>
-                    <h3 className="product-name">{product.name}</h3>
-                    <p className="product-description">{product.description}</p>
-                    <div className="product-rating">
-                      <span className="stars">⭐⭐⭐⭐⭐ {product.ratings}</span>
-                      <span className="reviews">({product.reviewCount} reviews)</span>
-                    </div>
-                    <div className="product-specs-list">
-                      <div className="spec-item">
-                        <span className="spec-icon">⚙️</span>
-                        <span>{product.movement_type || 'N/A'}</span>
-                      </div>
-                      <div className="spec-item">
-                        <span className="spec-icon">💧</span>
-                        <span>{product.water_resistance || 'N/A'}</span>
-                      </div>
-                      <div className="spec-item">
-                        <span className="spec-icon">💎</span>
-                        <span>{product.glass_material || 'N/A'}</span>
-                      </div>
-                    </div>
-                    <div className="product-footer">
-                      <div className="price">
-                        {formatCurrency(product.detail?.[0]?.price,'en-US','USD') || 'N/A'}
-                      </div>
-                      <button className="add-to-cart-btn">
-                        🛒 Add to Cart
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 0 && (
-              <div className="pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  ← Previous
-                </button>
-
-                <div className="page-numbers">
-                  {[...Array(totalPages)].map((_, index) => (
-                    <button
-                      key={index + 1}
-                      className={`page-number ${currentPage === index + 1 ? 'active' : ''}`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  className="pagination-btn"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Next →
-                </button>
-              </div>
-            )}
+            {!loading &&
+              (<ListProduct products={filteredProducts} />)
+            }
           </div>
         </section>
       </div>

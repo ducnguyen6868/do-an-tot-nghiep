@@ -7,18 +7,21 @@ import momoImg from '../assets/momo.png';
 import zaloImg from '../assets/zalopay.png';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import {useContext} from 'react';
-import {UserContext} from '../contexts/UserContext';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import recipientApi from '../api/recipientApi';
 import orderApi from '../api/orderApi';
 import { formatCurrency } from '../utils/formatCurrency';
 import { isValidPhoneNumber } from "../utils/isValidPhoneNumber";
+import Recipient from '../components/comon/Recipient';
 
 export default function CheckoutPage() {
 
-    const {infoUser} = useContext(UserContext);
+    const { infoUser, setInfoUser } = useContext(UserContext);
 
     const location = useLocation();
+    const queyParams = new URLSearchParams(location.search);
+    const fromCart = queyParams.get('cart') || null;
     const productData = location.state?.productData;
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -40,35 +43,35 @@ export default function CheckoutPage() {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (!token) {
             setLogged(false);
-        }else{
+        } else {
             setLogged(true);
-            setFormData((prev)=>({
+            setFormData((prev) => ({
                 ...prev,
-                email:infoUser.email
+                email: infoUser.email
             }));
         }
-       
+
     }, [infoUser.email]);
+    const getRecipients = async () => {
+        try {
+            const response = await recipientApi.recipient();
+            setAddresses(response.recipients);
+            response.recipients.forEach((r) => {
+                if (r.isDefault) {
+                    setRecipient({
+                        name: r.name,
+                        phone: r.phone,
+                        address: r.address,
+                        type: r.type,
+                        id: r._id
+                    });
+                }
+            });
+        } catch (err) {
+            toast.error(err.response?.data?.message || err.message);
+        }
+    };
     useEffect(() => {
-        const getRecipients = async () => {
-            try {
-                const response = await recipientApi.recipient();
-                setAddresses(response.recipients);
-                response.recipients.forEach((r) => {
-                    if (r.isDefault) {
-                        setRecipient({
-                            name: r.name,
-                            phone: r.phone,
-                            address: r.address,
-                            type: r.type,
-                            id: r._id
-                        });
-                    }
-                });
-            } catch (err) {
-                toast.error(err.response?.data?.message || err.message);
-            }
-        };
         if (logged) {
             getRecipients();
         }
@@ -152,16 +155,17 @@ export default function CheckoutPage() {
         const orderData = {
             formData,
             productData,
-            total_amount:total,
-            discount_amount:0,
-            final_amount:total
+            total_amount: total,
+            discount_amount: 0,
+            final_amount: total
 
         };
         try {
             setLoading(true);
             const final_amount = total;
             const response = await orderApi.payment(final_amount);
-            await orderApi.createOrder(orderData,response.orderId);
+            const res = await orderApi.createOrder(orderData, response.orderId, fromCart);
+            setInfoUser(prev => ({ ...prev, cart: response.cart }));
             window.location.href = response.payUrl;
         } catch (err) {
             toast.error(err.res?.data?.message || err.message);
@@ -170,7 +174,6 @@ export default function CheckoutPage() {
             setLoading(false);
         }
     };
-
     return (
         <>
             <Header />
@@ -182,7 +185,7 @@ export default function CheckoutPage() {
                         {productData?.map((product, index) => (
                             <div key={index} className="product-order-card">
                                 <div className="product-order-img">
-                                    <img src={product.image} alt={product.name} title={product.name} />
+                                    <img src={`http://localhost:5000` + product.image} alt={product.name} title={product.name} />
                                 </div>
                                 <div className="product-order-details">
                                     <div className="product-name">{product.name}</div>
@@ -238,19 +241,30 @@ export default function CheckoutPage() {
                                 <div className="section-title">Shipping Address</div>
                                 {logged ? (
                                     <div className="addresses-container">
-                                        <div className="address-item">
-                                            <div className="address-content">
-                                                <div className="address-name">
-                                                    {recipient.name}
-                                                    <span className="address-type-badge">{recipient.type}</span>
-                                                </div>
-                                                <div className="address-phone">{recipient.phone}</div>
-                                                <div className="address-text">{recipient.address}</div>
-                                            </div>
-                                            <button className="change-recipient" onClick={() => setAddressList(true)}>
-                                                change
-                                            </button>
-                                        </div>
+                                        {
+                                            addresses.length === 0 ? (
+                                                <>
+                                                    <Recipient onChange={() => getRecipients()} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="address-item">
+                                                        <div className="address-content">
+                                                            <div className="address-name">
+                                                                {recipient.name}
+                                                                <span className="address-type-badge">{recipient.type}</span>
+                                                            </div>
+                                                            <div className="address-phone">{recipient.phone}</div>
+                                                            <div className="address-text">{recipient.address}</div>
+                                                        </div>
+                                                        <button className="change-recipient" onClick={() => setAddressList(true)}>
+                                                            change
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )
+                                        }
+
                                     </div>
                                 ) : (
                                     <div className="recipient-form">

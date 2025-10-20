@@ -6,7 +6,9 @@ export const UserProvider = ({ children }) => {
     const [infoUser, setInfoUser] = useState({
         name: '',
         email: '',
-        avatar: ''
+        avatar: '',
+        wishlist:0,
+        cart:0
     });
     const getInfoUser = async () => {
         const token = localStorage.getItem('token') || sessionStorage.getItem("token");
@@ -14,7 +16,9 @@ export const UserProvider = ({ children }) => {
             setInfoUser({
                 name: '',
                 email: '',
-                avatar: ''
+                avatar: '',
+                wishlist:0,
+                cart:0
             });
             return;
         }
@@ -25,13 +29,17 @@ export const UserProvider = ({ children }) => {
             setInfoUser({
                 name: response.data.user.name,
                 email: response.data.user.email,
-                avatar: response.data.user.avatar
+                avatar: response.data.user.avatar,
+                wishlist:response.data.user.wishlist?.length||0,
+                cart:response.data.user.carts?.length||0
             })
         } catch (err) {
             setInfoUser({
                 name: '',
                 email: '',
-                avatar: ''
+                avatar: '',
+                wishlist:0,
+                cart:0
             });
         }
 
@@ -41,7 +49,7 @@ export const UserProvider = ({ children }) => {
     }, []);
     return (
         <>
-            <UserContext.Provider value={{ infoUser, getInfoUser }}>
+            <UserContext.Provider value={{ infoUser,setInfoUser, getInfoUser }}>
                 {children}
             </UserContext.Provider>
         </>

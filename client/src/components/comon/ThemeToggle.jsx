@@ -23,10 +23,10 @@ function ThemeToggle() {
                 onClick={toggleTheme}
             >
                 <span className="theme-btn-inner light-icon">
-                    <Icon icon="noto:sun" width="15" height="15" />
+                    <Icon icon="noto:sun" width="12" height="12" />
                 </span>
                 <span className="theme-btn-inner dark-icon">
-                    <Icon icon="noto:last-quarter-moon-face" width="15" height="15" />
+                    <Icon icon="noto:last-quarter-moon-face" width="12" height="12" />
                 </span>
             </button>
         </>

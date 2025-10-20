@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import '../../styles/Header.css';
-import { Link , useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import websiteLogo from '../../assets/website-logo.png';
+import avatar from '../../assets/avatar-default.png';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { toast } from 'react-toastify';
@@ -10,19 +12,15 @@ import categoryApi from '../../api/categoryApi';
 
 export default function Header() {
   //Get info User
-  const { infoUser, getInfoUser } = useContext(UserContext);
+  const { infoUser } = useContext(UserContext);
 
   const [category, setCategory] = useState([]);
 
   const [keyword, setKeyword] = useState('');
 
   const [isLogged, setIsLogged] = useState(false);
-  
-  const navigate= useNavigate();
-  //Check login
-  useEffect(() => {
-    getInfoUser();
-  }, []);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (infoUser && infoUser.name !== '') {
@@ -98,7 +96,9 @@ export default function Header() {
           <div className="header-container">
             {/* <!-- Logo --> */}
             <Link to="/" className="logo" style={{ margin: '0' }}>
-              <div className="logo-icon">⌚</div>
+              <div className="logo-icon">
+                <img src={websiteLogo} alt='Website Logo' title='Website Logo'/>
+              </div>
               <div className="logo-text">
                 <div className="logo-title">TIMEPIECE</div>
                 <div className="logo-subtitle">Luxury Watches</div>
@@ -125,9 +125,9 @@ export default function Header() {
             {/* <!-- Header Actions --> */}
             {isLogged ? (<div className="header-actions">
               <div className="header-action">
-                <Link to="/profile">
+                <Link to="/profile" >
                   <div className="action-icon avatar-wave"  >
-                    <img src={`http://localhost:5000/` + infoUser.avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
+                    <img  src={infoUser.avatar? `http://localhost:5000/` + infoUser.avatar:avatar } className="avatar-icon" alt="avatar" title="avatar" style={{
                       width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"
                     }} />
                   </div>
@@ -140,30 +140,30 @@ export default function Header() {
                   <div className="action-icon">
                     <Icon icon="noto:red-heart" width="40" height="40" />
                   </div>
-                  <div className="action-badge">3</div>
+                  <div className="action-badge">{infoUser.wishlist}</div>
                 </Link>
                 <div className="action-label">Wishlist</div>
               </div>
               <div className="header-action">
-                <Link to="#">
+                <Link to="/cart">
                   <div className="action-icon">
                     <Icon icon="noto:shopping-cart" width="40" height="40" />
                   </div>
-                  <div className="action-badge">2</div>
+                  <div className="action-badge">{infoUser.cart}</div>
                 </Link>
                 <div className="action-label">Cart</div>
               </div>
             </div>
             ) : (
               <div className="header-actions">
-                <Link to='login'>
-                  <div className="header-action">
+                <div className="header-action">
+                  <Link to='/login' >
                     <div className="action-icon">
                       <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
                     </div>
+                  </Link>
                     <div className="action-label">Account</div>
-                  </div>
-                </Link>
+                </div>
                 <div className="header-action">
                   <div className="action-icon">
                     <Icon icon="noto:red-heart" width="32" height="32" />

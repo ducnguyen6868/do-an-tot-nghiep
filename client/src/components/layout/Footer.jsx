@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../../styles/Footer.css';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import websiteLogo from '../../assets/website-logo.png';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -50,39 +51,41 @@ export default function Footer() {
 
       {/* Main Footer Content */}
       <div className="footer-main">
-        <div className="footer-container">
-          <div className="footer-grid">
-            {/* Company Info */}
-            <div className="footer-company">
-              <div className="footer-logo">
-                <div className="logo-icon">⌚</div>
-                <div>
-                  <div className="logo-title">TIMEPIECE</div>
-                  <div className="logo-subtitle">LUXURY WATCHES</div>
-                </div>
+        <div className="footer-grid">
+          {/* Company Info */}
+          <div className="footer-company">
+            <div className="footer-logo">
+              <div className="logo-icon">
+                <img src={websiteLogo} alt='Website Logo' title='Website Logo' />
               </div>
-              <p className="company-desc">
-                Your premier destination for luxury watches. We bring together the finest timepieces from around the world, offering exceptional quality and timeless elegance.
-              </p>
-              <div className="social-icons">
-                <Link to="#" className="social-icon">
-                  <Icon icon="skill-icons:gmail-light" width="256" height="256" />
-                </Link>
-                <Link to="#" className="social-icon">
-                  <Icon icon="logos:youtube-icon" width="256" height="180" />
-                </Link>
-                <Link to="#" className="social-icon">
-                  <Icon icon="logos:messenger" width="256" height="256" />
-                </Link>
-                <Link to="#" className="social-icon">
-                  <Icon icon="logos:tiktok-icon" width="256" height="290" />
-                </Link>
-                <Link to="#" className="social-icon">
-                  <Icon icon="fa7-brands:square-x-twitter" width="448" height="512" />
-                </Link>
+              <div>
+                <div className="logo-title">TIMEPIECE</div>
+                <div className="logo-subtitle">LUXURY WATCHES</div>
               </div>
             </div>
+            <p className="company-desc">
+              Your premier destination for luxury watches. We bring together the finest timepieces from around the world, offering exceptional quality and timeless elegance.
+            </p>
+            <div className="social-icons">
+              <Link to="#" className="social-icon">
+                <Icon icon="skill-icons:gmail-light" width="256" height="256" />
+              </Link>
+              <Link to="#" className="social-icon">
+                <Icon icon="logos:youtube-icon" width="256" height="180" />
+              </Link>
+              <Link to="#" className="social-icon">
+                <Icon icon="logos:messenger" width="256" height="256" />
+              </Link>
+              <Link to="#" className="social-icon">
+                <Icon icon="logos:tiktok-icon" width="256" height="290" />
+              </Link>
+              <Link to="#" className="social-icon">
+                <Icon icon="fa7-brands:square-x-twitter" width="448" height="512" />
+              </Link>
+            </div>
+          </div>
 
+          <div className='footer-columns'>
             {/* Quick Links */}
             <div className="footer-column">
               <h4 className="footer-heading">Quick Links</h4>
@@ -142,14 +145,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Back to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="back-to-top"
-        aria-label="Back to top"
-      >
-        <Icon icon="marketeq:top-circle" width="50" height="50" />
-      </button>
     </footer>
   )
 }

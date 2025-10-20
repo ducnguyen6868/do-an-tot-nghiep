@@ -101,33 +101,28 @@
   animation: fadeIn 0.3s ease;
 }
 
-.modal-content.logout-modal-content {
-  background: var(--bg-primary);
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 6px 20px var(--shadow-lg);
-  width: 90%;
-  max-width: 420px;
-  padding: 2rem;
-  color: var(--text-primary);
-  animation: slideUp 0.3s ease;
-}
-
 .logout-modal {
   text-align: center;
+  position: relative;
 }
 
-/* Logout Icon */
-.logout-icon-circle {
-  background: var(--brand-light);
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  margin: 0 auto 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: bounceIn 0.5s ease;
+.logout-icon {
+  position: absolute;
+  animation: fly 1s ease;
+}
+
+@keyframes fly {
+  0% {
+    left: 30px;
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  100% {
+    left: 200px;
+    bottom: 200px;
+    opacity: 0;
+  }
 }
 
 .logout-title {
@@ -135,6 +130,19 @@
   font-weight: 700;
   color: var(--brand-color);
   margin-bottom: 0.5rem;
+  animation: down 1s ease;
+}
+
+@keyframes down {
+  0% {
+    margin-top: 0;
+    opacity: 1;
+  }
+
+  100% {
+    margin-top: 20px;
+    opacity: 0;
+  }
 }
 
 .logout-message {
@@ -148,15 +156,16 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  background: var(--bg-tertiary);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .logout-stat-item {
   flex: 1;
   text-align: center;
+  background: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 12px;
+
 }
 
 .stat-icon {
@@ -189,7 +198,7 @@
   border: none;
   cursor: pointer;
   transition: transform 0.1s ease, background 0.2s ease;
-  flex:1;
+  flex: 1;
 }
 
 .logout-cancel-btn {
@@ -224,18 +233,6 @@
   transform: translateX(4px);
 }
 
-/* =========================
-   LOGGING OUT MODAL
-   ========================= */
-.loggingout-modal-content {
-  text-align: center;
-}
-
-.loggingout-icon {
-  background: linear-gradient(135deg, var(--brand-color), #06b6d4);
-  animation: pulse 1.2s infinite alternate;
-}
-
 .loggingout-title {
   color: var(--brand-color);
   margin-top: 1rem;
@@ -247,46 +244,80 @@
    ANIMATIONS
    ========================= */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes bounceIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  80% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  80% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes pulse {
-  from { transform: scale(1); opacity: 1; }
-  to { transform: scale(1.1); opacity: 0.9; }
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
 }
 
 /* =========================
    RESPONSIVE
    ========================= */
-@media (max-width:1024px){
-  .sidebar-profile{
+@media (max-width:1024px) {
+  .sidebar-profile {
     width: 100%;
     height: max-content;
   }
-  .nav-button.logout{
-    margin:0;
+
+  .nav-button.logout {
+    margin: 0;
   }
-  .nav-menu-profile{
+
+  .nav-menu-profile {
     flex-direction: row;
     gap: 2rem;
     height: max-content;
   }
-  .nav-label,.nav-arrow{
+
+  .nav-label,
+  .nav-arrow {
     display: none;
   }
 }
+
 @media (max-width: 768px) {
   .logout-stats {
     flex-direction: column;

@@ -194,220 +194,32 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.5rem;
+  position: relative;
+  margin-bottom: 5rem;
 }
 
 .results-list {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  position: relative;
+  margin-bottom: 5rem;
 }
 
-.product-card-search {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.results-list .product-card-search {
+.results-list>.product-card {
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   padding: 1rem;
+  gap: 1rem;
 }
 
-.product-card-search:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px var(--shadow-md);
-}
-
-.product-image {
-  position: relative;
-  width: 100%;
-  background: var(--bg-tertiary);
-  overflow: hidden;
-}
-
-.results-list .product-image {
-  flex: 0 0 200px;
+.results-list>.product-card>.product-image {
+  flex: 0 0 215px;
   border-radius: 8px;
   position: relative;
+  height: 215px;
 }
 
-.product-image:hover .product-overlay{
-  opacity: 1;
-}
-.product-image img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
-
-.product-card-search:hover img {
-  transform: scale(1.05);
-}
-
-/* Discount Badge */
-.discount-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: var(--badge-bg);
-  color: var(--badge-text);
-  font-weight: 600;
-  font-size: 0.8rem;
-  border-radius: 6px;
-  padding: 4px 8px;
-}
-
-/* Quick Actions */
-.quick-actions {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  display: flex;
-  gap: 6px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.product-card-search:hover .quick-actions {
-  opacity: 1;
-}
-
-.action-btn {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.action-btn:hover {
-  background: var(--brand-light);
-  color: #fff;
-}
-
-/* Product Info */
-.product-info {
-  padding: 1rem;
-  flex: 1;
-}
-
-.product-brand-detail {
-  font-weight: 600;
-  color: var(--brand-color);
-}
-
-.product-name-detail {
-  font-size: 1.1rem;
-  margin: 0.3rem 0;
-  color: var(--text-primary);
-}
-
-.product-description-search {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.product-rating-search {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  justify-content: space-between;
-}
-
-.product-specs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 0.5rem;
-}
-
-.spec-badge {
-  background: var(--bg-tertiary);
-  border-radius: 8px;
-  padding: 3px 8px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-/* Footer */
-.product-footer1 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.75rem;
-}
-
-.original-price {
-  text-decoration: line-through;
-  color: var(--text-muted);
-  margin-left: 6px;
-}
-
-.add-cart-btn {
-  background: var(--brand-color);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.add-cart-btn:hover {
-  background: var(--brand-hover);
-  transform: translateY(-2px);
-}
-
-/* Stock Warning */
-.stock-warning {
-  color: #e11d48;
-  font-size: 0.85rem;
-  margin-top: 0.4rem;
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 900px) {
-  .results-layout {
-    flex-direction: column;
-  }
-
-  .filters-sidebar {
-    position: relative;
-    top: 0;
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-bar-wrapper {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .results-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .add-cart-btn {
-    padding: 0.5rem 0.8rem;
-  }
+.results-list>.product-card>.product-details {
+  padding: 0;
 }

@@ -95,7 +95,6 @@
 }
 
 .header-main {
-  padding: 20px 0;
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -125,9 +124,9 @@
   transform: scale(1.05);
 }
 
-.logo-icon {
-  font-size: 48px;
-  filter: drop-shadow(0 2px 4px var(--shadow-md));
+.logo-icon>img {
+  width: auto;
+  height:88px;
 }
 
 .logo-text {
@@ -247,11 +246,6 @@
 
 .header-action:hover {
   transform: translateY(-3px);
-}
-
-.header-action a {
-  text-decoration: none;
-  color: inherit;
 }
 
 .action-icon {
@@ -528,10 +522,8 @@
     display: flex;
   }
 
-  .search-container {
-    order: 4;
-    flex-basis: 100%;
-    margin-top: 15px;
+  .header-top, .search-container {
+    display:none;
   }
 
   .header-actions {
@@ -552,7 +544,7 @@
     font-size: 12px;
   }
 
-  .nav-menu {
+  .nav-container {
     display: none;
   }
 

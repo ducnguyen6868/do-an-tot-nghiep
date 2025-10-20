@@ -18,7 +18,7 @@
 
 .profile-card {
     position: relative;
-    background: white;
+    background: var(--bg-secondary);
     border-radius: 24px;
     padding: 40px;
     display: flex;
@@ -89,13 +89,13 @@
 .user-name {
     font-size: 36px;
     font-weight: 700;
-    color: #1e293b;
+    color:var(--text-primary);
     margin-bottom: 8px;
 }
 
 .user-email {
     font-size: 16px;
-    color: #64748b;
+    color:var(--text-secondary);
     margin-bottom: 16px;
 }
 
@@ -193,4 +193,136 @@
 .checkin-button.checked {
     background: #94a3b8;
     cursor: not-allowed;
+}
+
+/* ==============================
+   🎉 Check-in Modal Styling
+   ============================== */
+
+.checkin-modal {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: 16px;
+  padding: 24px 32px;
+  box-shadow: 0 10px 30px var(--shadow-lg);
+  text-align: center;
+  animation: popIn 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Title */
+.checkin-success-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--success-color);
+  margin-bottom: 12px;
+}
+
+/* Points Earned */
+.checkin-points-earned {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--brand-color);
+  margin-bottom: 16px;
+  text-shadow: 0 0 6px rgba(0, 188, 212, 0.3);
+}
+
+/* Calendar Container */
+.checkin-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Individual Day Card */
+.checkin-day {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px var(--shadow-sm);
+}
+
+.checkin-day.completed {
+  background: var(--success-color);
+  color: var(--text-primary);
+  border-color: var(--success-color);
+}
+
+.checkin-day.today {
+  border-color: var(--brand-color);
+  background: rgba(0, 188, 212, 0.08);
+  color: var(--brand-color);
+  transform: scale(1.05);
+}
+
+/* Inside the day box */
+.day-number {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color:var(--text-primary);
+}
+
+.day-icon {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.day-points {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Streak Info */
+.checkin-streak-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.streak-text {
+  color: var(--text-secondary);
+}
+
+.streak-next {
+  color: var(--brand-light);
+  font-weight: 500;
+}
+
+/* Button */
+.modal-btn {
+  background: var(--brand-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.modal-btn:hover {
+  background: var(--brand-hover);
+  transform: translateY(-2px);
+}
+
+/* Animation */
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

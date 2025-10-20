@@ -4,7 +4,7 @@
 .product-detail-page {
   background: var(--bg-secondary);
   color: var(--text-primary);
-  padding: 2rem;
+  padding: 1rem 2rem;
   transition: background 0.3s ease, color 0.3s ease;
   position: relative;
 }
@@ -323,7 +323,7 @@
 
 /* ========== TABS SECTION ========== */
 .tabs-section {
-  margin-top: 3rem;
+  margin-top: 1.5rem;
   background: var(--bg-primary);
   border-radius: 12px;
   border: 1px solid var(--border-color);

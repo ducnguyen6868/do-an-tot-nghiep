@@ -1,4 +1,4 @@
-import { useState , useContext } from 'react';
+import { useState, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { Icon } from '@iconify/react';
 import '../../styles/HeaderProfile.css';
@@ -18,7 +18,7 @@ const userData = {
 
 
 export default function HeaderProfile() {
-    const {infoUser} = useContext(UserContext);
+    const { infoUser } = useContext(UserContext);
 
     const [hasCheckedInToday, setHasCheckedInToday] = useState(false);
     const [showCheckInModal, setShowCheckInModal] = useState(false);
@@ -26,7 +26,7 @@ export default function HeaderProfile() {
     const checkInRewards = [200, 200, 200, 200, 200, 200, 500];
     const nextDayReward = checkInRewards[userData.checkInStreak] || 200;
 
-    
+
     const handleCheckIn = () => {
         if (!hasCheckedInToday) {
             setShowCheckInModal(true);
@@ -92,29 +92,26 @@ export default function HeaderProfile() {
             {/* Check-in Modal */}
             {showCheckInModal && (
                 <div className="modal-overlay" onClick={() => setShowCheckInModal(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={() => setShowCheckInModal(false)}>✕</button>
-                        <div className="checkin-modal">
-                            <h3 className="checkin-success-title">
-                                <span style={{ marginRight: "8px" }}>Check-in Successful!</span>
-                                <Icon icon="noto:party-popper" width="50" height="50" />
-                            </h3>
-                            <div className="checkin-points-earned">+{nextDayReward} Points</div>
-                            <div className="checkin-calendar">
-                                {checkInRewards.map((points, index) => (
-                                    <div key={index} className={`checkin-day ${index < userData.checkInStreak ? 'completed' : index === userData.checkInStreak ? 'today' : ''}`}>
-                                        <div className="day-number">Day {index + 1}</div>
-                                        <div className="day-icon">{index < userData.checkInStreak ? '✓' : index === userData.checkInStreak ? '⭐' : '○'}</div>
-                                        <div className="day-points">{points} pts</div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="checkin-streak-info">
-                                <span className="streak-text">Current Streak: {userData.checkInStreak} days</span>
-                                <span className="streak-next">Next: {checkInRewards[userData.checkInStreak + 1] || 'Complete!'} pts</span>
-                            </div>
-                            <button className="modal-btn" onClick={() => setShowCheckInModal(false)}>Got it!</button>
+                    <div className="checkin-modal" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="checkin-success-title">
+                            <span style={{ marginRight: "8px" }}>Check-in Successful!</span>
+                            <Icon icon="noto:party-popper" width="50" height="50" />
+                        </h3>
+                        <div className="checkin-points-earned">+{nextDayReward} Points</div>
+                        <div className="checkin-calendar">
+                            {checkInRewards.map((points, index) => (
+                                <div key={index} className={`checkin-day ${index < userData.checkInStreak ? 'completed' : index === userData.checkInStreak ? 'today' : ''}`}>
+                                    <div className="day-number">Day {index + 1}</div>
+                                    <div className="day-icon">{index < userData.checkInStreak ? '✓' : index === userData.checkInStreak ? '⭐' : '○'}</div>
+                                    <div className="day-points">{points} pts</div>
+                                </div>
+                            ))}
                         </div>
+                        <div className="checkin-streak-info">
+                            <span className="streak-text">Current Streak: {userData.checkInStreak} days</span>
+                            <span className="streak-next">Next: {checkInRewards[userData.checkInStreak + 1] || 'Complete!'} pts</span>
+                        </div>
+                        <button className="modal-btn" onClick={() => setShowCheckInModal(false)}>Got it!</button>
                     </div>
                 </div>
             )}

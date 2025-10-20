@@ -112,12 +112,9 @@ export default function AddressPage() {
                             <div className="modal-overlay" onClick={() => setDel(false)}>
                                 <div className="modal-content logout-modal-content " onClick={(e) => e.stopPropagation()}>
                                     <div className="logout-modal">
-                                        <div className="logout-icon">
-                                            <div className="logout-icon-circle">
-                                                <Icon icon="noto:waving-hand" width="50" height="50" />
-                                            </div>
-                                        </div>
-                                        <h3 className="logout-title">Confirm delete</h3>
+                                            <Icon icon="noto:waving-hand" width="50" height="50" />
+                                        
+                                        <h3 className="logout-title" style={{animation:'none'}}>Confirm delete</h3>
                                         <p className="logout-message">Are you sure you want to delete this recipient ?</p>
 
                                         <div className="logout-actions">
@@ -135,7 +132,7 @@ export default function AddressPage() {
                         )}
                         {edit && (
                             <div className="modal-overlay" onClick={() => setEdit(false)}>
-                                <div  onClick={(e) => e.stopPropagation()}>
+                                <div onClick={(e) => e.stopPropagation()}>
                                     <Recipient onClose={() => setEdit(false)} onChange={() => recipients()} recipientData={recipientData} />
                                 </div>
                             </div>

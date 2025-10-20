@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import '../styles/SearchResultsPage.css';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { formatCurrency } from '../utils/formatCurrency';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
+import ListProduct from '../components/comon/ListProduct';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
 
 export default function SearchResultsPage() {
@@ -17,19 +16,12 @@ export default function SearchResultsPage() {
   const keyword = queryParams.get("keyword");
 
   const [results, setResults] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [brands, setBrands] = useState([]);
 
   const [filteredResults, setFilteredResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('relevance');
   const [viewMode, setViewMode] = useState('grid'); // grid or list
-
-  // Pagination
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProducts = filteredResults.slice(startIndex, startIndex + itemsPerPage);
 
   // Filters
   const [filters, setFilters] = useState({
@@ -140,12 +132,6 @@ export default function SearchResultsPage() {
     getBrands();
   }, []);
 
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filters]);
-
-
   const handleFilterChange = (filterName, value) => {
     setFilters({
       ...filters,
@@ -166,10 +152,6 @@ export default function SearchResultsPage() {
 
   const renderStars = (rating) => {
     return '⭐'.repeat(Math.floor(rating));
-  };
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -355,89 +337,9 @@ export default function SearchResultsPage() {
             )}
 
             {/* Results Grid/List */}
-            {!loading && currentProducts.length > 0 && (
-              <div className={`results-${viewMode}`}>
-                {currentProducts.map(product => (
-                  <div key={product._id} className="product-card-search">
-                    <div className="product-image">
-                      <img src="http://localhost:5000/uploads/image-replace.jpg" loading="lazy" alt={product.name} />
-                      <div className="discount-badge ">
-                        -{Math.round((1 - product.detail[0]?.price / product.detail[0]?.originalPrice) * 100)}%
-                      </div>
-                      <div className="product-overlay">
-                        <Link to={`/product?code=${product.code}`} className="quick-view-btn">👁️ Quick View</Link>
-                        <button className="wishlist-btn">❤️</button>
-                      </div>
-                    </div>
-
-                    <div className="product-info">
-                      <div className="product-brand-detail">{product.brand.name}</div>
-                      <h3 className="product-name-detail">{product.name}</h3>
-                      <p className="product-description-search">{product.description}</p>
-
-                      <div className="product-rating-search">
-                        <span className="stars">{renderStars(product.ratings)}{product.ratings}</span>
-                        <span className="reviews">({product.reviewCount} Reviews)</span>
-                      </div>
-
-                      <div className="product-specs">
-                        <span className="spec-badge">{product.movement_type}</span>
-                        <span className="spec-badge">{product.water_resistance}</span>
-                        <span className="spec-badge">{product.target_audience}</span>
-                      </div>
-
-                      <div className="product-footer1">
-                        <div className="price-section">
-                          <span className="current-price price">{formatCurrency(product.detail[0]?.price, 'en-US', 'USD')}</span>
-                          {product.detail[0]?.originalPrice && (
-                            <span className="original-price">{formatCurrency(product.detail[0]?.originalPrice, 'en-US', 'USD')}</span>
-                          )}
-                        </div>
-                        <button className="add-cart-btn">🛒 Add to Cart</button>
-                      </div>
-
-                      {product.stock < 10 && (
-                        <div className="stock-warning">Only {product.stock} left in stock!</div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
+            {!loading && filteredResults.length > 0 && (
+              <ListProduct products={filteredResults} />
             )}
-            {/* Pagination */}
-            {totalPages > 0 && (
-              <div className="pagination">
-                <button
-                  className="pagination-btn"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  ← Previous
-                </button>
-
-                <div className="page-numbers">
-                  {[...Array(totalPages)].map((_, index) => (
-                    <button
-                      key={index + 1}
-                      className={`page-number ${currentPage === index + 1 ? 'active' : ''}`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  className="pagination-btn"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  Next →
-                </button>
-              </div>
-            )}
-
           </main>
         </div>
       </div>

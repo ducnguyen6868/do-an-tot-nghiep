@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 require('./Promotion');
 require('./Order');
 require('./Recipient');
+require('./Cart');
 const userSchema = new Schema({
   name: { type: String },
   email: { type: String, required: true, unique: true },
@@ -16,12 +17,13 @@ const userSchema = new Schema({
   resetPasswordOTPExpiry: { type: Date },
   promotions: [{
     promotion: { type: Schema.Types.ObjectId, ref: 'Promotion' },
-    status: { type: String , enum:['not used', 'used'] , default:'not used'}
+    status: { type: String, enum: ['not used', 'used'], default: 'not used' }
   }],
-  orders:[{
-    type:Schema.Types.ObjectId , ref:"Order"
+  orders: [{
+    type: Schema.Types.ObjectId, ref: "Order"
   }],
-  recipients:[{type:Schema.Types.ObjectId , ref:"Recipient"}]
+  carts: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
+  recipients: [{ type: Schema.Types.ObjectId, ref: "Recipient" }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

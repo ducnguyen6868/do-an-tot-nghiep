@@ -1,4 +1,5 @@
 const { 
+    viewOrder,
     createOrder,
     payment,
     callBack,
@@ -6,7 +7,7 @@ const {
 const express = require('express');
 
 const router = express.Router();
-
+router.post('/',viewOrder);
 router.post('/create', createOrder);
 router.post('/payment', payment);
 router.post('/callback', callBack);

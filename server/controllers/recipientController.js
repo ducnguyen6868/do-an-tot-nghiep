@@ -30,18 +30,27 @@ const addRecipient = async (req, res) => {
       });
     }
 
-    const newRecipient = await Recipient.create({
-      name: data.name,
-      phone: data.phone,
-      address: data.address,
-      type: data.type
-    });
-
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-
+    let newRecipient;
+    if (user.recipients.length === 0) {
+      newRecipient = await Recipient.create({
+        name: data.name,
+        phone: data.phone,
+        address: data.address,
+        type: data.type,
+        isDefault: true
+      });
+    } else {
+      newRecipient = await Recipient.create({
+        name: data.name,
+        phone: data.phone,
+        address: data.address,
+        type: data.type
+      });
+    }
     user.recipients.push(newRecipient._id);
     await user.save();
 
@@ -86,7 +95,7 @@ const deleteRecipient = async (req, res) => {
 
 const setDefaultRecipient = async (req, res) => {
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id;
     const { recipientId } = req.params;
 
     const user = await User.findById(userId);
@@ -116,36 +125,36 @@ const setDefaultRecipient = async (req, res) => {
   }
 };
 
-const editRecipient = async (req,res)=>{
-  const {recipient}= req.body;
-  if(!recipient){
+const editRecipient = async (req, res) => {
+  const { recipient } = req.body;
+  if (!recipient) {
     return res.status(400).json({
-      message:"Recipient is required."
+      message: "Recipient is required."
     });
   }
-  try{
+  try {
     const isRecipient = await Recipient.findById(recipient.id);
-    if(!isRecipient){
+    if (!isRecipient) {
       return res.status(404).json({
-        message:"Recipient not found."
+        message: "Recipient not found."
       });
     }
-    const changeRecipient = await Recipient.findByIdAndUpdate(recipient.id,{
-      $set:{
-        name:recipient.name,
-        phone:recipient.phone,
-        address:recipient.address
+    const changeRecipient = await Recipient.findByIdAndUpdate(recipient.id, {
+      $set: {
+        name: recipient.name,
+        phone: recipient.phone,
+        address: recipient.address
       }
     })
     changeRecipient.save();
     return res.status(200).json({
-      message:"Change recipient successful."
+      message: "Change recipient successful."
     })
-  }catch(err){
+  } catch (err) {
     return res.status(500).json({
-      message:"Server error: "+err.message
+      message: "Server error: " + err.message
     });
   }
 
 }
-module.exports = { recipient, addRecipient, deleteRecipient , setDefaultRecipient , editRecipient };
+module.exports = { recipient, addRecipient, deleteRecipient, setDefaultRecipient, editRecipient };

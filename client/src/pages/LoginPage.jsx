@@ -112,6 +112,11 @@ export default function LoginPage() {
                 id="password"
                 value={loginData.password}
                 onChange={handleLoginChange}
+                onKeyDown={(e)=>{
+                  if(e.key==='Enter'){
+                    handleLoginSubmit(e);
+                  }
+                }}
                 placeholder="••••••••"
                 autoComplete='current-password'
                 className={errors.password ? "error" : ""}

@@ -4,7 +4,8 @@ const saltRounds = parseInt(process.env.SALT_ROUNDS);
 const bcrypt= require('bcrypt');
 
 const profile= async (req,res)=>{
-    const user= req.user;
+    const id= req.user.id;
+    const user= await User.findById(id);
     return res.status(200).json({message:"You are logged",user});
 }
 

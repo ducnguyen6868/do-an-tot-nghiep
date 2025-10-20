@@ -8,12 +8,12 @@ export default function SidebarProfile({ activeTab }) {
     const { getInfoUser } = useContext(UserContext);
     const [logoutModal, setLogoutModal] = useState(false);
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [logout, setLogout] = useState(false);
     const navigate = useNavigate();
 
     //Confirm logout
     const confirmLogout = async () => {
-        setIsLoading(true);
+        setLogout(true);
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
         await getInfoUser();
@@ -66,12 +66,10 @@ export default function SidebarProfile({ activeTab }) {
             {/* Logout Confirmation Modal */}
             {logoutModal && (
                 <div className="modal-overlay" onClick={() => setLogoutModal(false)}>
-                    <div className="modal-content logout-modal-content " onClick={(e) => e.stopPropagation()}>
+                    <div className="modal-content " onClick={(e) => e.stopPropagation()}>
                         <div className="logout-modal">
-                            <div className="logout-icon">
-                                <div className="logout-icon-circle">
-                                    <Icon icon="noto:waving-hand" width="50" height="50" />
-                                </div>
+                            <div className="goobye-icon">
+                                <Icon icon="noto:waving-hand" width="50" height="50" />
                             </div>
                             <h3 className="logout-title">Logout Confirmation</h3>
                             <p className="logout-message">Are you sure you want to logout? You will need to login again to access your account.</p>
@@ -109,18 +107,13 @@ export default function SidebarProfile({ activeTab }) {
                 </div>
             )}
             {/* {Loadding effect} */}
-            {isLoading && (
+            {logout && (
                 <div className="modal-overlay" >
-                    <div className="modal-content logout-modal-content loggingout-modal-content" >
-                        <div className="logout-modal">
-                            <div className="logout-icon">
-                                <div className="logout-icon-circle loggingout-icon">
-                                    <Icon icon="noto:rocket" width="80" height="80" />
-                                </div>
-                            </div>
-                            <h3 className="logout-title loggingout-title">Logging out...</h3>
-
+                    <div className="logout-modal">
+                        <div className="logout-icon">
+                            <Icon icon="noto:rocket" width="80" height="80" />
                         </div>
+                        <h3 className="logout-title">Logging out...</h3>
                     </div>
                 </div>
             )

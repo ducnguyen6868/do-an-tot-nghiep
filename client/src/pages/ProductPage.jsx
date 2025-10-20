@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
-import { useLocation ,useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/ProductPage.css';
 import { toast } from "react-toastify";
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import productApi from '../api/productApi';
+import userApi from '../api/userApi';
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import { formatCurrency } from '../utils/formatCurrency';
 
 export default function ProductPage() {
+
+  const {setInfoUser} = useContext(UserContext);
   const navigate = useNavigate();
+  
 
   const location = useLocation();
   const queyParams = new URLSearchParams(location.search);
@@ -22,7 +28,7 @@ export default function ProductPage() {
 
   const [product, setProduct] = useState();
 
-  
+
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -81,21 +87,42 @@ export default function ProductPage() {
 
   const selectedDetail = product.detail?.[selectedDetailIndex] || {};
 
-  const productData=[
+  const productData = [
     {
-      id:product._id,
-      name:product.name,
-      code:product.code,
-      image:product.images[0],
-      price:selectedDetail.price,
-      color:selectedDetail.color,
-      quantity:quantity,
-      detailId:selectedDetail._id
+      id: product._id,
+      name: product.name,
+      code: product.code,
+      image: product.images[0],
+      price: selectedDetail.price,
+      color: selectedDetail.color,
+      quantity: quantity,
+      detailId: selectedDetail._id
     }
   ]
-  const handleOrder = ()=>{
-    navigate('../product/checkout',{state:{productData}});
+  const handleOrder = () => {
+    navigate('../product/checkout', { state: { productData } });
   }
+ const handleCart =async(product)=>{
+    try{
+      const id= product._id;
+      const code= product.code;
+      const name = product.name;
+      const image = product.images[selectedDetailIndex];
+      const description = product.description;
+      const quantity=1;
+      const color=selectedDetail.color;
+      const price = selectedDetail.price;
+      const detailId= selectedDetail._id;
+      const data={
+        id,code ,name, image, description, quantity,color,price,detailId
+      }
+      const response = await userApi.addCart(data);
+      toast.success(response.message);
+      setInfoUser(prev=>({...prev , cart:response.cart}));
+    }catch(err){
+      toast.error(err.response?.data?.message||err.message)
+    }
+  };
   return (
     <>
       <Header />
@@ -106,7 +133,7 @@ export default function ProductPage() {
             <div className="image-gallery">
               <div className="main-image">
                 <img
-                  src={"" || 'http://localhost:5000/uploads/image-replace.jpg'}
+                  src={`http://localhost:5000` + product.images[selectedImage]}
                   alt={product.name}
                 />
               </div>
@@ -117,7 +144,7 @@ export default function ProductPage() {
                     className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
                     onClick={() => setSelectedImage(index)}
                   >
-                    <img src={img} alt={`View ${index + 1}`} />
+                    <img src={`http://localhost:5000` + img} alt={`View ${index + 1}`} />
                   </div>
                 ))}
               </div>
@@ -135,12 +162,12 @@ export default function ProductPage() {
               </div>
 
               <div className="price-section-detail">
-                <span className="current-price-detail">{formatCurrency(selectedDetail.price,'en-US','USD')}</span>
+                <span className="current-price-detail">{formatCurrency(selectedDetail.price, 'en-US', 'USD')}</span>
                 {selectedDetail.originalPrice > selectedDetail.price && (
                   <>
-                    <span className="original-price">{formatCurrency(selectedDetail.originalPrice,'en-US','USD')}</span>
+                    <span className="original-price">{formatCurrency(selectedDetail.originalPrice, 'en-US', 'USD')}</span>
                     <span className="discount-badge-detail">
-                      Save {formatCurrency(selectedDetail.originalPrice - selectedDetail.price,'en-US','USD')}
+                      Save {formatCurrency(selectedDetail.originalPrice - selectedDetail.price, 'en-US', 'USD')}
                     </span>
                   </>
                 )}
@@ -157,8 +184,20 @@ export default function ProductPage() {
                     <span className="spec-value">{product.brand?.name || 'N/A'}</span>
                   </div>
                   <div className="spec-item1">
+                    <span className="spec-label">Audience:</span>
+                    <span className="spec-value">{product.target_audience || 'N/A'}</span>
+                  </div>
+                  <div className="spec-item1">
                     <span className="spec-label">Movement:</span>
                     <span className="spec-value">{product.movement_type || 'N/A'}</span>
+                  </div>
+                  <div className="spec-item1">
+                    <span className="spec-label">Dial type:</span>
+                    <span className="spec-value">{product.dial_type || 'N/A'}</span>
+                  </div>
+                  <div className="spec-item1">
+                    <span className="spec-label">Thickness:</span>
+                    <span className="spec-value">{product.thickness || 'N/A'}</span>
                   </div>
                   <div className="spec-item1">
                     <span className="spec-label">Water Resistance:</span>
@@ -229,8 +268,8 @@ export default function ProductPage() {
 
               {/* Action Buttons */}
               <div className="action-buttons">
-                <button className="btn-add-cart">🛒 Add to Cart</button>
-                <button  className="btn-buy-now" onClick={()=>handleOrder()}>
+                <button className="btn-add-cart" onClick={() => handleCart(product)}>🛒 Add to Cart</button>
+                <button className="btn-buy-now" onClick={() => handleOrder()}>
                   ⚡ Buy Now
                 </button>
                 <button className="btn-wishlist">❤️</button>

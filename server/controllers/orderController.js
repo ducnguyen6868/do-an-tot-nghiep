@@ -3,12 +3,31 @@ var accessKey = "F8BBA842ECF85";
 var secretkey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
 const Order = require('../models/Order');
 const User = require('../models/User');
+const Cart = require('../models/Cart');
 const Detail = require('../models/Detail');
 const axios = require('axios');
 
+const viewOrder = async (req, res) => {
+    const { orderId } = req.body;
+    if (!orderId) {
+        return res.status(400).json({
+            message: "OrderId is required."
+        });
+    }
+    const order = await Order.findOne({ code: orderId });
+    if (!order) {
+        return res.status(404).json({
+            message: "Order not found."
+        });
+    } else {
+        return res.status(200).json({
+            message: "Get order successful.", order
+        })
+    }
+}
 const createOrder = async (req, res) => {
     try {
-        const { orderData,orderId } = req.body;
+        const { orderData, orderId, fromCart } = req.body;
         const formData = orderData.formData;
         const productData = orderData.productData;
         const { total_amount, discount_amount, final_amount } = orderData;
@@ -21,7 +40,14 @@ const createOrder = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
+        if (fromCart) {
+            const cartIds = user.carts.map(cart => cart._id);
 
+            await Cart.deleteMany({ _id: { $in: cartIds } });
+
+            user.carts = [];
+            await user.save();
+        }
         // create new order
         const newOrder = new Order({
             code: orderId,
@@ -34,10 +60,9 @@ const createOrder = async (req, res) => {
             list_products: productData.map(p => ({
                 product: p.id,
                 quantity: p.quantity,
-                color:p.color
+                color: p.color
             })),
         });
-
         await newOrder.save();
 
         // Update detail
@@ -58,14 +83,14 @@ const createOrder = async (req, res) => {
 
         res.status(201).json({
             message: 'Create order successful!',
-            order: newOrder,
+            cart:user.carts.length
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 }
 const payment = async (req, res) => {
-    const { final_amount} = req.body;
+    const { final_amount } = req.body;
 
     var partnerCode = "MOMO";
     var requestId = partnerCode + new Date().getTime();
@@ -149,20 +174,19 @@ const transitionStatus = async (req, res) => {
     }
     try {
         const result = await axios(options);
-        if(result.data.resultCode===0){
-            await Order.findOneAndReplace({code:orderId},{
-                $set:{
-                    status:'paid'
+        if (result.data.resultCode === 0) {
+            await Order.findOneAndUpdate({ code: orderId }, {
+                $set: {
+                    status: 'paid'
                 }
             });
         }
         return res.status(200).json(result.data);
     } catch (err) {
-        console.log(err.message);
         return res.status(500).json({
             message: "Server error:" + err.message
         })
     }
 };
 
-module.exports = { createOrder,payment, callBack, transitionStatus };
+module.exports = { viewOrder, createOrder, payment, callBack, transitionStatus };
