@@ -1,3 +1,11 @@
+/* Product Grid */
+.product-grid {
+  gap: 1.5rem;
+  position: relative;
+  margin-bottom: 1rem;
+  display:flex;
+  justify-content: center;
+}
 /* ---------- PRODUCT CARD BASE ---------- */
 .product-card {
   background: var(--bg-primary);
@@ -13,6 +21,9 @@
   animation: jetLanding 1s ease-out forwards;
   will-change: transform, opacity;
   position: relative;
+  max-width: 400px;
+  min-width: 280px;
+  flex:1;
 }
 
 /* Hiệu ứng khi hover: “ready to take off” */

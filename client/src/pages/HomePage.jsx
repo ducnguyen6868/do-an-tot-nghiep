@@ -33,47 +33,6 @@ export default function HomePage() {
     return endTime > new Date();
   });
 
-  // Regular products with filters applied
-  const getFilteredProducts = () => {
-    let filtered = products.filter(p => {
-      // Exclude active flash sale products
-      if (p.flashSale) {
-        const endTime = new Date(p.flashSaleEnd);
-        if (endTime > new Date()) return false;
-      }
-      return true;
-    });
-
-    // Apply brand filter
-    if (selectedFilters.brand !== 'all') {
-      filtered = filtered.filter(p => p.brand?.name === selectedFilters.brand);
-    }
-
-    // Apply audience filter
-    if (selectedFilters.audience !== 'all') {
-      filtered = filtered.filter(p => p.target_audience === selectedFilters.audience);
-    }
-
-    // Apply price range filter
-    if (selectedFilters.priceRange !== 'all') {
-      filtered = filtered.filter(p => {
-        const price = p.detail?.[0]?.price || 0;
-        switch (selectedFilters.priceRange) {
-          case 'under100':
-            return price < 100;
-          case '100to200':
-            return price >= 100 && price < 200;
-          case 'above200':
-            return price >= 200;
-          default:
-            return true;
-        }
-      });
-    }
-
-    return filtered;
-  };
-
   const itemsPerPageFlash = 4;
   const totalPagesFlash = Math.ceil(flashSaleProducts.length / itemsPerPageFlash);
   const startIndexFlash = (currentPageFlash - 1) * itemsPerPageFlash;
@@ -146,8 +105,42 @@ export default function HomePage() {
   }, [flashSaleProducts]);
 
   useEffect(() => {
+     let filtered = products.filter(p => {
+      // Exclude active flash sale products
+      if (p.flashSale) {
+        const endTime = new Date(p.flashSaleEnd);
+        if (endTime > new Date()) return false;
+      }
+      return true;
+    });
 
-    setFilteredProducts(getFilteredProducts());
+    // Apply brand filter
+    if (selectedFilters.brand !== 'all') {
+      filtered = filtered.filter(p => p.brand?.name === selectedFilters.brand);
+    }
+
+    // Apply audience filter
+    if (selectedFilters.audience !== 'all') {
+      filtered = filtered.filter(p => p.target_audience === selectedFilters.audience);
+    }
+
+    // Apply price range filter
+    if (selectedFilters.priceRange !== 'all') {
+      filtered = filtered.filter(p => {
+        const price = p.detail?.[0]?.price || 0;
+        switch (selectedFilters.priceRange) {
+          case 'under100':
+            return price < 100;
+          case '100to200':
+            return price >= 100 && price < 200;
+          case 'above200':
+            return price >= 200;
+          default:
+            return true;
+        }
+      });
+    }
+    setFilteredProducts(filtered);
   }, [selectedFilters, products]);
 
   const handlePageChangeFlash = (page) => {

@@ -1,22 +1,22 @@
 const Product = require('../models/Product');
 
 const product = async (req, res) => {
-    try {
-        const products = await Product.find({}).populate("detail brand category");
-        if (!products) {
-            res.status(400).json({
-                message: "No product found."
-            });
-        } else {
-            res.status(200).json({
-                message: "Get product successful.",products
-            });
-        }
-    } catch (err) {
-        res.status(500).json({
-            message: "Server error:" + err.message
-        })
+  try {
+    const products = await Product.find({}).populate("detail brand category");
+    if (!products) {
+      res.status(400).json({
+        message: "No product found."
+      });
+    } else {
+      res.status(200).json({
+        message: "Get product successful.", products
+      });
     }
+  } catch (err) {
+    res.status(500).json({
+      message: "Server error:" + err.message
+    })
+  }
 }
 
 const search = async (req, res) => {
@@ -34,7 +34,7 @@ const search = async (req, res) => {
         { code: regex },
         { name: regex },
         { description: regex },
-        {target_audience:regex},
+        { target_audience: regex },
         { features: regex },
         { movement_type: regex },
         { strap_material: regex },
@@ -62,30 +62,51 @@ const search = async (req, res) => {
   }
 };
 
-const detail = async (req,res)=>{
-  const {code} = req.query;
+const detail = async (req, res) => {
+  const { code } = req.query;
 
-  try{
-    if(!code){
+  try {
+    if (!code) {
       return res.status(401).json({
-        message:"Code is required."
+        message: "Code is required."
       });
-    }else{
-      const product= await Product.findOne({code}).populate("detail brand category reviews");
-      if(product){
+    } else {
+      const product = await Product.findOne({ code }).populate("detail brand category reviews");
+      if (product) {
         return res.status(200).json({
-          message:"Get product successful.",product
+          message: "Get product successful.", product
         });
-      }else{
+      } else {
         return res.status(404).json({
-          message:"Product not found."
+          message: "Product not found."
         })
       }
     }
-  }catch(err){
+  } catch (err) {
     return res.status(500).json({
-      message:"Server error: "+err.messgae
+      message: "Server error: " + err.messgae
     });
   }
 }
-module.exports = {product,search,detail};
+
+const wishlist = async (req, res) => {
+  const wishlist = req.body;
+  if(!wishlist){
+    return res.status(400).json({
+      message:"Wishlist is require."
+    });
+  }
+  let products=[];
+  for (const wish of wishlist) {
+    const product = await Product.findOne({ code: wish.code }).populate('brand detail');
+    if (product) {
+      products.push(product);
+    }
+  }
+
+  return res.status(200).json({
+    message: "Get wishlist successful",
+    products,
+  });
+}
+module.exports = { product, search, detail , wishlist };

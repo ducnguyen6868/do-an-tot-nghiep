@@ -165,7 +165,7 @@ export default function CheckoutPage() {
             const final_amount = total;
             const response = await orderApi.payment(final_amount);
             const res = await orderApi.createOrder(orderData, response.orderId, fromCart);
-            setInfoUser(prev => ({ ...prev, cart: response.cart }));
+            setInfoUser(prev => ({ ...prev, cart: res.cart }));
             window.location.href = response.payUrl;
         } catch (err) {
             toast.error(err.res?.data?.message || err.message);

@@ -15,6 +15,7 @@ import AddressPage from './pages/AddressPage';
 import CheckoutPage from './pages/CheckoutPage';
 import PaymentResultPage from './pages/PaymentResultPage';
 import CartPage from './pages/CartPage';
+import WishlistPage from './pages/WishlistPage';
 import UserAuth from './hooks/userAuth';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="product/checkout" element={<CheckoutPage/>}></Route>
           <Route path="payment-result" element={<PaymentResultPage/>}></Route>
           <Route path='cart' element={<CartPage/>}></Route>
+          <Route path='wishlist' element={<WishlistPage/>}></Route>
           {/* Profile */}
           <Route path="/profile" element=
             {

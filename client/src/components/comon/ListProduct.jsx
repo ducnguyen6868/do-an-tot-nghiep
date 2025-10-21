@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {Icon} from '@iconify/react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import userApi from '../../api/userApi';
 import { useContext } from 'react';
@@ -8,7 +9,7 @@ import { UserContext } from '../../contexts/UserContext';
 import useProductsPerRow from '../../hooks/useProductsPerRow';
 import '../../styles/ListProduct.css';
 
-export default function ListProduct({ products }) {
+export default function ListProduct({ products, wishlist,onChange }) {
 
   const { setInfoUser } = useContext(UserContext);
 
@@ -39,7 +40,7 @@ export default function ListProduct({ products }) {
       const price = product.detail[0]?.price;
       const detailId = product.detail[0]?._id;
       const data = {
-        id, code, name, image, description, quantity, color, price ,detailId
+        id, code, name, image, description, quantity, color, price, detailId
       }
       const response = await userApi.addCart(data);
       toast.success(response.message);
@@ -48,6 +49,65 @@ export default function ListProduct({ products }) {
       toast.error(err.response?.data?.message || err.message)
     }
   };
+  const handleWishlist = async (code) => {
+    const token = localStorage.getItem('token');
+    const index = 0;
+    if (!token) {
+      const wish = { code, index };
+
+      const wishlist = localStorage.getItem('wishlist');
+      let wishlistArray = [];
+
+      if (wishlist) {
+        wishlistArray = JSON.parse(wishlist);
+      }
+
+      const isExist = wishlistArray.some(item => item.code === code && item.index === index);
+      if (isExist) {
+        toast.warn("Product already in wishlist");
+        return;
+      }
+      wishlistArray.push(wish);
+      setInfoUser(prev => ({ ...prev, wishlist: wishlistArray.length }));
+      localStorage.setItem('wishlist', JSON.stringify(wishlistArray));
+      toast.success("Product added to your wishlist.")
+      return;
+    }
+
+    try {
+      const response = await userApi.addWishlist(code, index);
+      if (response.exist) {
+        toast.warn(response.message);
+      } else {
+        toast.success(response.message);
+      }
+      setInfoUser(prev => ({ ...prev, wishlist: response.wishlist }));
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message);
+    }
+  }
+  const handleRemove = async (code)=>{
+      const token = localStorage.getItem("token");
+      if(!token){
+        let wishlist = localStorage.getItem('wishlist');
+        wishlist= JSON.parse(wishlist);
+        const newWishlist = wishlist.filter(item=>item.code!==code);
+        setInfoUser(prev=>({...prev , wishlist:newWishlist.length}));
+        onChange?.();
+        localStorage.setItem('wishlist',JSON.stringify(newWishlist));
+        return;
+      }
+      try{
+        const response = await userApi.removeWishlist(code);
+        setInfoUser(prev=>({...prev , wishlist:response.wishlist}));
+        onChange?.();
+      }catch(err){
+        toast.error(err.response?.data?.message||err.message);
+        if(err.response&&err.response.status===403){
+          localStorage.removeItem('token');
+        }
+      }
+  }
   return (
     <>
       <div className='product-grid'>
@@ -57,7 +117,13 @@ export default function ListProduct({ products }) {
               <img src={`http://localhost:5000` + product.images[0]} loading="lazy" alt={product.name} />
               <div className="product-overlay">
                 <Link to={`/product?code=${product.code}`} className="quick-view-btn">👁️ Quick View</Link>
-                <button className="wishlist-btn">❤️</button>
+                {wishlist ? (
+                  <button className="wishlist-btn" onClick={()=>handleRemove(product.code)}>
+                    <Icon icon="noto:broken-heart" width="16" height="16" />
+                  </button>
+                ) : (
+                  <button className="wishlist-btn" onClick={() => { handleWishlist(product.code) }}>❤️</button>
+                )}
               </div>
             </div>
             <div className="product-details">
@@ -66,7 +132,7 @@ export default function ListProduct({ products }) {
               <p className="product-description">{product.description}</p>
               <div className="product-rating">
                 <span className="stars"> {renderStars(product.ratings)} {product.ratings}</span>
-                <span className="reviews">({product.reviewCount} reviews)</span>
+                <span className="reviews">({product.reviews?.length} reviews)</span>
               </div>
               <div className="product-footer">
                 <div className="price">

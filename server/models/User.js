@@ -22,6 +22,7 @@ const userSchema = new Schema({
   orders: [{
     type: Schema.Types.ObjectId, ref: "Order"
   }],
+  wishlist:[{code:{type:String},index:{type:Number}}],
   carts: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
   recipients: [{ type: Schema.Types.ObjectId, ref: "Recipient" }]
 }, { timestamps: true });

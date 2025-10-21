@@ -87,8 +87,8 @@ export default function CartPage() {
             toast.error(err.response?.data?.message || err.message)
         }
     }
-    const handleShopping = ()=>{
-        navigate('/product/checkout?cart=all',{state:{productData}});
+    const handleShopping = () => {
+        navigate('/product/checkout?cart=all', { state: { productData } });
     }
     return (
         <>
@@ -96,7 +96,10 @@ export default function CartPage() {
             <div className="cart-container">
                 {(carts.length === 0) ? (
                     <>
-                        <img style={{ width: '100%' }} src={cart404} />
+                        <div className='empty-container'>
+                            <img className='empty-image'  alt="Cart Empty" title="Cart Empty" src={cart404} />
+                            <Link to='/' className='shopping-btn'>Shopping now</Link>
+                        </div>
                     </>
                 ) : (
                     <>
@@ -149,7 +152,7 @@ export default function CartPage() {
                                 <span>Total:</span>
                                 <span>{formatCurrency(total + total * 0.101, 'en-US', 'USD')}</span>
                             </div>
-                            <button className="checkout-btn" onClick={()=>handleShopping()}>Proceed to Checkout</button>
+                            <button className="checkout-btn" onClick={() => handleShopping()}>Proceed to Checkout</button>
                             <button className="continue-shopping">Continue Shopping</button>
                         </div>
                     </>

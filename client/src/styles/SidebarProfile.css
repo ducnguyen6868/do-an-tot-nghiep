@@ -106,7 +106,7 @@
   position: relative;
 }
 
-.logout-icon {
+.loggingout-icon {
   position: absolute;
   animation: fly 1s ease;
 }
@@ -130,9 +130,10 @@
   font-weight: 700;
   color: var(--brand-color);
   margin-bottom: 0.5rem;
-  animation: down 1s ease;
 }
-
+.loggingout-title {
+animation: down 1s ease;
+}
 @keyframes down {
   0% {
     margin-top: 0;

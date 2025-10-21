@@ -110,10 +110,10 @@ export default function SidebarProfile({ activeTab }) {
             {logout && (
                 <div className="modal-overlay" >
                     <div className="logout-modal">
-                        <div className="logout-icon">
+                        <div className="logout-icon loggingout-icon">
                             <Icon icon="noto:rocket" width="80" height="80" />
                         </div>
-                        <h3 className="logout-title">Logging out...</h3>
+                        <h3 className="logout-title loggingout-title">Logging out...</h3>
                     </div>
                 </div>
             )

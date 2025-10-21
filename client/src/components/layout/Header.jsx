@@ -26,7 +26,7 @@ export default function Header() {
     if (infoUser && infoUser.name !== '') {
       setIsLogged(true);
     } else {
-      setIsLogged(false);
+      setIsLogged(false);      
     }
   }, [infoUser]);
 
@@ -97,7 +97,7 @@ export default function Header() {
             {/* <!-- Logo --> */}
             <Link to="/" className="logo" style={{ margin: '0' }}>
               <div className="logo-icon">
-                <img src={websiteLogo} alt='Website Logo' title='Website Logo'/>
+                <img src={websiteLogo} alt='Website Logo' title='Website Logo' />
               </div>
               <div className="logo-text">
                 <div className="logo-title">TIMEPIECE</div>
@@ -115,7 +115,7 @@ export default function Header() {
             {/* <!-- Search Bar --> */}
             <div className="search-container">
               <div className="search-bar">
-                <input type="text" className="search-input" value={keyword} onKeyDown={(e) => e.key === "Enter" && handleSearch()} onChange={(e) => setKeyword(e.target.value)} placeholder="Search for watches, brands, collections..." />
+                <input type="text" className="search-input" name='search' value={keyword} onKeyDown={(e) => e.key === "Enter" && handleSearch()} onChange={(e) => setKeyword(e.target.value)} placeholder="Search for watches, brands, collections..." />
                 <button className="search-btn" onClick={handleSearch}>
                   <Icon icon="noto:magnifying-glass-tilted-left" width="24" height="24" />
                 </button>
@@ -127,7 +127,7 @@ export default function Header() {
               <div className="header-action">
                 <Link to="/profile" >
                   <div className="action-icon avatar-wave"  >
-                    <img  src={infoUser.avatar? `http://localhost:5000/` + infoUser.avatar:avatar } className="avatar-icon" alt="avatar" title="avatar" style={{
+                    <img src={infoUser.avatar ? `http://localhost:5000/` + infoUser.avatar : avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
                       width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"
                     }} />
                   </div>
@@ -136,7 +136,7 @@ export default function Header() {
                 <div className="action-label">{infoUser.name}</div>
               </div>
               <div className="header-action">
-                <Link to="#">
+                <Link to="/wishlist">
                   <div className="action-icon">
                     <Icon icon="noto:red-heart" width="40" height="40" />
                   </div>
@@ -162,25 +162,25 @@ export default function Header() {
                       <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
                     </div>
                   </Link>
-                    <div className="action-label">Account</div>
+                  <div className="action-label">Account</div>
                 </div>
                 <div className="header-action">
-                  <div className="action-icon">
-                    <Icon icon="noto:red-heart" width="32" height="32" />
-                  </div>
-                  <div className="action-badge">3</div>
+                  <Link to='/wishlist'>
+                    <div className="action-icon">
+                      <Icon icon="noto:red-heart" width="32" height="32" />
+                    </div>
+                    <div className="action-badge">{infoUser.wishlist}</div>
+                  </Link>
                   <div className="action-label">Wishlist</div>
                 </div>
                 <div className="header-action">
                   <div className="action-icon">
                     <Icon icon="noto:shopping-cart" width="32" height="32" />
                   </div>
-                  <div className="action-badge">2</div>
+                  <div className="action-badge">{infoUser.cart}</div>
                   <div className="action-label">Cart</div>
                 </div>
               </div>)}
-
-
           </div>
         </div>
 

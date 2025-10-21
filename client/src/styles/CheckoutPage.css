@@ -1,5 +1,4 @@
 .checkout-container {
-    min-height: 100vh;
     padding:0.5rem;
     background-color: var(--bg-secondary);
 }
