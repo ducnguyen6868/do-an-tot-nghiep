@@ -12,7 +12,7 @@ import categoryApi from '../../api/categoryApi';
 
 export default function Header() {
   //Get info User
-  const { infoUser } = useContext(UserContext);
+  const { infoUser, setLocale, currency, setCurrency } = useContext(UserContext);
 
   const [category, setCategory] = useState([]);
 
@@ -47,6 +47,15 @@ export default function Header() {
       navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
     }
   };
+  const handleChangeCurrency = async ()=>{
+    if(currency==='USD'){
+      setLocale('vi-VN');
+      setCurrency('VND');
+    }else{
+      setLocale('en-US');
+      setCurrency('USD');
+    }
+  }
   return (
     <>
       <div className="announcement-bar">
@@ -85,7 +94,10 @@ export default function Header() {
               <Link to="#">Help</Link>
               <Link to="#">Store Locator</Link>
               <Link to="#">English ▼</Link>
-              <Link to="#">USD $ ▼</Link>
+              <Link to="#"
+                onClick={() =>handleChangeCurrency()}>
+                {currency === 'USD' ? 'USD $' : 'VND ₫'}▼
+              </Link>
             </div>
             <ThemToggle />
           </div>

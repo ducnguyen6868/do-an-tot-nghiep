@@ -201,7 +201,7 @@ export default function CartPage() {
                             </div>
                             <div className="summary-row">
                                 <span>Shipping:</span>
-                                <span>{formatCurrency(total * 0.001, 'en-US', 'USD')}</span>
+                                <span className='free'>FREE</span>
                             </div>
                             <div className="summary-row">
                                 <span>Tax:</span>
@@ -209,7 +209,7 @@ export default function CartPage() {
                             </div>
                             <div className="summary-row total">
                                 <span>Total:</span>
-                                <span>{formatCurrency(total + total * 0.101, 'en-US', 'USD')}</span>
+                                <span>{formatCurrency(total + total * 0.1, 'en-US', 'USD')}</span>
                             </div>
                             <button className="checkout-btn" onClick={() => handleShopping()}>Proceed to Checkout</button>
                             <button className="continue-shopping">Continue Shopping</button>

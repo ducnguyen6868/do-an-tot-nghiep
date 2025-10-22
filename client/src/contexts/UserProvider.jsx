@@ -4,10 +4,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 export const UserProvider = ({ children }) => {
 
-    let wishlist = localStorage.getItem('wishlist');
-    wishlist = JSON.parse(wishlist)||[];
     let cart = localStorage.getItem('cart');
-    cart = JSON.parse(cart)||[];
+    cart = cart ? JSON.parse(cart) : [];
+
+    let wishlist = localStorage.getItem('wishlist');
+    wishlist = wishlist ? JSON.parse(wishlist) : [];
+
+    const [locale, setLocale] = useState('en-US');
+    const [currency, setCurrency] = useState('USD');
     const [infoUser, setInfoUser] = useState({
         name: '',
         email: '',
@@ -15,33 +19,34 @@ export const UserProvider = ({ children }) => {
         wishlist: wishlist?.length || 0,
         cart: cart?.length || 0
     });
-    const getInfoUser = async () => {
-        const token = localStorage.getItem('token') || sessionStorage.getItem("token");
-        if (token) {
-            try {
-                const response = await axios.get("http://localhost:5000/profile", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setInfoUser({
-                    name: response.data.user.name,
-                    email: response.data.user.email,
-                    avatar: response.data.user.avatar,
-                    wishlist: response.data.user.wishlist?.length || 0,
-                    cart: response.data.user.carts?.length || 0
-                })
-            } catch (err) {
-                toast.error(err.response?.data?.message || err.message);
+
+    useEffect(() => {
+        const getInfoUser = async () => {
+            const token = localStorage.getItem('token') || sessionStorage.getItem("token");
+            if (token) {
+                try {
+                    const response = await axios.get("http://localhost:5000/profile", {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    setInfoUser({
+                        name: response.data.user.name,
+                        email: response.data.user.email,
+                        avatar: response.data.user.avatar,
+                        wishlist: response.data.user.wishlist?.length || 0,
+                        cart: response.data.user.carts?.length || 0
+                    })
+                } catch (err) {
+                    toast.error(err.response?.data?.message || err.message);
+                }
             }
         }
-    }
-    useEffect(() => {
         getInfoUser();
     }, []);
     return (
         <>
-            <UserContext.Provider value={{ infoUser, setInfoUser, getInfoUser }}>
+            <UserContext.Provider value={{ infoUser, setInfoUser, locale, setLocale, currency, setCurrency }}>
                 {children}
             </UserContext.Provider>
         </>

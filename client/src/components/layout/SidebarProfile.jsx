@@ -16,9 +16,16 @@ export default function SidebarProfile({ activeTab }) {
         setLogout(true);
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
-        setInfoUser(prev=>({
-            ...prev , name:'',email:'',avatar:''
-        }));
+
+        let cart = localStorage.getItem('cart');
+        cart = cart ? JSON.parse(cart) : [];
+
+        let wishlist = localStorage.getItem('wishlist');
+        wishlist = wishlist ? JSON.parse(wishlist) : [];
+        await setInfoUser({
+            name: '', email: '', avatar: '',
+            cart: cart.length, wishlist: wishlist.length
+        });
         setTimeout(() => navigate("/"), 500);
     }
     return (

@@ -8,6 +8,8 @@ import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
 import ListProduct from '../components/comon/ListProduct';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
+import { motion, AnimatePresence } from "framer-motion";
+
 
 export default function SearchResultsPage() {
   const location = useLocation();
@@ -21,7 +23,8 @@ export default function SearchResultsPage() {
   const [filteredResults, setFilteredResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('relevance');
-  const [viewMode, setViewMode] = useState('grid'); // grid or list
+  const [isOpen, setIsOpen] = useState(false);
+
 
   // Filters
   const [filters, setFilters] = useState({
@@ -159,126 +162,179 @@ export default function SearchResultsPage() {
       <Header />
       <div className="search-results-page">
         <div className="results-layout">
-          {/* Sidebar Filters */}
-          <aside className="filters-sidebar">
-            <div className="filters-header">
-              <h3>Filters</h3>
-              <button className="clear-btn" onClick={clearFilters}>Clear All</button>
-            </div>
-
-            {/* Price Range */}
-            <div className="filter-group">
-              <h4>Price Range</h4>
-              <div className="price-inputs">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={filters.priceMin}
-                  onChange={(e) => handleFilterChange('priceMin', e.target.value)}
-                />
-                <span>-</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={filters.priceMax}
-                  onChange={(e) => handleFilterChange('priceMax', e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Brand Filter */}
-            <div className="filter-group">
-              <h4>Brand</h4>
-              <select
-                value={filters.brand}
-                onChange={(e) => handleFilterChange('brand', e.target.value)}
+          <div className="filters-container">
+            {/* Bong bóng nhỏ */}
+            {!isOpen && (
+              <motion.div
+                className="filter-bubble"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsOpen(true)}
               >
-                <option value="All brand">All brand</option>
-                {brands.map(brand =>
-                  <option key={brand._id} value={brand.name}>{brand.name}</option>
-                )}
-              </select>
-            </div>
+                🔍 Filter
+              </motion.div>
+            )}
 
-            {/* Target Audience */}
-            <div className="filter-group">
-              <h4>For</h4>
-              <div className="radio-group">
-                <label>
-                  <input
-                    type="radio"
-                    name="audience"
-                    value="all"
-                    checked={filters.audience === 'all'}
-                    onChange={(e) => handleFilterChange('audience', e.target.value)}
-                  />
-                  All
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="audience"
-                    value="Male"
-                    checked={filters.audience === 'Male'}
-                    onChange={(e) => handleFilterChange('audience', e.target.value)}
-                  />
-                  Men
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="audience"
-                    value="Female"
-                    checked={filters.audience === 'Female'}
-                    onChange={(e) => handleFilterChange('audience', e.target.value)}
-                  />
-                  Women
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="audience"
-                    value="Unisex"
-                    checked={filters.audience === 'Unisex'}
-                    onChange={(e) => handleFilterChange('audience', e.target.value)}
-                  />
-                  Unisex
-                </label>
-              </div>
-            </div>
+            {/* Sidebar với hiệu ứng macOS */}
+            <AnimatePresence>
+              {isOpen && (
+                <motion.aside
+                  className="filters-sidebar"
+                  initial={{ scale: 0.3, opacity: 0, borderRadius: "50%", y: 60 }}
+                  animate={{
+                    scale: 1,
+                    opacity: 1,
+                    borderRadius: "20px",
+                    y: 0,
+                    transition: {
+                      type: "spring",
+                      stiffness: 120,
+                      damping: 15,
+                    },
+                  }}
+                  exit={{
+                    scale: 0.3,
+                    opacity: 0,
+                    borderRadius: "50%",
+                    y: 60,
+                    transition: {
+                      duration: 0.4,
+                      ease: "easeInOut",
+                    },
+                  }}
+                >
+                  <div className="filters-header">
+                    <h3>Filters</h3>
+                    <button className="close-btn" onClick={() => setIsOpen(false)}>
+                      ✕
+                    </button>
+                  </div>
 
-            {/* Movement Type */}
-            <div className="filter-group">
-              <h4>Movement Type</h4>
-              <select
-                value={filters.movement}
-                onChange={(e) => handleFilterChange('movement', e.target.value)}
-              >
-                <option value="all">All Types</option>
-                <option value="Automatic">Automatic</option>
-                <option value="Quartz">Quartz</option>
-                <option value="Mechanical">Mechanical</option>
-              </select>
-            </div>
+                  {/* Price Range */}
+                  <div className="filter-group">
+                    <h4>Price Range</h4>
+                    <div className="price-inputs">
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        value={filters.priceMin}
+                        onChange={(e) => handleFilterChange("priceMin", e.target.value)}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        value={filters.priceMax}
+                        onChange={(e) => handleFilterChange("priceMax", e.target.value)}
+                      />
+                    </div>
+                  </div>
 
-            {/* Rating Filter */}
-            <div className="filter-group">
-              <h4>Minimum Rating</h4>
-              <div className="rating-filter">
-                {[4, 3, 2, 1].map(rating => (
-                  <label key={rating} className="rating-option">
-                    <input
-                      type="radio"
-                      name="rating"
-                      checked={filters.minRating === rating}
-                      onChange={() => handleFilterChange('minRating', rating)}
-                    />
-                    <span>{renderStars(rating)} and up</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </aside>
+                  {/* Brand */}
+                  <div className="filter-group filters-group">
+                    <div className='brand-filter'>
+                      <h4>Brand</h4>
+                      <select
+                        value={filters.brand}
+                        onChange={(e) => handleFilterChange("brand", e.target.value)}
+                      >
+                        <option value="All brand">All brand</option>
+                        {brands.map((brand) => (
+                          <option key={brand._id} value={brand.name}>
+                            {brand.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* Movement Type */}
+                    <div className='movement-filter'>
+                      <h4>Movement Type</h4>
+                      <select
+                        value={filters.movement}
+                        onChange={(e) => handleFilterChange('movement', e.target.value)}
+                      >
+                        <option value="all">All Types</option>
+                        <option value="Automatic">Automatic</option>
+                        <option value="Quartz">Quartz</option>
+                        <option value="Mechanical">Mechanical</option>
+                      </select>
+                    </div>
+                  </div>
+
+
+                  {/* Target Audience */}
+                  <div className="filter-group">
+                    <div className='audience-filter'>
+                      <h4>For</h4>
+                      <div className="radio-group">
+                        <label>
+                          <input
+                            type="radio"
+                            name="audience"
+                            value="all"
+                            checked={filters.audience === 'all'}
+                            onChange={(e) => handleFilterChange('audience', e.target.value)}
+                          />
+                          All
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="audience"
+                            value="Male"
+                            checked={filters.audience === 'Male'}
+                            onChange={(e) => handleFilterChange('audience', e.target.value)}
+                          />
+                          Men
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="audience"
+                            value="Female"
+                            checked={filters.audience === 'Female'}
+                            onChange={(e) => handleFilterChange('audience', e.target.value)}
+                          />
+                          Women
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="audience"
+                            value="Unisex"
+                            checked={filters.audience === 'Unisex'}
+                            onChange={(e) => handleFilterChange('audience', e.target.value)}
+                          />
+                          Unisex
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Rating Filter */}
+                  <div className="filter-group">
+                    <h4>Minimum Rating</h4>
+                    <div className="rating-filter">
+                      {[4, 3, 2, 1].map(rating => (
+                        <label key={rating} className="rating-option">
+                          <input
+                            type="radio"
+                            name="rating"
+                            checked={filters.minRating === rating}
+                            onChange={() => handleFilterChange('minRating', rating)}
+                          />
+                          <span>{renderStars(rating)} and up</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button className="clear-btn" onClick={clearFilters}>
+                    Clear All
+                  </button>
+                </motion.aside>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Main Content */}
           <main className="results-content">
@@ -290,21 +346,6 @@ export default function SearchResultsPage() {
               </div>
 
               <div className="results-controls">
-                <div className="view-toggle">
-                  <button
-                    className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                    onClick={() => setViewMode('grid')}
-                  >
-                    ⊞
-                  </button>
-                  <button
-                    className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-                    onClick={() => setViewMode('list')}
-                  >
-                    ☰
-                  </button>
-                </div>
-
                 <select
                   className="sort-select"
                   value={sortBy}
@@ -338,7 +379,7 @@ export default function SearchResultsPage() {
 
             {/* Results Grid/List */}
             {!loading && filteredResults.length > 0 && (
-              <ListProduct products={filteredResults} />
+              <ListProduct products={filteredResults} search={true} />
             )}
           </main>
         </div>

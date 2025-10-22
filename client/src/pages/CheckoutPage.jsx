@@ -165,11 +165,23 @@ export default function CheckoutPage() {
             const final_amount = total;
             const response = await orderApi.payment(final_amount);
             const res = await orderApi.createOrder(orderData, response.orderId, fromCart);
-            setInfoUser(prev => ({ ...prev, cart: res.cart }));
+            if (!formData.email) {
+                const newOrder = res.order;
+                let order= localStorage.getItem('order');
+                order = order?JSON.parse(order):[];
+                order.push(newOrder);
+                localStorage.setItem('order',JSON.stringify(order));
+                if (fromCart) {
+                    setInfoUser(prev => ({ ...prev, cart:0 }));
+                    localStorage.removeItem('cart');
+                }
+            }else{
+                setInfoUser(prev => ({ ...prev, cart: res.cart }));
+            }
             window.location.href = response.payUrl;
         } catch (err) {
-            toast.error(err.res?.data?.message || err.message);
             toast.error(err.response?.data?.message || err.message);
+            toast.error(err.res?.data?.message || err.message);
         } finally {
             setLoading(false);
         }

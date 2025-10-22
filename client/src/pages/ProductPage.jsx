@@ -12,9 +12,8 @@ import { formatCurrency } from '../utils/formatCurrency';
 
 export default function ProductPage() {
 
-  const {setInfoUser} = useContext(UserContext);
+  const {setInfoUser , locale , currency} = useContext(UserContext);
   const navigate = useNavigate();
-  
 
   const location = useLocation();
   const queyParams = new URLSearchParams(location.search);
@@ -162,12 +161,12 @@ export default function ProductPage() {
               </div>
 
               <div className="price-section-detail">
-                <span className="current-price-detail">{formatCurrency(selectedDetail.price, 'en-US', 'USD')}</span>
+                <span className="current-price-detail">{formatCurrency(selectedDetail.price, locale, currency)}</span>
                 {selectedDetail.originalPrice > selectedDetail.price && (
                   <>
-                    <span className="original-price">{formatCurrency(selectedDetail.originalPrice, 'en-US', 'USD')}</span>
+                    <span className="original-price">{formatCurrency(selectedDetail.originalPrice, locale, currency)}</span>
                     <span className="discount-badge-detail">
-                      Save {formatCurrency(selectedDetail.originalPrice - selectedDetail.price, 'en-US', 'USD')}
+                      Save {formatCurrency(selectedDetail.originalPrice - selectedDetail.price, locale, currency)}
                     </span>
                   </>
                 )}

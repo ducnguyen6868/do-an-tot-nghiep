@@ -9,9 +9,9 @@ import { UserContext } from '../../contexts/UserContext';
 import useProductsPerRow from '../../hooks/useProductsPerRow';
 import '../../styles/ListProduct.css';
 
-export default function ListProduct({ products, wishlist, onChange }) {
+export default function ListProduct({ products, wishlist, onChange  , search}) {
 
-  const { setInfoUser } = useContext(UserContext);
+  const { setInfoUser , locale ,currency } = useContext(UserContext);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -67,7 +67,6 @@ export default function ListProduct({ products, wishlist, onChange }) {
         localStorage.setItem('cart', JSON.stringify(cartLocal));
         setInfoUser(prev => ({ ...prev, cart: cartLocal.length }));
       }
-
       return;
     }
 
@@ -166,7 +165,7 @@ export default function ListProduct({ products, wishlist, onChange }) {
               </div>
               <div className="product-footer">
                 <div className="price">
-                  {formatCurrency(product.detail?.[0]?.price, 'en-US', 'USD') || 'N/A'}
+                  {formatCurrency(product.detail?.[0]?.price, locale, currency) || 'N/A'}
                 </div>
                 <button className="add-to-cart-btn"
                   onClick={() => handleCart(product)}

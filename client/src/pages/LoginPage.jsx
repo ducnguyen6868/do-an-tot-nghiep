@@ -11,14 +11,14 @@ import authApi from '../api/authApi';
 
 export default function LoginPage() {
 
-  const { infoUser, getInfoUser } = useContext(UserContext);
+  const { setInfoUser } = useContext(UserContext);
 
   const [isModal, setIsModal] = useState(false);
   const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
-    email: infoUser.email || '',
-    password: infoUser.password || '',
+    email:'',
+    password: '',
     rememberMe: true,
   });
 
@@ -57,11 +57,17 @@ export default function LoginPage() {
         sessionStorage.setItem("token", response.token);
       }
       toast.success(response.message);
-      await getInfoUser();
+      await setInfoUser(prev=>({
+        ...prev , name:response.user.name,
+        email:response.user.name,
+        avatar:response.user.avatar,
+        cart:response.user.carts?.length,
+        wishlist:response.user.wishlist?.length
+      }));
       navigate('/');
 
     } catch (err) {
-      toast.error(err.response.data.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     }
   };
 

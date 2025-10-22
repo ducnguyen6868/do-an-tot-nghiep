@@ -3,7 +3,8 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 
 const viewCart = async (req, res) => {
-  const user = await User.findById(id).populate('carts');
+  const userId = req.user.id;
+  const user = await User.findById(userId).populate('carts');
   if (!user) {
     return res.status(404).json({
       message: "User not found."
@@ -33,7 +34,6 @@ const addCart = async (req, res) => {
     if (existingCart) {
       existingCart.quantity_product += quantity;
       await existingCart.save();
-
       return res.status(200).json({
         message: "Product quantity updated in cart.",
         cart: user.carts.length
@@ -54,7 +54,6 @@ const addCart = async (req, res) => {
     });
 
     await User.findByIdAndUpdate(userId, { $push: { carts: newCart._id } });
-
     return res.status(200).json({
       message: "Product added to cart successfully.",
       cart: user.carts.length + 1

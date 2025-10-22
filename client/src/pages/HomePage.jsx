@@ -5,6 +5,8 @@ import { Icon } from '@iconify/react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { toast } from 'react-toastify';
+import {useContext} from 'react';
+import {UserContext} from '../contexts/UserContext';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
 import Brand from '../components/comon/Brand';
 import productApi from '../api/productApi';
@@ -13,6 +15,8 @@ import { formatCurrency } from '../utils/formatCurrency';
 import ListProduct from '../components/comon/ListProduct';
 
 export default function HomePage() {
+  const {locale,currency} = useContext(UserContext);
+
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -211,9 +215,9 @@ export default function HomePage() {
                       </div>
                       <div className="product-pricing">
                         <div className="price-info">
-                          <span className="current-price">{formatCurrency(product.detail[0].price, 'en-US', 'USD')}</span>
+                          <span className="current-price">{formatCurrency(product.detail[0].price, locale, currency)}</span>
                           <span className="original-price">
-                            {formatCurrency(product.detail[0].originalPrice, 'en-US', 'USD')}
+                            {formatCurrency(product.detail[0].originalPrice, locale, currency)}
                           </span>
                         </div>
                         <Link to={`/product?code=${product.code}`} className="add-to-cart-btn flash">

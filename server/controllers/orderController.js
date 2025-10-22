@@ -32,27 +32,35 @@ const createOrder = async (req, res) => {
         const productData = orderData.productData;
         const { total_amount, discount_amount, final_amount } = orderData;
 
-        if (!formData.email) {
-            return res.status(400).json({ message: 'You must login before buy product.' });
-        }
+        // Update quantity
+        for (const product of productData) {
+            const detail = await Detail.findById(product.detailId);
+            if (!detail) continue;
 
-        const user = await User.findOne({ email: formData.email });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found.' });
-        }
-        if (fromCart) {
-            const cartIds = user.carts.map(cart => cart._id);
+            const newQuantity = detail.quantity - product.quantity;
+            if(newQuantity<0){
+                return res.status(403).json({
+                    message:"Quantity exceeds product in stock."
+                })
+            }
+            const newSold = (detail.sold || 0) + product.quantity;
 
-            await Cart.deleteMany({ _id: { $in: cartIds } });
+            await Detail.findByIdAndUpdate(product.detailId, {
+                $set: {
+                    quantity: newQuantity >= 0 ? newQuantity : 0,
+                    sold: newSold,
+                },
+            });
+        };
 
-            user.carts = [];
-            await user.save();
-        }
         // create new order
         const newOrder = new Order({
             code: orderId,
-            user: user._id,
             recipient: formData.recipientId,
+            name: formData.name,
+            phone: formData.phone,
+            address: formData.address,
+            type: formData.type,
             total_amount: parseFloat(total_amount),
             discount_amount: parseFloat(discount_amount || 0),
             final_amount: parseFloat(final_amount),
@@ -65,26 +73,37 @@ const createOrder = async (req, res) => {
         });
         await newOrder.save();
 
-        // Update detail
-        for (const product of productData) {
-            const detail = await Detail.findById(product.detailId);
-            if (!detail) continue;
-
-            const newQuantity = detail.quantity - product.quantity;
-            const newSold = (detail.sold || 0) + product.quantity;
-
-            await Detail.findByIdAndUpdate(product.detailId, {
+    
+        if (formData.email) {
+            const user = await User.findOne({ email: formData.email });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found.' });
+            }
+            await Order.findByIdAndUpdate(newOrder.id, {
                 $set: {
-                    quantity: newQuantity >= 0 ? newQuantity : 0,
-                    sold: newSold,
-                },
+                    user: user.id
+                }
+            });
+            //Delete product form cart
+            if (fromCart) {
+                const cartIds = user.carts.map(cart => cart._id);
+
+                await Cart.deleteMany({ _id: { $in: cartIds } });
+
+                user.carts = [];
+                await user.save();
+            };
+           return res.status(201).json({
+                message: 'Create order successful!',
+                cart: user.carts.length
             });
         }
 
         res.status(201).json({
             message: 'Create order successful!',
-            cart:user.carts.length
+            order: newOrder
         });
+
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
