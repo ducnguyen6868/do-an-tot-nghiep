@@ -5,10 +5,9 @@ import { toast } from 'react-toastify';
 export const UserProvider = ({ children }) => {
 
     let wishlist = localStorage.getItem('wishlist');
-    wishlist = JSON.parse(wishlist);
+    wishlist = JSON.parse(wishlist)||[];
     let cart = localStorage.getItem('cart');
-    cart = JSON.parse(cart);
-
+    cart = JSON.parse(cart)||[];
     const [infoUser, setInfoUser] = useState({
         name: '',
         email: '',

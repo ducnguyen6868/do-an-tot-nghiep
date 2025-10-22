@@ -13,6 +13,7 @@ import cart404 from '../assets/cart404.png';
 
 export default function CartPage() {
     const { setInfoUser } = useContext(UserContext);
+    const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
     const [carts, setCarts] = useState([]);
@@ -27,7 +28,7 @@ export default function CartPage() {
             setCarts(response.carts);
             const total = response.carts.reduce((t, c) => t + c.price_product * c.quantity_product, 0);
             setTotal(total);
-            const handleProductData = await response.carts.map(cart => {
+            const productData = await response.carts.map(cart => {
                 const product = {
                     id: cart.productId,
                     name: cart.name_product,
@@ -40,34 +41,66 @@ export default function CartPage() {
                 }
                 return product
             })
-            setProductData(handleProductData);
+            setProductData(productData);
         } catch (err) {
             toast.error(err.response?.data?.message || err.message);
         }
     }
     useEffect(() => {
-        getCarts();
-    }, []);
+        if (token) {
+            getCarts();
+        } else {
+            let cart = localStorage.getItem('cart');
+            if (cart) {
+                cart = JSON.parse(cart);
+                setCarts(cart);
+                const total = cart.reduce((t, c) => t + c.price * c.quantity, 0);
+                setTotal(total);
+            } else {
+                cart = [];
+                setCarts(cart);
+            }
+        }
+    }, [token]);
     const handleQuantityChange = async (cartId, action, index) => {
         setIndexCart(index);
+        if (token) {
+            const updatedCarts = carts.map(cart => {
+                if (cart._id === cartId) {
+                    let newQuantity = cart.quantity_product;
+                    if (action === 'increase') newQuantity += 1;
+                    else if (action === 'decrease' && newQuantity > 1) newQuantity -= 1;
+                    return { ...cart, quantity_product: newQuantity };
+                }
+                return cart;
+            });
+            setCarts(updatedCarts);
+            const total = updatedCarts.reduce((t, c) => t + c.price_product * c.quantity_product, 0);
+            setTotal(total);
+            return;
+        }
         const updatedCarts = carts.map(cart => {
-            if (cart._id === cartId) {
-                let newQuantity = cart.quantity_product;
+            if (cart.code === cartId) {
+                let newQuantity = cart.quantity;
                 if (action === 'increase') newQuantity += 1;
                 else if (action === 'decrease' && newQuantity > 1) newQuantity -= 1;
-                return { ...cart, quantity_product: newQuantity };
+                return { ...cart, quantity_product: newQuantity, quantity: newQuantity };
             }
             return cart;
         });
-
         setCarts(updatedCarts);
-
-
-        const total = updatedCarts.reduce((t, c) => t + c.price_product * c.quantity_product, 0);
+        const total = updatedCarts.reduce((t, c) => t + c.price * c.quantity, 0);
         setTotal(total);
     };
 
     const handleSubmitQuantity = async (cartId, quantitty) => {
+        if (!token) {
+            localStorage.setItem('cart', JSON.stringify(carts));
+            toast.success("Update quantity successful");
+            setIndexCart(-1);
+            setCarts(carts);
+            return;
+        }
         try {
             const response = await userApi.changeQuantity(cartId, quantitty);
             toast.success(response.message);
@@ -78,6 +111,14 @@ export default function CartPage() {
         }
     }
     const handleRemove = async (cartId) => {
+        if (!token) {
+            const newCart = carts.filter(item => item.code !== cartId);
+            localStorage.setItem('cart', JSON.stringify(newCart));
+            setCarts(newCart);
+            setInfoUser(prev => ({ ...prev, cart: newCart.length }));
+            toast.success("Deleted product from cart.");
+            return;
+        }
         try {
             const response = await userApi.deleteCart(cartId);
             toast.success(response.message);
@@ -88,16 +129,34 @@ export default function CartPage() {
         }
     }
     const handleShopping = () => {
-        navigate('/product/checkout?cart=all', { state: { productData } });
+        if (!token) {
+            const productData = carts.map(cart => {
+                const product = {
+                    id: cart.id,
+                    name: cart.name,
+                    code: cart.code,
+                    image: cart.image,
+                    price: cart.price,
+                    color: cart.color,
+                    quantity: cart.quantity,
+                    detailId: cart.detailId
+                }
+                return product
+            })
+            setProductData(productData);
+            navigate('/product/checkout?cart=all', { state: { productData } });
+        } else {
+            navigate('/product/checkout?cart=all', { state: { productData } });
+        }
     }
     return (
         <>
             <Header />
             <div className="cart-container">
-                {(carts.length === 0) ? (
+                {(carts?.length === 0) ? (
                     <>
                         <div className='empty-container'>
-                            <img className='empty-image'  alt="Cart Empty" title="Cart Empty" src={cart404} />
+                            <img className='empty-image' alt="Cart Empty" title="Cart Empty" src={cart404} />
                             <Link to='/' className='shopping-btn'>Shopping now</Link>
                         </div>
                     </>
@@ -106,26 +165,26 @@ export default function CartPage() {
                         <div className="cart-content">
                             <div className="cart-items">
                                 {
-                                    carts.map((cart, index) => (
+                                    carts?.map((cart, index) => (
                                         <div key={index} className="cart-item">
                                             <div className="item-image">
-                                                <img src={`http://localhost:5000${cart.image_product}`} alt={cart.name_product} title={cart.name_product} />
+                                                <img src={`http://localhost:5000${cart.image_product || cart.image}`} alt={cart.name_product || cart.image} title={cart.name_product || cart.image} />
                                             </div>
                                             <div className="item-details">
                                                 <div className="item-header">
-                                                    <Link to={`/product?code=${cart.code_product}`} className="item-name">{cart.name_product}</Link>
-                                                    <div className="item-price">{formatCurrency(cart.price_product, 'en-US', 'USD')}</div>
+                                                    <Link to={`/product?code=${cart.code_product || cart.code}`} className="item-name">{cart.name_product || cart.code}</Link>
+                                                    <div className="item-price">{formatCurrency(cart.price_product || cart.price, 'en-US', 'USD')}</div>
                                                 </div>
-                                                <p className="item-description">{cart.description_product}</p>
-                                                <div className='item-color'>Color:{cart.color_product}</div>
+                                                <p className="item-description">{cart.description_product || cart.description}</p>
+                                                <div className='item-color'>Color:{cart.color_product || cart.color}</div>
                                                 <div className="item-controls">
                                                     <div className="quantity-control">
-                                                        <button className="qty-btn" onClick={() => handleQuantityChange(cart._id, 'decrease', index)}>−</button>
-                                                        <div className="quantity">{cart.quantity_product}</div>
-                                                        <button className="qty-btn" onClick={() => handleQuantityChange(cart._id, 'increase', index)}>+</button>
+                                                        <button className="qty-btn" onClick={() => handleQuantityChange(cart._id || cart.code, 'decrease', index)}>−</button>
+                                                        <div className="quantity">{cart.quantity_product || cart.quantity}</div>
+                                                        <button className="qty-btn" onClick={() => handleQuantityChange(cart._id || cart.code, 'increase', index)}>+</button>
                                                     </div>
-                                                    <button className={`quantity-change ${indexCart === index ? 'show' : ' '}`} onClick={() => handleSubmitQuantity(cart._id, cart.quantity_product)}>Ok</button>
-                                                    <button className="item-remove" onClick={() => handleRemove(cart._id)}>Remove</button>
+                                                    <button className={`quantity-change ${indexCart === index ? 'show' : ' '}`} onClick={() => handleSubmitQuantity(cart._id || cart.code, cart.quantity_product || cart.quantitty)}>Ok</button>
+                                                    <button className="item-remove" onClick={() => handleRemove(cart._id || cart.code)}>Remove</button>
                                                 </div>
                                             </div>
                                         </div>

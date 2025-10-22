@@ -5,7 +5,7 @@ import { UserContext } from "../../contexts/UserContext";
 import '../../styles/SidebarProfile.css';
 
 export default function SidebarProfile({ activeTab }) {
-    const { getInfoUser } = useContext(UserContext);
+    const { setInfoUser } = useContext(UserContext);
     const [logoutModal, setLogoutModal] = useState(false);
 
     const [logout, setLogout] = useState(false);
@@ -16,7 +16,9 @@ export default function SidebarProfile({ activeTab }) {
         setLogout(true);
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
-        await getInfoUser();
+        setInfoUser(prev=>({
+            ...prev , name:'',email:'',avatar:''
+        }));
         setTimeout(() => navigate("/"), 500);
     }
     return (

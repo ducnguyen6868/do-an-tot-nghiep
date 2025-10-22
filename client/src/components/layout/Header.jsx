@@ -18,15 +18,15 @@ export default function Header() {
 
   const [keyword, setKeyword] = useState('');
 
-  const [isLogged, setIsLogged] = useState(false);
+  const [logged, setLogged] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (infoUser && infoUser.name !== '') {
-      setIsLogged(true);
+      setLogged(true);
     } else {
-      setIsLogged(false);      
+      setLogged(false);
     }
   }, [infoUser]);
 
@@ -123,17 +123,29 @@ export default function Header() {
             </div>
 
             {/* <!-- Header Actions --> */}
-            {isLogged ? (<div className="header-actions">
+            <div className="header-actions">
               <div className="header-action">
-                <Link to="/profile" >
-                  <div className="action-icon avatar-wave"  >
-                    <img src={infoUser.avatar ? `http://localhost:5000/` + infoUser.avatar : avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
-                      width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"
-                    }} />
-                  </div>
-                </Link>
-
-                <div className="action-label">{infoUser.name}</div>
+                {logged ? (
+                  <>
+                    <Link to='/profile' >
+                      <div className="action-icon avatar-wave"  >
+                        <img src={infoUser.avatar ? `http://localhost:5000/` + infoUser.avatar : avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
+                          width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"
+                        }} />
+                      </div>
+                    </Link>
+                    <div className="action-label">{infoUser.name}</div>
+                  </>
+                ) : (
+                  <>
+                    <Link to='/login' >
+                      <div className="action-icon">
+                        <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
+                      </div>
+                    </Link>
+                    <div className="action-label">Account</div>
+                  </>
+                )}
               </div>
               <div className="header-action">
                 <Link to="/wishlist">
@@ -154,33 +166,7 @@ export default function Header() {
                 <div className="action-label">Cart</div>
               </div>
             </div>
-            ) : (
-              <div className="header-actions">
-                <div className="header-action">
-                  <Link to='/login' >
-                    <div className="action-icon">
-                      <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
-                    </div>
-                  </Link>
-                  <div className="action-label">Account</div>
-                </div>
-                <div className="header-action">
-                  <Link to='/wishlist'>
-                    <div className="action-icon">
-                      <Icon icon="noto:red-heart" width="32" height="32" />
-                    </div>
-                    <div className="action-badge">{infoUser.wishlist}</div>
-                  </Link>
-                  <div className="action-label">Wishlist</div>
-                </div>
-                <div className="header-action">
-                  <div className="action-icon">
-                    <Icon icon="noto:shopping-cart" width="32" height="32" />
-                  </div>
-                  <div className="action-badge">{infoUser.cart}</div>
-                  <div className="action-label">Cart</div>
-                </div>
-              </div>)}
+
           </div>
         </div>
 

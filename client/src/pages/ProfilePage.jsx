@@ -1,11 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import '../styles/ProfilePage.css';
 import { Icon } from '@iconify/react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
 import PasswordChangeModal from '../components/comon/PasswordChangeModal';
 import SidebarProfile from '../components/layout/SidebarProfile';
 import HeaderProfile from '../components/layout/HeaderProfile';
@@ -59,8 +54,6 @@ const supportMessages = [
 ];
 
 export default function ProfilePage() {
-    const { infoUser, getInfoUser } = useContext(UserContext);
-    // console.log(infoUser);
     const [activeTab, setActiveTab] = useState('profile');
 
     const [messageInput, setMessageInput] = useState('');

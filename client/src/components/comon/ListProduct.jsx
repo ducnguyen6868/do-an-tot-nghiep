@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {Icon} from '@iconify/react';
+import { Icon } from '@iconify/react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import userApi from '../../api/userApi';
 import { useContext } from 'react';
@@ -9,7 +9,7 @@ import { UserContext } from '../../contexts/UserContext';
 import useProductsPerRow from '../../hooks/useProductsPerRow';
 import '../../styles/ListProduct.css';
 
-export default function ListProduct({ products, wishlist,onChange }) {
+export default function ListProduct({ products, wishlist, onChange }) {
 
   const { setInfoUser } = useContext(UserContext);
 
@@ -29,20 +29,50 @@ export default function ListProduct({ products, wishlist,onChange }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const handleCart = async (product) => {
-    try {
-      const id = product._id;
-      const code = product.code;
-      const name = product.name;
-      const image = product.images[0];
-      const description = product.description;
-      const quantity = 1;
-      const color = product.detail[0]?.color;
-      const price = product.detail[0]?.price;
-      const detailId = product.detail[0]?._id;
-      const data = {
-        id, code, name, image, description, quantity, color, price, detailId
+    const id = product._id;
+    const code = product.code;
+    const name = product.name;
+    const image = product.images[0];
+    const description = product.description;
+    const quantity = 1;
+    const color = product.detail[0]?.color;
+    const price = product.detail[0]?.price;
+    const detailId = product.detail[0]?._id;
+    const cart = {
+      id, code, name, image, description, quantity, color, price, detailId
+    }
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      let cartLocal = localStorage.getItem('cart');
+      cartLocal = cartLocal ? JSON.parse(cartLocal) : [];
+
+      const existCart = cartLocal.find(
+        item => item.code === cart.code && item.color === cart.color
+      );
+
+      if (existCart) {
+        const newCart = cartLocal.map(item => {
+          if (item.code === existCart.code && item.color === existCart.color) {
+            item.quantity += 1;
+          }
+          return item;
+        });
+        toast.success('Product quantity updated.');
+        localStorage.setItem('cart', JSON.stringify(newCart));
+        setInfoUser(prev => ({ ...prev, cart: newCart.length }));
+      } else {
+        cartLocal.push(cart);
+        toast.success('Product has been added to the cart.');
+        localStorage.setItem('cart', JSON.stringify(cartLocal));
+        setInfoUser(prev => ({ ...prev, cart: cartLocal.length }));
       }
-      const response = await userApi.addCart(data);
+
+      return;
+    }
+
+    try {
+      const response = await userApi.addCart(cart);
       toast.success(response.message);
       setInfoUser(prev => ({ ...prev, cart: response.cart }));
     } catch (err) {
@@ -86,27 +116,27 @@ export default function ListProduct({ products, wishlist,onChange }) {
       toast.error(err.response?.data?.message || err.message);
     }
   }
-  const handleRemove = async (code)=>{
-      const token = localStorage.getItem("token");
-      if(!token){
-        let wishlist = localStorage.getItem('wishlist');
-        wishlist= JSON.parse(wishlist);
-        const newWishlist = wishlist.filter(item=>item.code!==code);
-        setInfoUser(prev=>({...prev , wishlist:newWishlist.length}));
-        onChange?.();
-        localStorage.setItem('wishlist',JSON.stringify(newWishlist));
-        return;
+  const handleRemove = async (code) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      let wishlist = localStorage.getItem('wishlist');
+      wishlist = JSON.parse(wishlist);
+      const newWishlist = wishlist.filter(item => item.code !== code);
+      setInfoUser(prev => ({ ...prev, wishlist: newWishlist.length }));
+      onChange?.();
+      localStorage.setItem('wishlist', JSON.stringify(newWishlist));
+      return;
+    }
+    try {
+      const response = await userApi.removeWishlist(code);
+      setInfoUser(prev => ({ ...prev, wishlist: response.wishlist }));
+      onChange?.();
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message);
+      if (err.response && err.response.status === 403) {
+        localStorage.removeItem('token');
       }
-      try{
-        const response = await userApi.removeWishlist(code);
-        setInfoUser(prev=>({...prev , wishlist:response.wishlist}));
-        onChange?.();
-      }catch(err){
-        toast.error(err.response?.data?.message||err.message);
-        if(err.response&&err.response.status===403){
-          localStorage.removeItem('token');
-        }
-      }
+    }
   }
   return (
     <>
@@ -118,7 +148,7 @@ export default function ListProduct({ products, wishlist,onChange }) {
               <div className="product-overlay">
                 <Link to={`/product?code=${product.code}`} className="quick-view-btn">👁️ Quick View</Link>
                 {wishlist ? (
-                  <button className="wishlist-btn" onClick={()=>handleRemove(product.code)}>
+                  <button className="wishlist-btn" onClick={() => handleRemove(product.code)}>
                     <Icon icon="noto:broken-heart" width="16" height="16" />
                   </button>
                 ) : (

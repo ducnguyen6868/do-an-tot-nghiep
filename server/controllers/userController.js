@@ -3,7 +3,6 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 
 const viewCart = async (req, res) => {
-  const id = req.user.id;
   const user = await User.findById(id).populate('carts');
   if (!user) {
     return res.status(404).json({
@@ -17,8 +16,8 @@ const viewCart = async (req, res) => {
 const addCart = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { data } = req.body;
-    const { id, code, name, image, description, quantity, color, price, detailId } = data;
+    const { cart } = req.body;
+    const { id, code, name, image, description, quantity, color, price, detailId } = cart;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -41,7 +40,7 @@ const addCart = async (req, res) => {
       });
     }
 
-    const cart = await Cart.create({
+    const newCart = await Cart.create({
       userId,
       productId: id,
       code_product: code,
@@ -54,7 +53,7 @@ const addCart = async (req, res) => {
       detailId
     });
 
-    await User.findByIdAndUpdate(userId, { $push: { carts: cart._id } });
+    await User.findByIdAndUpdate(userId, { $push: { carts: newCart._id } });
 
     return res.status(200).json({
       message: "Product added to cart successfully.",
