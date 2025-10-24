@@ -5,8 +5,6 @@ import { toast } from 'react-toastify';
 import '../styles/CheckoutPage.css';
 import momoImg from '../assets/momo.png';
 import zaloImg from '../assets/zalopay.png';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import recipientApi from '../api/recipientApi';
@@ -188,8 +186,7 @@ export default function CheckoutPage() {
     };
     return (
         <>
-            <Header />
-            <div className="checkout-container">
+             <div className="checkout-container">
                 <div className="checkout-main">
                     {/* --- ORDER SUMMARY --- */}
                     <div className="order-summary">
@@ -461,7 +458,6 @@ export default function CheckoutPage() {
                     </div>
                 )}
             </div>
-            <Footer />
         </>
     );
 }

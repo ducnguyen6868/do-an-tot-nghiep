@@ -90,7 +90,7 @@ export default function Header() {
               </div>
             </div>
             <div className="header-links">
-              <Link to="#">Track Order</Link>
+              <Link to={`${infoUser.name?'/user/order':'/order'}`}>Track Order</Link>
               <Link to="#">Help</Link>
               <Link to="#">Store Locator</Link>
               <Link to="#">English ▼</Link>
@@ -139,7 +139,7 @@ export default function Header() {
               <div className="header-action">
                 {logged ? (
                   <>
-                    <Link to='/profile' >
+                    <Link to='/user/profile' >
                       <div className="action-icon avatar-wave"  >
                         <img src={infoUser.avatar ? `http://localhost:5000/` + infoUser.avatar : avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
                           width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"

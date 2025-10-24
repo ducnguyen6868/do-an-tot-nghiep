@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
 import { Icon } from '@iconify/react';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import { toast } from 'react-toastify';
 import {useContext} from 'react';
 import {UserContext} from '../contexts/UserContext';
@@ -161,7 +159,6 @@ export default function HomePage() {
 
   return (
     <>
-      <Header />
       <div className="product-page">
         {/* Flash Sale Section */}
         {totalPagesFlash > 0 && (
@@ -321,7 +318,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 }

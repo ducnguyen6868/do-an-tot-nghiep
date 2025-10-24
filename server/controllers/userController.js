@@ -29,10 +29,10 @@ const addCart = async (req, res) => {
       return res.status(400).json({ message: "Fields are missing." });
     }
 
-    const existingCart = await Cart.findOne({ userId, productId: id, color_product: color });
+    const existingCart = await Cart.findOne({ userId, productId: id, color: color });
 
     if (existingCart) {
-      existingCart.quantity_product += quantity;
+      existingCart.quantity += quantity;
       await existingCart.save();
       return res.status(200).json({
         message: "Product quantity updated in cart.",
@@ -43,14 +43,7 @@ const addCart = async (req, res) => {
     const newCart = await Cart.create({
       userId,
       productId: id,
-      code_product: code,
-      image_product: image,
-      name_product: name,
-      description_product: description,
-      price_product: price,
-      quantity_product: quantity,
-      color_product: color,
-      detailId
+      code, name, image, description, price,quantity,color, detailId
     });
 
     await User.findByIdAndUpdate(userId, { $push: { carts: newCart._id } });
@@ -102,7 +95,7 @@ const updateCartQuantity = async (req, res) => {
     const cart = await Cart.findOne({ _id: cartId, userId });
     if (!cart) return res.status(404).json({ message: "Cart not found." });
 
-    cart.quantity_product = quantity;
+    cart.quantity = quantity;
     await cart.save();
 
     const user = await User.findById(userId);

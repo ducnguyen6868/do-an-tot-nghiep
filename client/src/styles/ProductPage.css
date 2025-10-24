@@ -489,8 +489,7 @@
   color: var(--text-primary);
   border-radius: 16px;
   padding: 2rem;
-  max-width: 600px;
-  width: 100%;
+  width: max-content;
   box-shadow: 0 6px 20px var(--shadow-lg);
   position: relative;
   animation: slideUp 0.3s ease;

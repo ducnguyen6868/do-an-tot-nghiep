@@ -59,7 +59,7 @@ export default function LoginPage() {
       toast.success(response.message);
       await setInfoUser(prev=>({
         ...prev , name:response.user.name,
-        email:response.user.name,
+        email:response.user.email,
         avatar:response.user.avatar,
         cart:response.user.carts?.length,
         wishlist:response.user.wishlist?.length

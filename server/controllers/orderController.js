@@ -7,8 +7,25 @@ const Cart = require('../models/Cart');
 const Detail = require('../models/Detail');
 const axios = require('axios');
 
+const view = async (req, res) => {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(404).json({
+            message: "User not found."
+        });
+    }
+    const ordersData = await Order.find({ user:userId }).populate('products');
+    const orders = [...ordersData].reverse();
+    return res.status(200).json({
+        message: "Get orders successful",
+        orders,
+    });
+
+}
 const viewOrder = async (req, res) => {
-    const { orderId } = req.body;
+    const { orderId } = req.params;
+
     if (!orderId) {
         return res.status(400).json({
             message: "OrderId is required."
@@ -38,9 +55,9 @@ const createOrder = async (req, res) => {
             if (!detail) continue;
 
             const newQuantity = detail.quantity - product.quantity;
-            if(newQuantity<0){
+            if (newQuantity < 0) {
                 return res.status(403).json({
-                    message:"Quantity exceeds product in stock."
+                    message: "Quantity exceeds product in stock."
                 })
             }
             const newSold = (detail.sold || 0) + product.quantity;
@@ -65,15 +82,17 @@ const createOrder = async (req, res) => {
             discount_amount: parseFloat(discount_amount || 0),
             final_amount: parseFloat(final_amount),
             paymentMethod: formData.payment,
-            list_products: productData.map(p => ({
-                product: p.id,
+            products: productData.map(p => ({
+                code:p.code,
+                name:p.name,
+                image:p.image,
                 quantity: p.quantity,
                 color: p.color
             })),
         });
         await newOrder.save();
 
-    
+
         if (formData.email) {
             const user = await User.findOne({ email: formData.email });
             if (!user) {
@@ -93,7 +112,7 @@ const createOrder = async (req, res) => {
                 user.carts = [];
                 await user.save();
             };
-           return res.status(201).json({
+            return res.status(201).json({
                 message: 'Create order successful!',
                 cart: user.carts.length
             });
@@ -196,7 +215,7 @@ const transitionStatus = async (req, res) => {
         if (result.data.resultCode === 0) {
             await Order.findOneAndUpdate({ code: orderId }, {
                 $set: {
-                    status: 'paid'
+                    payment: 'paid'
                 }
             });
         }
@@ -208,4 +227,32 @@ const transitionStatus = async (req, res) => {
     }
 };
 
-module.exports = { viewOrder, createOrder, payment, callBack, transitionStatus };
+//Adminstrator 
+
+const orders = async (req,res)=>{
+    const orders = await Order.find();
+    return res.status(200).json({
+        message:'Get list order successful.',
+        orders
+    });
+}
+
+const changeStatus = async(req ,res)=>{
+    const {orderId , status} = req.body;
+    const order = await Order.findById(orderId);
+    if(!order){
+        return res.status(404).json({
+            message:"Order not found"
+        });
+    }    
+    await Order.findByIdAndUpdate(orderId,{
+        $set:{status}
+    });
+    return res.status(200).json({
+        message:'Canceled order successful.'
+    });
+
+}
+module.exports = { view, viewOrder, 
+    createOrder, payment, callBack, transitionStatus ,
+     orders , changeStatus };

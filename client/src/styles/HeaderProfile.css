@@ -2,8 +2,9 @@
 /* Hero Section */
 .hero-section {
     position: relative;
-    padding: 40px 2rem 60px;
+    padding: 1rem 2rem;
     overflow: hidden;
+    background-color:var(--bg-secondary);
 }
 
 .hero-bg {

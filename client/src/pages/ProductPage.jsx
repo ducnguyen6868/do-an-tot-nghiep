@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/ProductPage.css';
 import { toast } from "react-toastify";
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import productApi from '../api/productApi';
 import userApi from '../api/userApi';
 import { useContext } from 'react';
@@ -63,11 +61,9 @@ export default function ProductPage() {
   if (loading) {
     return (
       <>
-        <Header />
         <div style={{ textAlign: 'center', padding: '50px' }}>
           <h2>Loading product...</h2>
         </div>
-        <Footer />
       </>
     );
   }
@@ -75,11 +71,9 @@ export default function ProductPage() {
   if (!product || !product.name) {
     return (
       <>
-        <Header />
         <div style={{ textAlign: 'center', padding: '50px' }}>
           <h2>Product not found</h2>
         </div>
-        <Footer />
       </>
     );
   }
@@ -124,7 +118,6 @@ export default function ProductPage() {
   };
   return (
     <>
-      <Header />
       <div className="product-detail-page">
         <div className="container">
           <div className="product-section">
@@ -402,8 +395,6 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 }

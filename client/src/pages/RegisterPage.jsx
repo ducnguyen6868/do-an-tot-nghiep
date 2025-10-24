@@ -183,6 +183,7 @@ export default function RegisterPage() {
                                         onChange={handleRegisterChange}
                                         placeholder="••••••••"
                                         className={errors.confirmPassword ? "error" : ""}
+                                        onKeyDown={(e)=>e.key==='Enter'&&handleRegisterSubmit()}
                                     />
                                     <button
                                         type="button"

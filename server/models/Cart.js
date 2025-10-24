@@ -6,13 +6,13 @@ require('./Detail');
 const cartSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-  code_product: { type: String },
-  image_product: { type: String },
-  name_product:{type:String},
-  description_product: { type: String },
-  price_product: { type: Number },
-  quantity_product: { type: Number, required: true, default: 1 },
-  color_product:{type:String},
+  code: { type: String },
+  image: { type: String },
+  name:{type:String},
+  description: { type: String },
+  price: { type: Number },
+  quantity: { type: Number, required: true, default: 1 },
+  color:{type:String},
   detailId: { type: Schema.Types.ObjectId, ref: 'Detail', required: true },
      
 },{timestamps:true});

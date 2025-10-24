@@ -61,6 +61,15 @@ export default function PaymentResultPage() {
         getProducts();
     }, []);
 
+    const handleNavigate = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/user/order');
+
+        } else {
+            navigate('/order');
+        }
+    }
     const currentProducts = products.slice(0, 4);
 
     return (
@@ -74,7 +83,7 @@ export default function PaymentResultPage() {
                             <h2>Payment Summary</h2>
                             <ul>
                                 <li><strong>Order Total:</strong> {formatCurrency(order?.final_amount, 'en-US', 'USD') || 0}</li>
-                                <li><strong>Payment Method:</strong> {order?.paymentMethod}</li>
+                                <li><strong>Payment :</strong> {order?.paymentMethod} - {order?.payment}</li>
                                 <li><strong>Transaction ID:</strong> {order?.code}</li>
                                 <li><strong>Status:</strong> {order?.status}</li>
                             </ul>
@@ -85,7 +94,7 @@ export default function PaymentResultPage() {
                             <button className="btn btn-primary" onClick={() => navigate('/')}>
                                 Continue Shopping
                             </button>
-                            <button className="btn btn-secondary" onClick={() => navigate('/orders')}>
+                            <button className="btn btn-secondary" onClick={() => handleNavigate()}>
                                 View Order History
                             </button>
                         </div>

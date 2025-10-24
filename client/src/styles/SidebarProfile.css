@@ -131,9 +131,11 @@
   color: var(--brand-color);
   margin-bottom: 0.5rem;
 }
+
 .loggingout-title {
-animation: down 1s ease;
+  animation: down 1s ease;
 }
+
 @keyframes down {
   0% {
     margin-top: 0;
@@ -166,17 +168,18 @@ animation: down 1s ease;
   background: var(--bg-tertiary);
   padding: 1rem;
   border-radius: 12px;
-
+  color: var(--text-primary);
 }
 
 .stat-icon {
   display: block;
-  margin-bottom: 0.4rem;
 }
 
 .stat-value {
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 0.2rem;
 }
 
 .stat-label {
@@ -297,6 +300,25 @@ animation: down 1s ease;
 /* =========================
    RESPONSIVE
    ========================= */
+@media (max-width: 1256px) {
+  .sidebar-profile {
+    width: 100%;
+  }
+
+  .nav-menu-profile {
+    flex-direction: row;
+    gap: 2rem;
+    height: max-content;
+    justify-content: space-evenly;
+  }
+
+  .nav-label,
+  .nav-arrow {
+    display: none;
+  }
+
+}
+
 @media (max-width:1024px) {
   .sidebar-profile {
     width: 100%;
@@ -307,16 +329,6 @@ animation: down 1s ease;
     margin: 0;
   }
 
-  .nav-menu-profile {
-    flex-direction: row;
-    gap: 2rem;
-    height: max-content;
-  }
-
-  .nav-label,
-  .nav-arrow {
-    display: none;
-  }
 }
 
 @media (max-width: 768px) {

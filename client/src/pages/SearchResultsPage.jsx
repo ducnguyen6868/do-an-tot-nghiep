@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import '../styles/SearchResultsPage.css';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import productApi from '../api/productApi';
@@ -159,7 +157,6 @@ export default function SearchResultsPage() {
 
   return (
     <>
-      <Header />
       <div className="search-results-page">
         <div className="results-layout">
           <div className="filters-container">
@@ -384,7 +381,6 @@ export default function SearchResultsPage() {
           </main>
         </div>
       </div>
-      <Footer />
     </>
   )
 }

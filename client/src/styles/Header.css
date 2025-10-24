@@ -7,10 +7,10 @@
   font-size: 14px;
   overflow: hidden;
   background-size: 200% 200%;
-  animation: toRight 3s linear infinite;
+  animation: toLeft 3s linear infinite;
 }
 
-@keyframes toRight {
+@keyframes toLeft {
   0% {
     background-position: 0% 50%;
   }

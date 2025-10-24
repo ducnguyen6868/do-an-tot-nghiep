@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import '../../styles/SidebarProfile.css';
 
@@ -11,6 +11,18 @@ export default function SidebarProfile({ activeTab }) {
     const [logout, setLogout] = useState(false);
     const navigate = useNavigate();
 
+    const asideData = [
+        { link: '/user/profile', icon: 'noto:identification-card', content: 'Personal Info', arrow: '→', activeTab: 'profile' },
+        { link: '#', icon: 'noto:coin', content: 'Points History', arrow: '→', activeTab: 'points' },
+        { link: '#', icon: 'noto:wrapped-gift', content: 'My Vouchers', arrow: '→', activeTab: 'voucher' },
+        { link: '/user/order', icon: 'noto:package', content: 'Order History', arrow: '→', activeTab: 'order' },
+        { link: '/user/address', icon: 'noto:round-pushpin', content: 'Addresses', arrow: '→', activeTab: 'address' },
+        { link: '#', icon: 'noto:speech-balloon', content: 'Support message', arrow: '→', activeTab: 'chat' },];
+
+
+    const handleActiveTab = (item) => {
+        navigate(`${item.link}`, { state: { activeTab: item.activeTab } })
+    }
     //Confirm logout
     const confirmLogout = async () => {
         setLogout(true);
@@ -33,36 +45,20 @@ export default function SidebarProfile({ activeTab }) {
             {/* Sidebar */}
             <aside className="sidebar-profile">
                 <nav className="nav-menu-profile">
-                    <Link to='../profile' className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}  >
-                        <span className="nav-icon"><Icon icon="noto:identification-card" width="30" height="30" /></span>
-                        <span className="nav-label">Personal Info</span>
-                        <span className="nav-arrow">→</span>
-                    </Link>
-                    <Link to="#" className={`nav-button ${activeTab === 'points' ? 'active' : ''}`}  >
-                        <span className="nav-icon"><Icon icon="noto:coin" width="30" height="30" /></span>
-                        <span className="nav-label">Points History</span>
-                        <span className="nav-arrow">→</span>
-                    </Link>
-                    <Link to='#' className={`nav-button ${activeTab === 'vouchers' ? 'active' : ''}`}  >
-                        <span className="nav-icon"><Icon icon="noto:wrapped-gift" width="30" height="30" /></span>
-                        <span className="nav-label">My Vouchers</span>
-                        <span className="nav-arrow">→</span>
-                    </Link>
-                    <Link to="#" className={`nav-button ${activeTab === 'orders' ? 'active' : ''}`}  >
-                        <span className="nav-icon"><Icon icon="noto:package" width="30" height="30" /></span>
-                        <span className="nav-label">Order History</span>
-                        <span className="nav-arrow">→</span>
-                    </Link>
-                    <Link to="/profile/address" className={`nav-button ${activeTab === 'address' ? 'active' : ''}`}  >
-                        <span className="nav-icon"><Icon icon="noto:round-pushpin" width="30" height="30" /></span>
-                        <span className="nav-label">Addresses</span>
-                        <span className="nav-arrow">→</span>
-                    </Link>
-                    <Link tp='#' className={`nav-button ${activeTab === 'chats' ? 'active' : ''}`}  >
-                        <span className="nav-icon"><Icon icon="noto:speech-balloon" width="30" height="30" /></span>
-                        <span className="nav-label">Support message</span>
-                        <span className="nav-arrow">→</span>
-                    </Link>
+                    {asideData.map((item, index) => (
+                        <button onClick={() => handleActiveTab(item)}
+                            key={index}
+                            to={item.link}
+                            className={`nav-button ${item.activeTab === activeTab ? 'active' : ''}`}
+                        >
+                            <span className="nav-icon">
+                                <Icon icon={item.icon} width="30" height="30" />
+                            </span>
+                            <span className="nav-label">{item.content}</span>
+                            <span className="nav-arrow">{item.arrow}</span>
+                        </button>
+                    ))}
+
                     <button className="nav-button logout" onClick={() => setLogoutModal(true)}>
                         <span className="nav-icon">
                             <Icon icon="noto:door" width="30" height="30" />
@@ -70,6 +66,7 @@ export default function SidebarProfile({ activeTab }) {
                         <span className="nav-label">Logout</span>
                     </button>
                 </nav>
+
             </aside>
 
             {/* Logout Confirmation Modal */}

@@ -1,7 +1,7 @@
 /* =========================
    PROFILE PAGE
    ========================= */
-.profile-page {
+.user-page {
   background: var(--bg-secondary);
   color: var(--text-primary);
   min-height: 100vh;
@@ -10,12 +10,9 @@
 
 /* Main layout */
 .main-section {
-  padding: 2rem;
-}
-
-.content-layout {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
+    padding:0 2rem;
 }
 
 /* Content area (right side) */
@@ -24,7 +21,6 @@
   background: var(--bg-primary);
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  padding: 2rem;
   box-shadow: 0 4px 12px var(--shadow-sm);
 }
 
@@ -165,6 +161,11 @@
 /* =========================
    RESPONSIVE
    ========================= */
+@media (max-width: 1256px) {
+  .main-section{
+    flex-wrap: wrap;
+  }
+}
 @media (max-width: 992px) {
   .content-layout {
     flex-direction: column;

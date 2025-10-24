@@ -12,19 +12,21 @@ const orderSchema = new Schema({
   total_amount: { type: Number, required: true },// tổng tiền trước giảm giá
   discount_amount: { type: Number, default: 0 },    // số tiền giảm giá (nếu có)
   final_amount: { type: Number },   // tổng tiền sau khi áp dụng khuyến mãi
-  level: {
+  status: {
     type: String,
-    enum: ['processing', 'shipping', 'delivered successfully', 'cancel'],
-    default: 'processing'
+    enum: ['Processing', 'Shipping', 'Delivered Successfully', 'Canceled'],
+    default: 'Processing'
   },
-  list_products: [{
-    product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-    quantity: { type: Number, required: true },
+  products: [{
+    code: { type: String },
+    name: { type: String },
+    image: { type: String },
+    quantity: { type: Number },
     color: { type: String }
   }],
   promotion: { type: Schema.Types.ObjectId, ref: 'Promotion' },
-  paymentMethod: { type: String },
-  status: { type: String, enum: ['unpaid', 'paid'], default: 'unpaid' }
+  payment: { type: String, enum: ['unpaid', 'paid'], default: 'unpaid' },
+  paymentMethod: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);
