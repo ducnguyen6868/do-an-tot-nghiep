@@ -85,7 +85,7 @@ export default function PaymentResultPage() {
                                 <li><strong>Order Total:</strong> {formatCurrency(order?.final_amount, 'en-US', 'USD') || 0}</li>
                                 <li><strong>Payment :</strong> {order?.paymentMethod} - {order?.payment}</li>
                                 <li><strong>Transaction ID:</strong> {order?.code}</li>
-                                <li><strong>Status:</strong> {order?.status}</li>
+                                <li><strong>Status:</strong> {order?.status?.at(-1)?.present}</li>
                             </ul>
                         </div>
 

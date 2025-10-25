@@ -13,6 +13,8 @@ export default function TrackingOrder({ order }) {
     const orderId = order._id;
     const getColor = (status) => {
         switch (status) {
+            case "Order Placed":
+                return '#4de606ff'
             case "Processing":
                 return "#facc15";
             case "Shipping":
@@ -30,7 +32,7 @@ export default function TrackingOrder({ order }) {
         <>
             <AnimatePresence>
                 <motion.div
-                    className={`order-card-pro ${order.status.replace(/\s/g, "-")}`}
+                    className={`order-card-pro ${order.status?.at(-1)?.present.replace(/\s/g, "-")}`}
                     initial={{ opacity: 0, y: 40, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -20, transition: { duration: 0.3 } }}
@@ -46,9 +48,9 @@ export default function TrackingOrder({ order }) {
                                     : "UNPAID"}
                             </span>
                             <span
-                                className='progress-text' style={{ backgroundColor: getColor(order.status) }}
+                                className='progress-text' style={{ backgroundColor: getColor(order.status?.at(-1)?.present) }}
                             >
-                                {order.status}
+                                {order.status.at(-1)?.present}
                             </span>
                         </div>
                         <p className="order-date">
@@ -127,13 +129,17 @@ export default function TrackingOrder({ order }) {
 
                     </div>
                     <div className='order-card-footer'>
-                        {order.status === 'Delivered Successfully' ? (
+                        {order.status?.at(-1)?.present === 'Delivered Successfully' ? (
                             <>
-                                <button className='review'>Review</button>
+                                <Link to='#' className='action-btn review' style={{backgroundColor:'#1576e3ff'}}>Review</Link>
                                 <div>
-                                    <button className='refund'>Return / Refund request</button>
-                                    <button style={{ marginLeft: '.8rem' }} className='buy-again'>Buy again</button>
+                                    <Link to='#' className='action-btn refund' style={{backgroundColor: '#eb0c0cff'}}>Return / Refund request</Link>
+                                    <Link to='#' style={{ marginLeft: '.8rem',backgroundColor: '#10ee4fff' }} className='action-btn buy-again'>Buy again</Link>
                                 </div>
+                            </>
+                        ) : order.status?.at(-1)?.present === 'Canceled' ? (
+                            <>
+                                <div style={{ flex: 1 }}><Link  className='action-btn' to={`/product?code=${order.products[0].code}`} style={{ backgroundColor: 'var(--brand-color)', float: 'right' , textDecoration:'none' }}>Buy again</Link></div>
                             </>
                         ) : (
                             <div style={{ flex: 1 }}><button style={{ backgroundColor: 'red', float: 'right' }} onClick={() => setOpen(true)}>Cancel</button></div>

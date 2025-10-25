@@ -18,15 +18,19 @@
 }
 
 /* Status-specific effects */
-.order-card-pro.processing {
+.order-card-pro.Order-Placed {
+    border-left: 5px solid blue;
+}
+
+.order-card-pro.Processing {
     border-left: 5px solid var(--brand-color);
 }
 
-.order-card-pro.delivered-successfully {
+.order-card-pro.Delivered-Successfully {
     border-left: 5px solid var(--success-color);
 }
 
-.order-card-pro.cancel {
+.order-card-pro.Canceled {
     border-left: 5px solid var(--error-color);
     opacity: 0.8;
 }
@@ -56,11 +60,13 @@
 .badge.paid {
     text-transform: uppercase;
     background-color: var(--success-color);
+    font-size: .6rem;
 }
 
 .badge.unpaid {
     text-transform: uppercase;
     background-color: var(--error-color);
+    font-size: .6rem;
 }
 
 .progress-text {
@@ -167,17 +173,10 @@
 
 }
 
-button.review {
-    background-color: #1E40AF;
+.action-btn {
+    text-decoration: none;
 }
 
-button.refund {
-    background-color: #B91C1C;
-}
-
-button.buy-again {
-    background-color: #166534;
-}
 
 /* Details Summary (Shipping Info) */
 .order-details-summary {

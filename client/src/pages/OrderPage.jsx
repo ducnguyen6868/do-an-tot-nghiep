@@ -18,7 +18,7 @@ export default function OrderPage() {
 
     const filteredOrders = orders?.filter(
         (o) =>
-            (filter === "all" || o.status === filter) &&
+            (filter === "all" || o.status?.at(-1)?.present === filter) &&
             o.code.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -89,10 +89,11 @@ export default function OrderPage() {
                             />
                             <select value={filter} onChange={(e) => setFilter(e.target.value)}>
                                 <option value="all">All</option>
+                                <option value="Order Placed">Order Placed</option>
                                 <option value="Processing">Processing</option>
                                 <option value="Shipping">Shipping</option>
                                 <option value="Delivered Successfully">Delivered</option>
-                                <option value="Cancel">Canceled</option>
+                                <option value="Canceled">Canceled</option>
                             </select>
                         </div>
                     </div>

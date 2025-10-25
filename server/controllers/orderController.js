@@ -15,7 +15,7 @@ const view = async (req, res) => {
             message: "User not found."
         });
     }
-    const ordersData = await Order.find({ user:userId }).populate('products');
+    const ordersData = await Order.find({ user: userId }).populate('products');
     const orders = [...ordersData].reverse();
     return res.status(200).json({
         message: "Get orders successful",
@@ -71,6 +71,7 @@ const createOrder = async (req, res) => {
         };
 
         // create new order
+        const status = { present: 'Order Placed', time: Date.now() }
         const newOrder = new Order({
             code: orderId,
             recipient: formData.recipientId,
@@ -83,13 +84,14 @@ const createOrder = async (req, res) => {
             final_amount: parseFloat(final_amount),
             paymentMethod: formData.payment,
             products: productData.map(p => ({
-                code:p.code,
-                name:p.name,
-                image:p.image,
+                code: p.code,
+                name: p.name,
+                image: p.image,
                 quantity: p.quantity,
                 color: p.color
             })),
         });
+        newOrder.status.push(status);
         await newOrder.save();
 
 
@@ -186,7 +188,7 @@ const callBack = async (req, res) => {
     return res.status(200).json();
 };
 
-const transitionStatus = async (req, res) => {
+const checkPayment = async (req, res) => {
 
     const { orderId } = req.body;
 
@@ -229,30 +231,32 @@ const transitionStatus = async (req, res) => {
 
 //Adminstrator 
 
-const orders = async (req,res)=>{
+const orders = async (req, res) => {
     const orders = await Order.find();
     return res.status(200).json({
-        message:'Get list order successful.',
+        message: 'Get list order successful.',
         orders
     });
 }
 
-const changeStatus = async(req ,res)=>{
-    const {orderId , status} = req.body;
+const changeStatus = async (req, res) => {
+    const { orderId, status } = req.body;
     const order = await Order.findById(orderId);
-    if(!order){
+    if (!order) {
         return res.status(404).json({
-            message:"Order not found"
+            message: "Order not found"
         });
-    }    
-    await Order.findByIdAndUpdate(orderId,{
-        $set:{status}
-    });
+    }
+    const newStatus = { present: status, time: Date.now() }
+    order.status.push(newStatus);
+    await order.save();
     return res.status(200).json({
-        message:'Canceled order successful.'
+        message: 'Update status order successful.'
     });
 
 }
-module.exports = { view, viewOrder, 
-    createOrder, payment, callBack, transitionStatus ,
-     orders , changeStatus };
+module.exports = {
+    view, viewOrder,
+    createOrder, payment, callBack, checkPayment,
+    orders, changeStatus
+};

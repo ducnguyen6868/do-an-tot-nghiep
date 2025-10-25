@@ -12,11 +12,14 @@ const orderSchema = new Schema({
   total_amount: { type: Number, required: true },// tổng tiền trước giảm giá
   discount_amount: { type: Number, default: 0 },    // số tiền giảm giá (nếu có)
   final_amount: { type: Number },   // tổng tiền sau khi áp dụng khuyến mãi
-  status: {
-    type: String,
-    enum: ['Processing', 'Shipping', 'Delivered Successfully', 'Canceled'],
-    default: 'Processing'
-  },
+  status: [{
+    present: {
+      type: String,
+      enum: ['Order Placed','Processing', 'Shipping', 'Delivered Successfully', 'Canceled'],
+      default: 'Order Placed'
+    }, 
+    time: { type: Date, default: Date.now() }
+  }],
   products: [{
     code: { type: String },
     name: { type: String },

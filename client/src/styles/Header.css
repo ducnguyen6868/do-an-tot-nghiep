@@ -77,13 +77,15 @@
   flex-wrap: wrap;
 }
 
-.header-links a {
+.header-links button {
   color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.3s ease;
+  background-color: #002fff00;
+  border:none;
 }
 
-.header-links a:hover {
+.header-links button:hover {
   color: var(--brand-color);
 }
 

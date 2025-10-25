@@ -3,41 +3,57 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from 'react-toastify';
 import orderApi from '../../api/orderApi';
 import TrackingOrder from "../../components/comon/TrackingOrder";
+import OrderStatusTracker from '../../components/comon/OrderStatusTracker';
 import { formatCurrency } from '../../utils/formatCurrency';
 import "../../styles/admin/OrderManagement.css";
 
 
-const levelColors = {
-  Processing: "#f59e0b",
-  Shipping: "#3b82f6",
-  "Delivered successfully": "#10b981",
-  Cancel: "#ef4444",
+const getColor = (status) => {
+  switch (status) {
+    case "Order Placed":
+      return '#0620e6ff';
+    case "Processing":
+      return "#facc15";
+    case "Shipping":
+      return "#3b82f6";
+    case "Delivered Successfully":
+      return "#22c55e";
+    case "Canceled":
+      return "#ef4444";
+    default:
+      return "#9ca3af";
+  }
 };
 
 export default function OrderManagement() {
   const [orders, setOrders] = useState([]);
-  const [open, setOpen] = useState(false);
   const [order, setOrder] = useState();
+
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState(false);
   const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    const getOrders = async () => {
-      try {
-        const response = await orderApi.orders();
-        setOrders(response.orders);
-      } catch (err) {
-        toast.error(err.response?.data?.messgae || err.message);
-      }
+  const getOrders = async () => {
+    try {
+      const response = await orderApi.orders();
+      setOrders(response.orders);
+    } catch (err) {
+      toast.error(err.response?.data?.messgae || err.message);
     }
+  }
+  useEffect(() => {
     getOrders();
   }, []);
 
-  const filteredOrders = filter === "all" ? orders : orders.filter((o) => o.level === filter);
+  const filteredOrders = filter === "all" ? orders : orders.filter((o) => o.status?.at(-1).present === filter);
 
   const handleOrder = (order) => {
     setOpen(true);
     setOrder(order);
-
+  }
+  const handleChangeStatus = (order) => {
+    setStatus(true);
+    setOrder(order);
   }
   return (
     <>
@@ -50,6 +66,7 @@ export default function OrderManagement() {
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value="all">Tất cả</option>
+            <option value="Order Placed">Order Placed</option>
             <option value="Processing">Processing</option>
             <option value="Shipping">Shipping</option>
             <option value="Delivered successfully">Delivered successfully</option>
@@ -81,19 +98,18 @@ export default function OrderManagement() {
                   <th>Address</th>
                   <th>Total</th>
                   <th>Status</th>
-                  <th>Payment</th>
                   <th>Detail</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredOrders.map((order , index) => (
+                {filteredOrders.map((order, index) => (
                   <motion.tr
                     key={order._id}
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 200 }}
                   >
-                    <td className="index">{index+1}</td>
+                    <td className="index">{index + 1}</td>
                     <td>
                       <div className="customer-info">
                         <strong>{order.name}</strong>
@@ -107,17 +123,9 @@ export default function OrderManagement() {
                     <td>
                       <span
                         className="badge"
-                        style={{ backgroundColor: levelColors[order.status] }}
+                        style={{ backgroundColor: getColor(order.status?.at(-1)?.present) }}
                       >
-                        {order.status}
-                      </span>
-                    </td>
-                    <td>
-                      <span
-                        className={`status-badge ${order.status === "paid" ? "paid" : "unpaid"
-                          }`}
-                      >
-                        {order.payment}
+                        {order.status?.at(-1)?.present}
                       </span>
                     </td>
                     <td>
@@ -126,14 +134,14 @@ export default function OrderManagement() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }} onClick={() => handleOrder(order)}
                       >
-                        Chi tiết
+                        View
                       </motion.button>
                     </td>
                     <td>
                       <motion.button
-                        className="action-btn"
+                        className="action-btn order-action"
                         whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }} onClick={() => handleOrder(order)}
+                        whileTap={{ scale: 0.95 }} onClick={() => handleChangeStatus(order)}
                       >
                         Update
                       </motion.button>
@@ -148,12 +156,20 @@ export default function OrderManagement() {
       </div>
       {open &&
         (
-          <div className='modal-overlay' onClick={()=>setOpen(false)}>
-            <div className='modal-content' style={{overflow:'scroll'}} onClick={(e)=>e.stopPropagation()}>
+          <div className='modal-overlay' onClick={() => setOpen(false)}>
+            <div className='modal-content' style={{ overflow: 'scroll' }} onClick={(e) => e.stopPropagation()}>
               <TrackingOrder order={order} />
             </div>
           </div>
         )}
+      {status && (
+        <div className="modal-overlay" onClick={(e)=>setStatus(false)}>
+          <div className="modal-content" style={{padding:'0'}} onClick={(e)=>e.stopPropagation()}>
+            <OrderStatusTracker order={order} onClose={()=>setStatus(false)} onChange={()=>getOrders()}/>
+          </div>
+        </div>
+      )}
+
     </>
   );
 };

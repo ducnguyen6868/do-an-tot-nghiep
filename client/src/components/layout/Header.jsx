@@ -56,6 +56,14 @@ export default function Header() {
       setCurrency('USD');
     }
   }
+
+  const handleViewOrder = ()=>{
+    if(infoUser.name){
+      navigate('/user/order',{state:{activeTab:'order'}});
+    }else{
+      navigate('/order');
+    }
+  }
   return (
     <>
       <div className="announcement-bar">
@@ -90,14 +98,14 @@ export default function Header() {
               </div>
             </div>
             <div className="header-links">
-              <Link to={`${infoUser.name?'/user/order':'/order'}`}>Track Order</Link>
-              <Link to="#">Help</Link>
-              <Link to="#">Store Locator</Link>
-              <Link to="#">English ▼</Link>
-              <Link to="#"
+              <button onClick={()=>handleViewOrder()}>Track Order</button>
+              <button >Help</button>
+              <button >Store Locator</button>
+              <button >English ▼</button>
+              <button 
                 onClick={() =>handleChangeCurrency()}>
                 {currency === 'USD' ? 'USD $' : 'VND ₫'}▼
-              </Link>
+              </button>
             </div>
             <ThemToggle />
           </div>

@@ -4,7 +4,7 @@ const {
     createOrder,
     payment,
     callBack,
-    transitionStatus,
+    checkPayment,
     orders, changeStatus } = require('../controllers/orderController');
 const verifyUser = require('../middlewares/authUser');
 const express = require('express');
@@ -16,7 +16,7 @@ router.get('/:orderId', viewOrder);
 router.post('/create', createOrder);
 router.post('/payment', payment);
 router.post('/callback', callBack);
-router.post('/transition-status', transitionStatus);
+router.post('/transition-status', checkPayment);
 router.patch('/status' , changeStatus);
 
 module.exports = router;

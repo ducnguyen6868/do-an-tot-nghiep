@@ -56,7 +56,7 @@ export default function Admin() {
                             <span className="nav-icon">{item.icon}</span>
                             {isSidebarOpen && (
                                 <>
-                                    <span className="nav-label">{item.label}</span>
+                                    <span className="nav-label-dashboard">{item.label}</span>
                                     {item.badge && <span className="nav-badge">{item.badge}</span>}
                                 </>
                             )}
