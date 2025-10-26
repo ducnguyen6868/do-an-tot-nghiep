@@ -1,0 +1,125 @@
+/* Reviews Panel */
+.summary-review{
+  display:flex;
+  justify-content: space-between;
+}
+.average-rating {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--brand-color);
+}
+
+.stars-large {
+  font-size: 1.4rem;
+  margin-bottom: .5rem;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.bar {
+  width: 120px;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: var(--brand-color);
+}
+
+.review-item {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.reviewer-header{
+  margin-bottom:1rem;
+}
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reviewer-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--brand-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+.reviewer-name{
+  font-size: 2rem;
+  padding: 5px 0;
+  display:flex;
+  align-items: center;
+}
+.verified-badge {
+  margin-left: 6px;
+  font-size: 0.85rem;
+  background-color: var(--brand-color);
+  padding: 5px 10px;
+  font-size: .7rem;
+  border-radius: 10px;
+  color: var(--text-primary);
+}
+.reviewer-date{
+  font-size: smaller;
+  color:var(--text-secondary);
+  text-align: left;
+  margin:0.2rem 0;
+}
+.review-rating{
+  text-align: left;
+}
+.review-title {
+  font-weight: 600;
+  margin: 1rem 0;
+  font-size: 1.5rem;
+}
+
+.review-comment {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.review-images , .review-videos{
+  display:flex;
+  flex-wrap: wrap;
+  gap:1rem;
+
+}
+.review-image , .review-video{
+  height:100px;
+  width: auto;
+}
+
+.review-footer{
+  text-align: right;
+}
+.helpful-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  color: var(--text-muted);
+}
+
+.helpful-btn:hover {
+  background: var(--bg-tertiary);
+}

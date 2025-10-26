@@ -27,9 +27,7 @@ const productSchema = new Schema({
   ratings: { type: Number, default: 0 },
   flashSale:{type:Boolean},
   flashSaleEnd:{type:Date},
-  reviews:[{
-    type:Schema.Types.ObjectId ,ref:"Review"
-  }]
+  reviews:{type:Number , default:0}
 
 }, { timestamps: true });
 

@@ -5,7 +5,7 @@ const {
     payment,
     callBack,
     checkPayment,
-    orders, changeStatus } = require('../controllers/orderController');
+    orders, listOrder ,changeStatus } = require('../controllers/orderController');
 const verifyUser = require('../middlewares/authUser');
 const express = require('express');
 
@@ -13,6 +13,7 @@ const router = express.Router();
 router.get('/', verifyUser, view);
 router.get('/management', orders);
 router.get('/:orderId', viewOrder);
+router.post('/list-order',listOrder);
 router.post('/create', createOrder);
 router.post('/payment', payment);
 router.post('/callback', callBack);

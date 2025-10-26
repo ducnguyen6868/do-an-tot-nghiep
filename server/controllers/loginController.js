@@ -28,7 +28,7 @@ const loginController = async(req,res)=>{
                 avatar: user.avatar,
             },
             process.env.JWT_SECRET,
-            { expiresIn: "24h" }
+            { expiresIn: "7d" }
         );
 
         return res.status(200).json({

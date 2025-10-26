@@ -1,554 +1,242 @@
 [
   {
-    "_id": {
-      "$oid": "68ea84959b9e5db9e147feee"
-    },
-    "code": "TP0021",
-    "name": "Tissot Chrono XL Thể Thao Đa Năng",
-    "description": "Mẫu Chronograph thể thao cỡ lớn, thiết kế mạnh mẽ với các lựa chọn màu sắc dây da và mặt số: Đen, Nâu, Xám.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c5"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2ca"
-      }
-    ],
-    "images": [
-      "/uploads/products/tissot-chrono-multi-1.jpg",
-      "/uploads/products/tissot-chrono-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecc"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed2"
-    },
-    "target_audience": "Nam",
-    "water_resistance": "10 ATM",
-    "movement_type": "Quartz",
-    "glass_material": "Sapphire",
-    "strap_material": "Da",
-    "dial_type": "Analog",
-    "thickness": 11,
-    "power_reserve": "Không áp dụng",
-    "features": "Chức năng Chronograph, Tachymeter",
-    "ratings": 4,
-    "flashSale": false,
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2cd"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
-  },
-  {
-    "_id": {
-      "$oid": "68ea84959b9e5db9e147feef"
-    },
-    "code": "TP0022",
-    "name": "Omega Constellation Nữ Thanh Lịch",
-    "description": "Thiết kế chòm sao đặc trưng của Omega. Có 4 lựa chọn màu mặt số: Trắng, Hồng, Bạc, Vàng, mang lại vẻ đẹp sang trọng, quý phái.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c9"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c6"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c1"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c3"
-      }
-    ],
-    "images": [
-      "/uploads/products/omega-constellation-multi-1.jpg",
-      "/uploads/products/omega-constellation-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fec8"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed0"
-    },
-    "target_audience": "Nữ",
-    "water_resistance": "5 ATM",
-    "movement_type": "Quartz",
-    "glass_material": "Sapphire",
-    "strap_material": "Thép không gỉ",
-    "dial_type": "Analog",
-    "thickness": 8,
-    "power_reserve": "Không áp dụng",
-    "features": "Lịch ngày",
-    "ratings": 5,
-    "flashSale": true,
-    "flashSaleEnd": {
-      "$date": "2025-11-28T23:59:59.000Z"
-    },
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2ce"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
-  },
-  {
-    "_id": {
-      "$oid": "68ea84959b9e5db9e147fef0"
-    },
+    "user": "60d5ec49f6b4e7001c3e3871",
+    "name": "Alex Johnson",
+    "avatar": "https://i.pravatar.cc/150?img=1",
     "code": "TP0023",
-    "name": "Seiko Prospex Divers Multi",
-    "description": "Đồng hồ lặn chuyên nghiệp với 3 tùy chọn màu mặt số/bezel mạnh mẽ: Đen, Xanh biển, Xanh lá. Dây đeo silicon hoặc kim loại.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c4"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c7"
-      }
-    ],
-    "images": [
-      "/uploads/products/seiko-prospex-multi-1.jpg",
-      "/uploads/products/seiko-prospex-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecd"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed3"
-    },
-    "target_audience": "Nam",
-    "water_resistance": "20 ATM",
-    "movement_type": "Cơ (Automatic)",
-    "glass_material": "Hardlex",
-    "strap_material": "Silicon/Thép không gỉ",
-    "dial_type": "Analog",
-    "thickness": 14,
-    "power_reserve": "41 giờ",
-    "features": "Bezel xoay một chiều, Luminous",
-    "ratings": 4,
-    "flashSale": false,
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2cf"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "rating": 5,
+    "comment": "Excellent! The product exceeded all expectations. High-quality finishing.",
+    "images": ["https://picsum.photos/200/300?random=1"],
+    "videos": [],
+    "createdAt": "2023-10-15T10:00:00.000Z",
+    "updatedAt": "2023-10-15T10:00:00.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea84959b9e5db9e147fef1"
-    },
-    "code": "TP0024",
-    "name": "Garmin Lily Dành Cho Nữ",
-    "description": "Smartwatch nhỏ gọn, thời trang, thiết kế họa tiết độc đáo, có 4 màu dây và vỏ: Trắng, Hồng, Nâu, Xám.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c9"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c6"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c5"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2ca"
-      }
-    ],
-    "images": [
-      "/uploads/products/garmin-lily-multi-1.jpg",
-      "/uploads/products/garmin-lily-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecb"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed7"
-    },
-    "target_audience": "Nữ",
-    "water_resistance": "5 ATM",
-    "movement_type": "Điện tử (Smartwatch)",
-    "glass_material": "Corning Gorilla Glass 3",
-    "strap_material": "Silicon/Da",
-    "dial_type": "Digital",
-    "thickness": 10,
-    "power_reserve": "Không áp dụng",
-    "features": "Theo dõi năng lượng Body Battery, Sức khỏe phụ nữ",
-    "ratings": 5,
-    "flashSale": false,
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d0"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3872",
+    "name": "Ben Carter",
+    "avatar": "https://i.pravatar.cc/150?img=2",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Very satisfied, though the delivery was a bit slow.",
+    "images": [],
+    "videos": ["https://example.com/video/review2.mp4"],
+    "createdAt": "2023-10-15T11:15:20.000Z",
+    "updatedAt": "2023-10-15T11:15:20.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea84959b9e5db9e147fef2"
-    },
-    "code": "TP0025",
-    "name": "Rolex Day-Date President Multi-Tone",
-    "description": "Biểu tượng của sự xa xỉ. Phiên bản này có 4 lựa chọn vật liệu và màu mặt số: Đen, Xanh biển, Bạc, Vàng.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c4"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c1"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c3"
-      }
-    ],
-    "images": [
-      "/uploads/products/rolex-daydate-multi-1.jpg",
-      "/uploads/products/rolex-daydate-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fec7"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fecf"
-    },
-    "target_audience": "Nam",
-    "water_resistance": "10 ATM",
-    "movement_type": "Cơ (Automatic)",
-    "glass_material": "Sapphire",
-    "strap_material": "Kim loại quý",
-    "dial_type": "Analog",
-    "thickness": 11,
-    "power_reserve": "70 giờ",
-    "features": "Hiển thị Thứ và Ngày",
-    "ratings": 5,
-    "flashSale": true,
-    "flashSaleEnd": {
-      "$date": "2025-12-05T00:00:00.000Z"
-    },
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d1"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3873",
+    "name": "Chris Lee",
+    "avatar": "https://i.pravatar.cc/150?img=3",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Will purchase again. Careful packaging.",
+    "images": ["https://picsum.photos/200/300?random=2", "https://picsum.photos/200/300?random=3"],
+    "videos": [],
+    "createdAt": "2023-10-16T09:30:15.000Z",
+    "updatedAt": "2023-10-16T09:30:15.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea85049b9e5db9e147fef3"
-    },
-    "code": "TP0026",
-    "name": "Citizen Promaster Dive Professional",
-    "description": "Đồng hồ lặn chuyên nghiệp Eco-Drive, bền bỉ và chính xác. Có 4 tùy chọn màu mặt số: Đen, Xanh biển, Xám, Trắng.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c4"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2ca"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c9"
-      }
-    ],
-    "images": [
-      "/uploads/products/citizen-dive-multi-1.jpg",
-      "/uploads/products/citizen-dive-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecd"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed4"
-    },
-    "target_audience": "Nam",
-    "water_resistance": "20 ATM",
-    "movement_type": "Eco-Drive (Quartz)",
-    "glass_material": "Mineral",
-    "strap_material": "Cao su",
-    "dial_type": "Analog",
-    "thickness": 14,
-    "power_reserve": "Không áp dụng",
-    "features": "Bezel xoay, Luminous, Báo mức năng lượng",
-    "ratings": 4,
-    "flashSale": true,
-    "flashSaleEnd": {
-      "$date": "2025-12-15T00:00:00.000Z"
-    },
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d2"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3874",
+    "name": "Diana Ross",
+    "avatar": "https://i.pravatar.cc/150?img=4",
+    "code": "TP0023",
+    "rating": 3,
+    "comment": "The product is usable, but not truly impressive.",
+    "images": [],
+    "videos": [],
+    "createdAt": "2023-10-16T15:45:55.000Z",
+    "updatedAt": "2023-10-16T15:45:55.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea85049b9e5db9e147fef4"
-    },
-    "code": "TP0027",
-    "name": "Casio Edifice Kim Loại Cao Cấp",
-    "description": "Dòng đồng hồ thể thao/business kết hợp. Thiết kế mạnh mẽ với 4 lựa chọn kim loại và màu mặt số: Đen, Bạc, Xanh lá, Nâu.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c1"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c7"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c5"
-      }
-    ],
-    "images": [
-      "/uploads/products/casio-edifice-multi-1.jpg",
-      "/uploads/products/casio-edifice-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecc"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed1"
-    },
-    "target_audience": "Nam",
-    "water_resistance": "10 ATM",
-    "movement_type": "Quartz",
-    "glass_material": "Mineral",
-    "strap_material": "Thép không gỉ",
-    "dial_type": "Analog",
-    "thickness": 12,
-    "power_reserve": "Không áp dụng",
-    "features": "Đồng hồ bấm giờ, Lịch ngày, Bluetooth",
-    "ratings": 4,
-    "flashSale": false,
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d3"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3875",
+    "name": "Emily Rose",
+    "avatar": "https://i.pravatar.cc/150?img=5",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Superb quality, exactly as described. Five stars!",
+    "images": ["https://picsum.photos/200/300?random=4"],
+    "videos": ["https://example.com/video/review5.mp4"],
+    "createdAt": "2023-10-17T08:22:10.000Z",
+    "updatedAt": "2023-10-17T08:22:10.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea85049b9e5db9e147fef5"
-    },
-    "code": "TP0028",
-    "name": "Fossil Minimalist Dây Da",
-    "description": "Thiết kế tối giản, thanh lịch, phù hợp cho văn phòng. Có 5 tùy chọn màu dây: Đen, Xanh biển, Bạc, Nâu, Xám.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c4"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c1"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c5"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2ca"
-      }
-    ],
-    "images": [
-      "/uploads/products/fossil-minimal-multi-1.jpg",
-      "/uploads/products/fossil-minimal-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecc"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed8"
-    },
-    "target_audience": "Nam",
-    "water_resistance": "5 ATM",
-    "movement_type": "Quartz",
-    "glass_material": "Mineral",
-    "strap_material": "Da",
-    "dial_type": "Analog",
-    "thickness": 9,
-    "power_reserve": "Không áp dụng",
-    "features": "Thiết kế siêu mỏng",
-    "ratings": 4,
-    "flashSale": true,
-    "flashSaleEnd": {
-      "$date": "2025-12-20T12:00:00.000Z"
-    },
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d4"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3876",
+    "name": "Frank Harris",
+    "avatar": "https://i.pravatar.cc/150?img=6",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Everything is fine, just wish the price was a bit lower.",
+    "images": [],
+    "videos": [],
+    "createdAt": "2023-10-17T12:50:30.000Z",
+    "updatedAt": "2023-10-17T12:50:30.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea85049b9e5db9e147fef6"
-    },
-    "code": "TP0029",
-    "name": "Longines Elegant Collection Nữ",
-    "description": "Đồng hồ nữ với thiết kế cổ điển và thanh lịch. Có 4 lựa chọn màu dây: Trắng, Hồng, Bạc, Vàng, phù hợp với các sự kiện trang trọng.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c9"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c6"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c1"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c3"
-      }
-    ],
-    "images": [
-      "/uploads/products/longines-elegant-multi-1.jpg",
-      "/uploads/products/longines-elegant-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fec8"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed5"
-    },
-    "target_audience": "Nữ",
-    "water_resistance": "3 ATM",
-    "movement_type": "Cơ (Automatic)",
-    "glass_material": "Sapphire",
-    "strap_material": "Thép không gỉ",
-    "dial_type": "Analog",
-    "thickness": 7,
-    "power_reserve": "40 giờ",
-    "features": "Lịch ngày",
-    "ratings": 5,
-    "flashSale": false,
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d5"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3877",
+    "name": "Gabriel M.",
+    "avatar": "https://i.pravatar.cc/150?img=7",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "I really like it! Worth the money.",
+    "images": ["https://picsum.photos/200/300?random=5"],
+    "videos": [],
+    "createdAt": "2023-10-18T07:10:05.000Z",
+    "updatedAt": "2023-10-18T07:10:05.000Z"
   },
   {
-    "_id": {
-      "$oid": "68ea85049b9e5db9e147fef7"
-    },
-    "code": "TP0030",
-    "name": "Apple Watch Ultra Sport Band Multi",
-    "description": "Phiên bản đồng hồ thông minh siêu bền với 5 tùy chọn màu dây thể thao (band): Đen, Xanh biển, Xám, Hồng, Xanh lá.",
-    "detail": [
-      {
-        "$oid": "68eb1d824291f61f213bd2c2"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c4"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2ca"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c6"
-      },
-      {
-        "$oid": "68eb1d824291f61f213bd2c7"
-      }
-    ],
-    "images": [
-      "/uploads/products/apple-watch-ultra-multi-1.jpg",
-      "/uploads/products/apple-watch-ultra-multi-2.jpg"
-    ],
-    "category": {
-      "$oid": "68ea68599b9e5db9e147fecb"
-    },
-    "brand": {
-      "$oid": "68ea69849b9e5db9e147fed6"
-    },
-    "target_audience": "Unisex",
-    "water_resistance": "10 ATM",
-    "movement_type": "Điện tử (Smartwatch)",
-    "glass_material": "Sapphire",
-    "strap_material": "Silicon (Sport Band)",
-    "dial_type": "Digital",
-    "thickness": 14,
-    "power_reserve": "Không áp dụng",
-    "features": "GPS tần số kép, Nút Tác vụ tùy chỉnh, Lặn giải trí",
-    "ratings": 5,
-    "flashSale": false,
-    "reviews": [
-      {
-        "$oid": "68eb21c54291f61f213bd2d6"
-      }
-    ],
-    "createdAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    },
-    "updatedAt": {
-      "$date": "2025-10-12T03:39:48.000Z"
-    }
+    "user": "60d5ec49f6b4e7001c3e3878",
+    "name": "Hannah T.",
+    "avatar": "https://i.pravatar.cc/150?img=8",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Good product, fast delivery.",
+    "images": [],
+    "videos": ["https://example.com/video/review8.mp4"],
+    "createdAt": "2023-10-18T14:35:40.000Z",
+    "updatedAt": "2023-10-18T14:35:40.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e3879",
+    "name": "Isaac N.",
+    "avatar": "https://i.pravatar.cc/150?img=9",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Perfect for my needs. Highly recommended.",
+    "images": ["https://picsum.photos/200/300?random=6", "https://picsum.photos/200/300?random=7"],
+    "videos": [],
+    "createdAt": "2023-10-19T10:00:00.000Z",
+    "updatedAt": "2023-10-19T10:00:00.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e387a",
+    "name": "Jane Doe",
+    "avatar": "https://i.pravatar.cc/150?img=10",
+    "code": "TP0023",
+    "rating": 3,
+    "comment": "Average, nothing special. Still okay.",
+    "images": [],
+    "videos": [],
+    "createdAt": "2023-10-19T16:18:25.000Z",
+    "updatedAt": "2023-10-19T16:18:25.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e387b",
+    "name": "Liam O'Conner",
+    "avatar": "https://i.pravatar.cc/150?img=11",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Great design and works well. Wonderful!",
+    "images": ["https://picsum.photos/200/300?random=8"],
+    "videos": ["https://example.com/video/review11.mp4"],
+    "createdAt": "2023-10-20T09:45:10.000Z",
+    "updatedAt": "2023-10-20T09:45:10.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e387c",
+    "name": "Mia P.",
+    "avatar": "https://i.pravatar.cc/150?img=12",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Good quality for the price.",
+    "images": [],
+    "videos": [],
+    "createdAt": "2023-10-20T11:05:00.000Z",
+    "updatedAt": "2023-10-20T11:05:00.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e387d",
+    "name": "Noah W.",
+    "avatar": "https://i.pravatar.cc/150?img=13",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Already recommended to friends. High-quality product.",
+    "images": ["https://picsum.photos/200/300?random=9", "https://picsum.photos/200/300?random=10"],
+    "videos": [],
+    "createdAt": "2023-10-21T07:20:45.000Z",
+    "updatedAt": "2023-10-21T07:20:45.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e387e",
+    "name": "Olivia P.",
+    "avatar": "https://i.pravatar.cc/150?img=14",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Good, but I expected the color to be a bit brighter.",
+    "images": [],
+    "videos": ["https://example.com/video/review14.mp4"],
+    "createdAt": "2023-10-21T13:55:30.000Z",
+    "updatedAt": "2023-10-21T13:55:30.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e387f",
+    "name": "Peter Q.",
+    "avatar": "https://i.pravatar.cc/150?img=15",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Nothing to complain about. Excellent!",
+    "images": ["https://picsum.photos/200/300?random=11"],
+    "videos": [],
+    "createdAt": "2023-10-22T10:00:00.000Z",
+    "updatedAt": "2023-10-22T10:00:00.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e3880",
+    "name": "Rachel S.",
+    "avatar": "https://i.pravatar.cc/150?img=16",
+    "code": "TP0023",
+    "rating": 3,
+    "comment": "The description was slightly different from the actual item received.",
+    "images": [],
+    "videos": [],
+    "createdAt": "2023-10-22T17:28:15.000Z",
+    "updatedAt": "2023-10-22T17:28:15.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e3881",
+    "name": "Sam T.",
+    "avatar": "https://i.pravatar.cc/150?img=17",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "Worth every penny. Very pleased.",
+    "images": ["https://picsum.photos/200/300?random=12"],
+    "videos": ["https://example.com/video/review17.mp4"],
+    "createdAt": "2023-10-23T08:00:00.000Z",
+    "updatedAt": "2023-10-23T08:00:00.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e3882",
+    "name": "Taylor V.",
+    "avatar": "https://i.pravatar.cc/150?img=18",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Satisfied. Will try other products.",
+    "images": [],
+    "videos": [],
+    "createdAt": "2023-10-23T14:12:50.000Z",
+    "updatedAt": "2023-10-23T14:12:50.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e3883",
+    "name": "Victor Z.",
+    "avatar": "https://i.pravatar.cc/150?img=19",
+    "code": "TP0023",
+    "rating": 5,
+    "comment": "User-friendly interface, easy to use. Great product!",
+    "images": ["https://picsum.photos/200/300?random=13", "https://picsum.photos/200/300?random=14"],
+    "videos": [],
+    "createdAt": "2023-10-24T09:33:40.000Z",
+    "updatedAt": "2023-10-24T09:33:40.000Z"
+  },
+  {
+    "user": "60d5ec49f6b4e7001c3e3884",
+    "name": "Wendy R.",
+    "avatar": "https://i.pravatar.cc/150?img=20",
+    "code": "TP0023",
+    "rating": 4,
+    "comment": "Quite good, hoping for high durability.",
+    "images": [],
+    "videos": ["https://example.com/video/review20.mp4"],
+    "createdAt": "2023-10-24T16:07:22.000Z",
+    "updatedAt": "2023-10-24T16:07:22.000Z"
   }
 ]

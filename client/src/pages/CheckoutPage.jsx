@@ -12,6 +12,7 @@ import orderApi from '../api/orderApi';
 import { formatCurrency } from '../utils/formatCurrency';
 import { isValidPhoneNumber } from "../utils/isValidPhoneNumber";
 import Recipient from '../components/comon/Recipient';
+import profileApi from '../api/profileApi';
 
 export default function CheckoutPage() {
 
@@ -38,18 +39,26 @@ export default function CheckoutPage() {
     const [addressList, setAddressList] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        if (!token) {
-            setLogged(false);
-        } else {
-            setLogged(true);
+        const checkLogged = async () => {
+            try{
+             await profileApi.profile();
+             setLogged(true);
+            }catch(err){
+                localStorage.removeItem('token');
+            }
+        }
+        checkLogged();
+    }, []);
+
+    useEffect(() => {
+        if(!logged) return;
+        setLogged(true);
             setFormData((prev) => ({
                 ...prev,
                 email: infoUser.email
             }));
-        }
 
-    }, [infoUser.email]);
+    }, [logged, infoUser.email]);
     const getRecipients = async () => {
         try {
             const response = await recipientApi.recipient();
@@ -164,16 +173,16 @@ export default function CheckoutPage() {
             const response = await orderApi.payment(final_amount);
             const res = await orderApi.createOrder(orderData, response.orderId, fromCart);
             if (!formData.email) {
-                const newOrder = res.order;
-                let order= localStorage.getItem('order');
-                order = order?JSON.parse(order):[];
-                order.push(newOrder);
-                localStorage.setItem('order',JSON.stringify(order));
+                const code = res.order?.code;
+                let order = localStorage.getItem('order');
+                order = order ? JSON.parse(order) : [];
+                order.push(code);
+                localStorage.setItem('order', JSON.stringify(order));
                 if (fromCart) {
-                    setInfoUser(prev => ({ ...prev, cart:0 }));
+                    setInfoUser(prev => ({ ...prev, cart: 0 }));
                     localStorage.removeItem('cart');
                 }
-            }else{
+            } else {
                 setInfoUser(prev => ({ ...prev, cart: res.cart }));
             }
             window.location.href = response.payUrl;
@@ -186,7 +195,7 @@ export default function CheckoutPage() {
     };
     return (
         <>
-             <div className="checkout-container">
+            <div className="checkout-container">
                 <div className="checkout-main">
                     {/* --- ORDER SUMMARY --- */}
                     <div className="order-summary">

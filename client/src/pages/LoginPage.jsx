@@ -111,7 +111,7 @@ export default function LoginPage() {
               <Icon icon="mdi:lock-outline" width="18" />
               <span>Password</span>
             </label>
-            <div className="form-input">
+            <div className="form-input-login">
               <input
                 type={isHiddenPassword ? "password" : "text"}
                 name="password"

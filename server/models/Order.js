@@ -25,11 +25,11 @@ const orderSchema = new Schema({
     name: { type: String },
     image: { type: String },
     quantity: { type: Number },
-    color: { type: String }
-  }],
+    color: { type: String }}],
   promotion: { type: Schema.Types.ObjectId, ref: 'Promotion' },
   payment: { type: String, enum: ['unpaid', 'paid'], default: 'unpaid' },
-  paymentMethod: { type: String }
+  paymentMethod: { type: String },
+  review:{type:Boolean , default:false}
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/ProductPage.css';
 import { toast } from "react-toastify";
-import productApi from '../api/productApi';
-import userApi from '../api/userApi';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import { formatCurrency } from '../utils/formatCurrency';
+import userApi from '../api/userApi';
+import productApi from '../api/productApi';
+import Review from '../components/comon/Review';
+import '../styles/ProductPage.css';
 
 export default function ProductPage() {
 
-  const {setInfoUser , locale , currency} = useContext(UserContext);
+  const { setInfoUser, locale, currency } = useContext(UserContext);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -24,7 +25,7 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
 
   const [product, setProduct] = useState();
-
+  const [stars, setStars] = useState();
 
   useEffect(() => {
     const getProduct = async () => {
@@ -32,6 +33,7 @@ export default function ProductPage() {
         setLoading(true);
         const response = await productApi.detail(code);
         setProduct(response.product);
+        setStars(response.stars);
       } catch (err) {
         toast.error(err.response?.data?.message || err.message);
       } finally {
@@ -95,27 +97,36 @@ export default function ProductPage() {
   const handleOrder = () => {
     navigate('../product/checkout', { state: { productData } });
   }
- const handleCart =async(product)=>{
-    try{
-      const id= product._id;
-      const code= product.code;
+  const handleCart = async (product) => {
+    try {
+      const id = product._id;
+      const code = product.code;
       const name = product.name;
       const image = product.images[selectedDetailIndex];
       const description = product.description;
-      const quantity=1;
-      const color=selectedDetail.color;
+      const quantity = 1;
+      const color = selectedDetail.color;
       const price = selectedDetail.price;
-      const detailId= selectedDetail._id;
-      const data={
-        id,code ,name, image, description, quantity,color,price,detailId
+      const detailId = selectedDetail._id;
+      const data = {
+        id, code, name, image, description, quantity, color, price, detailId
       }
       const response = await userApi.addCart(data);
       toast.success(response.message);
-      setInfoUser(prev=>({...prev , cart:response.cart}));
-    }catch(err){
-      toast.error(err.response?.data?.message||err.message)
+      setInfoUser(prev => ({ ...prev, cart: response.cart }));
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message)
     }
   };
+
+  const caculateFillStar = (star) => {
+    let total = (stars?.five + stars?.four + stars?.three + stars?.two + stars?.one) || 0;
+    if (total === 0) {
+      total = 1;
+    }
+    return (star / total) * 100;
+  }
+
   return (
     <>
       <div className="product-detail-page">
@@ -149,7 +160,7 @@ export default function ProductPage() {
 
               <div className="rating-section">
                 <span className="stars">{renderStars(product.ratings)}</span>
-                <span className="rating-text">{product.ratings}</span>
+                <span className="rating-text">{product.ratings.toFixed(2)}</span>
                 <span className="reviews-count">({product.reviews?.length || 0} Reviews)</span>
               </div>
 
@@ -304,7 +315,7 @@ export default function ProductPage() {
                 className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
                 onClick={() => setActiveTab('reviews')}
               >
-                Reviews ({product.reviews?.length || 0})
+                Reviews ({product.reviews || 0})
               </button>
             </div>
 
@@ -330,65 +341,44 @@ export default function ProductPage() {
 
               {activeTab === 'reviews' && (
                 <div className="tab-panel reviews-panel">
-                  <div className="reviews-summary">
+                  <div className="summary-review">
                     <div className="summary-left">
-                      <div className="average-rating">{product.ratings}</div>
-                      <div className="stars-large">{renderStars(product.ratings)}</div>
-                      <div className="total-reviews">{product.reviews?.length || 0} Reviews</div>
+                      <div className="average-rating">
+                        {product?.ratings.toFixed(1)}
+                        <span className="stars-large">{renderStars(product?.ratings)}</span>
+                      </div>
+                      <div className="total-reviews">{product?.reviews || 0} Reviews</div>
                     </div>
+
                     <div className="summary-right">
                       <div className="rating-bar">
                         <span>5 ⭐</span>
-                        <div className="bar"><div className="fill" style={{ width: '75%' }}></div></div>
-                        <span>186</span>
+                        <div className="bar"><div className="fill" style={{ width: `${caculateFillStar(stars?.five)}` }}></div></div>
+                        <span>{stars?.five}</span>
                       </div>
                       <div className="rating-bar">
                         <span>4 ⭐</span>
-                        <div className="bar"><div className="fill" style={{ width: '15%' }}></div></div>
-                        <span>37</span>
+                        <div className="bar"><div className="fill" style={{ width: `${caculateFillStar(stars?.four)}` }}></div></div>
+                        <span>{stars?.four}</span>
                       </div>
                       <div className="rating-bar">
                         <span>3 ⭐</span>
-                        <div className="bar"><div className="fill" style={{ width: '7%' }}></div></div>
-                        <span>17</span>
+                        <div className="bar"><div className="fill" style={{ width: `${caculateFillStar(stars?.three)}` }}></div></div>
+                        <span>{stars?.three}</span>
                       </div>
                       <div className="rating-bar">
                         <span>2 ⭐</span>
-                        <div className="bar"><div className="fill" style={{ width: '2%' }}></div></div>
-                        <span>5</span>
+                        <div className="bar"><div className="fill" style={{ width: `${caculateFillStar(stars?.two)}` }}></div></div>
+                        <span>{stars?.two}</span>
                       </div>
                       <div className="rating-bar">
                         <span>1 ⭐</span>
-                        <div className="bar"><div className="fill" style={{ width: '1%' }}></div></div>
-                        <span>3</span>
+                        <div className="bar"><div className="fill" style={{ width: `${caculateFillStar(stars?.one)}` }}></div></div>
+                        <span>{stars?.one}</span>
                       </div>
                     </div>
                   </div>
-
-                  <div className="reviews-list">
-                    {product.reviews?.map(review => (
-                      <div key={review._id} className="review-item">
-                        <div className="review-header">
-                          <div className="reviewer-info">
-                            <div className="reviewer-avatar">J</div>
-                            <div>
-                              <div className="reviewer-name">
-                                Jonh Wick
-                                <span className="verified-badge">✓ Verified Purchase</span>
-                              </div>
-                              <div className="review-date">08/08/1988</div>
-                            </div>
-                          </div>
-                          <div className="review-rating">{renderStars(review.rating)}</div>
-                        </div>
-                        <h4 className="review-title">No subject</h4>
-                        <p className="review-comment">{review.comment}</p>
-                        <div className="review-footer">
-                          <button className="helpful-btn">👍 Helpful 999+</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <Review code={product.code} />
                 </div>
               )}
             </div>

@@ -52,7 +52,7 @@ export default function OrderStatusTracker({ order , onClose, onChange }) {
 
     const statusIndex = statuses.findIndex((s) => s.id === orderStatus);
     const isCanceled = orderStatus === "Canceled";
-
+    
     const handleSubmitStatus=async ()=>{
         const orderId = order._id;
         const status = statuses[statusIndex+1].id;
@@ -164,7 +164,7 @@ export default function OrderStatusTracker({ order , onClose, onChange }) {
 
                 {/* Buttons */}
                 <div className="controls">
-                    {!isCanceled && (
+                    {!isCanceled && (statusIndex<3) && (
                         <button
                             onClick={() => handleSubmitStatus()}
                             className='control-btn'

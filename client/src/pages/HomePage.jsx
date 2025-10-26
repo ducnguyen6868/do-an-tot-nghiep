@@ -53,11 +53,10 @@ export default function HomePage() {
           const soldCount = product.detail?.reduce((sum, d) => sum + (d.sold || 0), 0) || 0;
           const quantityCount = product.detail?.reduce((sum, d) => sum + (d.quantity || 0), 0) || 0;
           const stockCount = quantityCount - soldCount;
-          const reviewCount = product.reviews.length;
           return {
             ...product,
             sold: soldCount,
-            stock: stockCount, reviewCount: reviewCount
+            stock: stockCount
           };
         });
         setProducts(updated);

@@ -35,6 +35,22 @@ export default function OrderPage() {
         }
         checking();
     }, []);
+
+    const getListOrder = async()=>{
+        let order = localStorage.getItem('order');
+        if(!order){
+            setOrders([]);
+            return;
+        }
+        order = JSON.parse(order);
+        try{
+            const response= await orderApi.viewList(order);
+            setOrders(response.orders);
+        }catch(err){
+            toast.error(err.response?.data?.message||err.response);
+        }
+    }
+
     useEffect(() => {
         if (!checked) return;
         if (logged) {
@@ -48,24 +64,7 @@ export default function OrderPage() {
             }
             getOrders();
         } else {
-            let order = localStorage.getItem('order');
-
-            if (order) {
-                try {
-                    order = JSON.parse(order);
-                    if (Array.isArray(order)) {
-                        order = order.reverse();
-                        setOrders(order);
-                    } else {
-                        setOrders([]);
-                    }
-                } catch (err) {
-                    console.error("Error parsing order from localStorage:", err);
-                    setOrders([]);
-                }
-            } else {
-                setOrders([]);
-            }
+          getListOrder();   
         }
     }, [logged, checked]);
     return (

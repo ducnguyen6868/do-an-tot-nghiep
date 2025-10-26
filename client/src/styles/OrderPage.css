@@ -2,9 +2,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
     padding: 1rem 2rem;
     border-bottom: 2px solid var(--border-color);
+    background-color: var(--bg-secondary);
 }
 
 .order-title {
@@ -38,10 +38,10 @@
     box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
 }
 
-.order-list{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap:1rem;
+.order-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    padding: 1rem;
+    gap: 1rem;
+    background-color: var(--bg-secondary);
 }

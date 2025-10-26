@@ -160,8 +160,8 @@ export default function ListProduct({ products, wishlist, onChange  , search}) {
               <h3 className="product-name">{product.name}</h3>
               <p className="product-description">{product.description}</p>
               <div className="product-rating">
-                <span className="stars"> {renderStars(product.ratings)} {product.ratings}</span>
-                <span className="reviews">({product.reviews?.length} reviews)</span>
+                <span className="stars"> {renderStars(product.ratings)} {product.ratings.toFixed(2)}</span>
+                <span className="reviews">({product.reviews} reviews)</span>
               </div>
               <div className="product-footer">
                 <div className="price">

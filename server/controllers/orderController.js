@@ -229,15 +229,31 @@ const checkPayment = async (req, res) => {
     }
 };
 
+const listOrder = async(req,res)=>{
+    let {order}= req.body;
+    if(!order){
+        return res.status(400).json({
+            message:'Order code is require.'
+        });
+    }
+    const orders= await Order.find({code:{$in:order}});
+    return res.status(200).json({
+        message:'Get list order successful.',
+        orders
+    });
+}
+
 //Adminstrator 
 
 const orders = async (req, res) => {
     const orders = await Order.find();
+    const listOrder = [...orders].reverse();
     return res.status(200).json({
         message: 'Get list order successful.',
-        orders
+        orders:listOrder
     });
 }
+
 
 const changeStatus = async (req, res) => {
     const { orderId, status } = req.body;
@@ -258,5 +274,5 @@ const changeStatus = async (req, res) => {
 module.exports = {
     view, viewOrder,
     createOrder, payment, callBack, checkPayment,
-    orders, changeStatus
+    orders, listOrder,changeStatus
 };
