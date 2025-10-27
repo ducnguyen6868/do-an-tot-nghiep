@@ -21,6 +21,7 @@ import OrderPage from './pages/OrderPage';
 import User from './components/layout/User';
 import UserAuth from './hooks/userAuth';
 import ProfilePage from './pages/ProfilePage';
+import PointPage from './pages/PointPage';
 
 
 import Admin from './components/layout/Admin';
@@ -52,6 +53,7 @@ function App() {
             <Route index path='profile' element={<UserAuth><ProfilePage /></UserAuth>}></Route>
             <Route path='address' element={<UserAuth><AddressPage /></UserAuth>}></Route>
             <Route path='order' element={<UserAuth><OrderPage /></UserAuth>}></Route>
+            <Route path='point' element={<UserAuth><PointPage /></UserAuth>}></Route>
           </Route>
 
 

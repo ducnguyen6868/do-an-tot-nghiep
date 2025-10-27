@@ -7,11 +7,12 @@ import userApi from '../../api/userApi';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import useProductsPerRow from '../../hooks/useProductsPerRow';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import '../../styles/ListProduct.css';
 
-export default function ListProduct({ products, wishlist, onChange  , search}) {
+export default function ListProduct({ products, wishlist, onChange }) {
 
-  const { setInfoUser , locale ,currency } = useContext(UserContext);
+  const { setInfoUser, locale, currency } = useContext(UserContext);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -26,7 +27,6 @@ export default function ListProduct({ products, wishlist, onChange  , search}) {
   };
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const handleCart = async (product) => {
     const id = product._id;
@@ -186,7 +186,7 @@ export default function ListProduct({ products, wishlist, onChange  , search}) {
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
-            ← Previous
+            <ChevronsLeft width={14} height={14} />
           </button>
 
           <div className="page-numbers">
@@ -206,7 +206,7 @@ export default function ListProduct({ products, wishlist, onChange  , search}) {
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
-            Next →
+            <ChevronsRight width={14} height={14} />
           </button>
         </div>
       )}

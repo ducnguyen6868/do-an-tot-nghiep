@@ -60,7 +60,7 @@ export default function AddressPage() {
             {/* Addresses */}
             <div className="tab-content">
                 <div className="content-header">
-                    <h2 className="content-title">Delivery Addresses</h2>
+                    <h2 className="content-title-address">Delivery Addresses</h2>
                     <button className="add-new-btn" onClick={() => setModal(true)}>+ Add New Address</button>
                 </div>
                 <div className="addresses-container">

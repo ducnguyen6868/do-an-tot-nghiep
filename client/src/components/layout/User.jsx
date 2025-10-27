@@ -4,9 +4,11 @@ import { useLocation } from 'react-router-dom';
 import HeaderProfile from '../layout/HeaderProfile';
 import SidebarProfile from '../layout/SidebarProfile';
 export default function User() {
+
     const [activeTab , setActiveTab]= useState('profile');
     const location = useLocation();
     const currentActiveTab = location.state?.activeTab ||'profile';
+    
     useEffect(()=>{
         setActiveTab(currentActiveTab);
     },[currentActiveTab]);

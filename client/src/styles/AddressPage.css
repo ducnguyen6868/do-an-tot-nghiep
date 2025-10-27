@@ -12,12 +12,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
 }
 
-.content-title {
+.content-title-address {
   font-size: 1.5rem;
-  color: var(--text-primary);
+  color: var(--brand-color);
   font-weight: 600;
 }
 

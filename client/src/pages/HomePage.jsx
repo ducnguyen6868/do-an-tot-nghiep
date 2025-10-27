@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import '../styles/HomePage.css';
 import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import {useContext} from 'react';
 import {UserContext} from '../contexts/UserContext';
 import LoadingAnimations from '../components/comon/LoadingAnimations';
 import Brand from '../components/comon/Brand';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
-import { formatCurrency } from '../utils/formatCurrency';
 import ListProduct from '../components/comon/ListProduct';
+import useProductsPerRow from '../hooks/useProductsPerRow';
+import { formatCurrency } from '../utils/formatCurrency';
 
 export default function HomePage() {
   const {locale,currency} = useContext(UserContext);
@@ -35,7 +37,7 @@ export default function HomePage() {
     return endTime > new Date();
   });
 
-  const itemsPerPageFlash = 4;
+  const itemsPerPageFlash = useProductsPerRow();
   const totalPagesFlash = Math.ceil(flashSaleProducts.length / itemsPerPageFlash);
   const startIndexFlash = (currentPageFlash - 1) * itemsPerPageFlash;
   const flashProducts = flashSaleProducts.slice(startIndexFlash, startIndexFlash + itemsPerPageFlash);
@@ -146,7 +148,6 @@ export default function HomePage() {
 
   const handlePageChangeFlash = (page) => {
     setCurrentPageFlash(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleFilterChange = (filterType, value) => {
@@ -241,7 +242,7 @@ export default function HomePage() {
                     onClick={() => handlePageChangeFlash(currentPageFlash - 1)}
                     disabled={currentPageFlash === 1}
                   >
-                    ← Previous
+            <ChevronsLeft width={14} height={14} />
                   </button>
 
                   <div className="page-numbers">
@@ -261,7 +262,7 @@ export default function HomePage() {
                     onClick={() => handlePageChangeFlash(currentPageFlash + 1)}
                     disabled={currentPageFlash === totalPagesFlash}
                   >
-                    Next →
+            <ChevronsRight width={14} height={14} />
                   </button>
                 </div>
               )}

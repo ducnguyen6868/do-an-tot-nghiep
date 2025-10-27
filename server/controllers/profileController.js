@@ -5,8 +5,9 @@ const bcrypt= require('bcrypt');
 
 const profile= async (req,res)=>{
     const id= req.user.id;
-    const user= await User.findById(id);
-    return res.status(200).json({message:"You are logged",user});
+    const user= await User.findById(id).populate('point');
+    const point = user.point;
+    return res.status(200).json({message:"You are logged",user,point});
 }
 
 const changePassword = async (req, res) => {

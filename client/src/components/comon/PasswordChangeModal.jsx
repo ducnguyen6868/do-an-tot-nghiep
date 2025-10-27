@@ -33,6 +33,7 @@ export default function PasswordChangeModal({ onClose }) {
     // Calculate password strength for new password
     if (name === 'newPassword') {
       calculatePasswordStrength(value);
+      console.log(passwordStrength);
     }
 
     // Clear errors
@@ -44,11 +45,10 @@ export default function PasswordChangeModal({ onClose }) {
 
   const calculatePasswordStrength = (passwords) => {
     let strength = 0;
-    if (passwords.length >= 1) strength += 10;
-    if (passwords.match(/[a-z]/) && passwords.match(/[A-Z]/)) strength += 25;
+    if (passwords.match(/[a-z]/)) strength += 25;
+    if (passwords.match(/[A-Z]/)) strength += 25;
     if (passwords.match(/[0-9]/)) strength += 25;
-    if (passwords.match(/[^a-zA-Z0-9]/)) strength += 25;
-    if (passwords.length >= 8) strength += 15;
+    if (passwords.length >= 8) strength += 25;
     setPasswordsStrength(strength);
   };
 

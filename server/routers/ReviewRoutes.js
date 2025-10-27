@@ -1,4 +1,4 @@
-const {review ,list} = require('../controllers/ReviewController');
+const {review ,list} = require('../controllers/reviewController');
 
 const multer = require("multer");
 const path = require("path");

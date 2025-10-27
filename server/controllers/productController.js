@@ -3,7 +3,10 @@ const Review = require('../models/Review');
 
 const product = async (req, res) => {
   try {
-    const products = await Product.find({}).populate("detail brand category");
+    const products = await Product.find({})
+    .sort({createdAt:-1})
+    .limit(20)
+    .populate("detail brand category");
     if (!products) {
       res.status(400).json({
         message: "No product found."

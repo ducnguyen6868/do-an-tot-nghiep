@@ -141,7 +141,7 @@ export default function RegisterPage() {
                                     <Icon icon="mdi:lock-outline" width="18" />
                                     <span>Password</span>
                                 </label>
-                                <div className="form-input">
+                                <div className="form-input-login">
                                     <input
                                         type={isHiddenPassword ? "password" : "text"}
                                         name="password"
@@ -175,7 +175,7 @@ export default function RegisterPage() {
                                     <Icon icon="mdi:shield-lock-outline" width="18" />
                                     <span>Confirm Password</span>
                                 </label>
-                                <div className="form-input">
+                                <div className="form-input-login">
                                     <input
                                         type={isHiddenConfirm ? "password" : "text"}
                                         name="confirmPassword"

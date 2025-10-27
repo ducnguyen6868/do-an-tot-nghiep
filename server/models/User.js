@@ -5,6 +5,8 @@ require('./Promotion');
 require('./Order');
 require('./Recipient');
 require('./Cart');
+require('./Point');
+
 const userSchema = new Schema({
   name: { type: String },
   email: { type: String, required: true, unique: true },
@@ -24,7 +26,9 @@ const userSchema = new Schema({
   }],
   wishlist:[{code:{type:String},index:{type:Number}}],
   carts: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
-  recipients: [{ type: Schema.Types.ObjectId, ref: "Recipient" }]
+  recipients: [{ type: Schema.Types.ObjectId, ref: "Recipient" }],
+  checkIn:{type:Boolean , default:false},
+  point:{type:Schema.Types.ObjectId , ref:'Point'}
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

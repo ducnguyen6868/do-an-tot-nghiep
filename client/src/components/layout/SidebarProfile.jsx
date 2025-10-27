@@ -13,7 +13,7 @@ export default function SidebarProfile({ activeTab }) {
 
     const asideData = [
         { link: '/user/profile', icon: 'noto:identification-card', content: 'Personal Info', arrow: '→', activeTab: 'profile' },
-        { link: '#', icon: 'noto:coin', content: 'Points History', arrow: '→', activeTab: 'points' },
+        { link: '/user/point', icon: 'noto:coin', content: 'Points History', arrow: '→', activeTab: 'points' },
         { link: '#', icon: 'noto:wrapped-gift', content: 'My Vouchers', arrow: '→', activeTab: 'voucher' },
         { link: '/user/order', icon: 'noto:package', content: 'Order History', arrow: '→', activeTab: 'order' },
         { link: '/user/address', icon: 'noto:round-pushpin', content: 'Addresses', arrow: '→', activeTab: 'address' },
@@ -48,7 +48,6 @@ export default function SidebarProfile({ activeTab }) {
                     {asideData.map((item, index) => (
                         <button onClick={() => handleActiveTab(item)}
                             key={index}
-                            to={item.link}
                             className={`nav-button ${item.activeTab === activeTab ? 'active' : ''}`}
                         >
                             <span className="nav-icon">

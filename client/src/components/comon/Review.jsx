@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import reviewApi from '../../api/reviewApi';
 import { toast } from 'react-toastify';
 import { formatDate } from '../../utils/formatDate';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
+import reviewApi from '../../api/reviewApi';
 import '../../styles/Review.css';
 
 export default function Review({ code }) {
@@ -28,7 +29,7 @@ export default function Review({ code }) {
 
     const pages = Math.ceil(total / limit);
 
-    const handlePageChange=(page)=>{
+    const handlePageChange = (page) => {
         setPage(page);
     }
 
@@ -101,7 +102,7 @@ export default function Review({ code }) {
                         onClick={() => handlePageChange(page - 1)}
                         disabled={page === 1}
                     >
-                        ← Previous
+                        <ChevronsLeft width={14} height={14} />
                     </button>
 
                     <div className="page-numbers">
@@ -121,7 +122,7 @@ export default function Review({ code }) {
                         onClick={() => handlePageChange(page + 1)}
                         disabled={page === pages}
                     >
-                        Next →
+                        <ChevronsRight width={14} height={14} />
                     </button>
                 </div>
             )}

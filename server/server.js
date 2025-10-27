@@ -11,7 +11,8 @@ const categoryRoutes = require('./routers/categoryRoutes');
 const brandRoutes = require('./routers/brandRoutes');
 const recipientRoutes = require('./routers/recipientRoutes');
 const orderRoutes = require('./routers/orderRoutes');
-const reviewRoutes = require('./routers/ReviewRoutes');
+const reviewRoutes = require('./routers/reviewRoutes');
+const pointRoutes = require('./routers/pointRoutes');
 
 const connectDB = require('./config/db');
 connectDB();
@@ -38,6 +39,8 @@ app.use('/recipient', recipientRoutes);
 app.use('/order',orderRoutes);
 
 app.use('/review',reviewRoutes);
+
+app.use('/point',pointRoutes);
 
 app.listen(5000, (req, res) => {
     console.log("Server listen port 5000");

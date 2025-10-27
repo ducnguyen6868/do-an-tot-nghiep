@@ -1,5 +1,6 @@
 require('dotenv').config();
 const User = require('../models/User');
+const Point = require('../models/Point');
 const bcrypt= require('bcrypt');
 const saltRounds=parseInt(process.env.SALT_ROUNDS);
 
@@ -23,6 +24,8 @@ const registerController = async (req, res) => {
             email,
             password: hashedPassword
         });
+        const point = await Point.create({});
+        user.point = point._id;
         await user.save();
         return res.status(201).json({
             message: "Account created."
