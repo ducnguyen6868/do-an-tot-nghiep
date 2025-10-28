@@ -25,7 +25,7 @@ export default function HeaderProfile() {
     }, []);
 
     const handleCheckIn = async () => {
-        if (!user.checkIn) {
+        if (!checkIn) {
             setShowCheckInModal(true);
             try {
                 await pointApi.patch(user._id);
@@ -36,6 +36,9 @@ export default function HeaderProfile() {
         }
     };
     const point = user.point;
+    const lastCheckIn = new Date(point?.lastCheckIn);
+    const now = new Date();
+    const checkIn = now.getDate() === lastCheckIn.getDate();
     return (
         <>
             {/* Hero Section */}
@@ -73,7 +76,7 @@ export default function HeaderProfile() {
                                         <span style={{ display: "flex", alignItems: "center" }}>
                                             <Icon icon="noto:treasure-chest" width="55" height="55" />
                                             <span className="points-number">
-                                                {user.point?.quantity}
+                                                {point?.quantity}
                                             </span>
                                         </span>
                                         <span className="points-text">Points</span>
@@ -82,11 +85,11 @@ export default function HeaderProfile() {
                                 </div>
                             </div>
                             <button
-                                className={`checkin-button ${user.checkIn ? 'checked' : ''}`}
+                                className={`checkin-button ${checkIn ? 'checked' : ''}`}
                                 onClick={handleCheckIn}
-                                disabled={user.checkIn}
+                                disabled={checkIn}
                             >
-                                {user.checkIn ? '✓ Checked In Today' : `📅 Daily Check-in (+${user.point?.table[user.point.streak]} pts)`}
+                                {checkIn ? '✓ Checked In Today' : `📅 Daily Check-in (+${point?.scoreBoard[point.streak]} pts)`}
                             </button>
                         </div>
                     </div>

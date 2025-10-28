@@ -27,7 +27,6 @@ const userSchema = new Schema({
   wishlist:[{code:{type:String},index:{type:Number}}],
   carts: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
   addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],
-  checkIn:{type:Boolean , default:false},
   point:{type:Schema.Types.ObjectId , ref:'Point'}
 }, { timestamps: true });
 
