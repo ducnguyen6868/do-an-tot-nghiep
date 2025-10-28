@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const RecipientSchema = new mongoose.Schema({
+const addressSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -20,5 +20,5 @@ const RecipientSchema = new mongoose.Schema({
     isDefault:{type:Boolean , default:false}
 },{timestamps:true});
 
-const Recipient = mongoose.model('Recipient', RecipientSchema);
-module.exports = Recipient;
+ module.exports = mongoose.model('Address', addressSchema);
+

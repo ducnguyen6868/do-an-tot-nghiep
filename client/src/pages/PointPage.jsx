@@ -80,7 +80,11 @@ export default function PointPage() {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="history-point">+ {item.point}</div>
+                                {item.point > 0 ? (
+                                    <div className="history-point">+ {item.point.toFixed(2)}</div>
+                                ) : (
+                                    <div className="history-point minus-points" style={{color:'#ff3030ff'}}>- {item.point.toFixed(2)*(-1)}</div>
+                                )}
                             </div>
                         ))
                 ) : (

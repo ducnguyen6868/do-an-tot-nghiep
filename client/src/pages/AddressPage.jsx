@@ -2,37 +2,37 @@ import { useState, useEffect } from 'react';
 import '../styles/AddressPage.css';
 import { toast } from 'react-toastify';
 import { Icon } from '@iconify/react';
-import Recipient from "../components/comon/Recipient";
-import recipientApi from '../api/recipientApi';
+import Address from "../components/comon/Address";
+import addressApi from '../api/addressApi';
 
 export default function AddressPage() {
     const [addresses, setAddresses] = useState([]);
-    const [recipientData, setRecipientData] = useState({});
+    const [addressData, setAddressData] = useState({});
 
-    const recipients = async () => {
+    const getAddresses = async () => {
         try {
-            const response = await recipientApi.recipient();
-            setAddresses(response.recipients);
+            const response = await addressApi.getAddress();
+            setAddresses(response.addresses);
         } catch (err) {
             toast.error(err.respone?.data?.messaage || err.message);
         }
     }
     useEffect(() => {
-        recipients();
+        getAddresses();
     }, []);
     const [modal, setModal] = useState(false);
-    const [recipientId, setRecipientId] = useState('');
+    const [addressId, setAddressId] = useState('');
     const [del, setDel] = useState(false);
     const [edit, setEdit] = useState(false);
 
-    const handleDelete = (recipientId) => {
-        setRecipientId(recipientId);
+    const handleDelete = (addressId) => {
+        setAddressId(addressId);
         setDel(true);
     }
     const confirmDelete = async () => {
         try {
-            const response = await recipientApi.delete(recipientId);
-            await recipients();
+            const response = await addressApi.deleteAddress(addressId);
+            await getAddresses();
             setDel(false);
             toast.success(response.message);
         } catch (err) {
@@ -40,11 +40,11 @@ export default function AddressPage() {
         }
     }
 
-    const handleSetDefault = async (recipientId) => {
-        setRecipientId(recipientId);
+    const handleSetDefault = async (addressId) => {
+        setAddressId(addressId);
         try {
-            const response = await recipientApi.setDefault(recipientId);
-            await recipients();
+            const response = await addressApi.patchAddress(addressId);
+            await getAddresses();
             toast.success(response.messaage);
         } catch (err) {
             toast.error(err.response?.data?.message || err.message);
@@ -52,7 +52,7 @@ export default function AddressPage() {
     }
 
     const handleEdit = (address) => {
-        setRecipientData(address);
+        setAddressData(address);
         setEdit(true);
     }
     return (
@@ -90,8 +90,8 @@ export default function AddressPage() {
             </div>
             {modal && (
                 <div className='modal-overlay' onClick={() => setModal(false)}>
-                    <div className='modal-contents' onClick={(e) => e.stopPropagation()}>
-                        {<Recipient onClose={() => setModal(false)} onChange={() => recipients()} />}
+                    <div className='modal-content' style={{padding:'0'}} onClick={(e) => e.stopPropagation()}>
+                        {<Address onClose={() => setModal(false)} onChange={() => getAddresses()} />}
                     </div>
                 </div>
             )}
@@ -119,8 +119,8 @@ export default function AddressPage() {
             )}
             {edit && (
                 <div className="modal-overlay" onClick={() => setEdit(false)}>
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <Recipient onClose={() => setEdit(false)} onChange={() => recipients()} recipientData={recipientData} />
+                    <div className='modal-content' style={{padding:'0'}} onClick={(e) => e.stopPropagation()}>
+                        <Address onClose={() => setEdit(false)} onChange={() => getAddresses()} addressData={addressData} />
                     </div>
                 </div>
             )}

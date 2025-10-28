@@ -135,6 +135,7 @@
 
 .forgot-btn:hover {
   color: var(--brand-hover);
+  text-decoration: underline;
 }
 
 /* ========== SUBMIT BUTTON ========== */

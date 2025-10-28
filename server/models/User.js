@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 require('./Promotion');
 require('./Order');
-require('./Recipient');
+require('./Address');
 require('./Cart');
 require('./Point');
 
@@ -26,7 +26,7 @@ const userSchema = new Schema({
   }],
   wishlist:[{code:{type:String},index:{type:Number}}],
   carts: [{ type: Schema.Types.ObjectId, ref: 'Cart' }],
-  recipients: [{ type: Schema.Types.ObjectId, ref: "Recipient" }],
+  addresses: [{ type: Schema.Types.ObjectId, ref: "Address" }],
   checkIn:{type:Boolean , default:false},
   point:{type:Schema.Types.ObjectId , ref:'Point'}
 }, { timestamps: true });

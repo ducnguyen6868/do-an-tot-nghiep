@@ -1,32 +1,32 @@
-const Recipient = require('../models/Recipient');
+const Address = require('../models/Address');
 const User = require('../models/User');
 
-const recipient = async (req, res) => {
+const getAddress = async (req, res) => {
   try {
     const userId = req.user.id;
 
     const user = await User.findById(userId)
-      .populate('recipients')
-      .select('recipients -_id');
+      .populate('addresses')
+      .select('addresses -_id');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    return res.status(200).json({ recipients: user.recipients });
+    return res.status(200).json({ addresses: user.addresses });
   } catch (err) {
     return res.status(500).json({ message: 'Server error: ' + err.message });
   }
 };
 
-const addRecipient = async (req, res) => {
+const postAddress = async (req, res) => {
   try {
     const userId = req.user.id;
     const { data } = req.body;
 
     if (!data.name || !data.phone || !data.address || !data.type) {
       return res.status(400).json({
-        message: "Missing recipient fields (name, phone or address)."
+        message: "Missing address fields (name, phone or address)."
       });
     }
 
@@ -34,9 +34,9 @@ const addRecipient = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-    let newRecipient;
-    if (user.recipients.length === 0) {
-      newRecipient = await Recipient.create({
+    let newAddress;
+    if (user.addresses.length === 0) {
+      newAddress = await Address.create({
         name: data.name,
         phone: data.phone,
         address: data.address,
@@ -44,19 +44,19 @@ const addRecipient = async (req, res) => {
         isDefault: true
       });
     } else {
-      newRecipient = await Recipient.create({
+      newAddress = await Address.create({
         name: data.name,
         phone: data.phone,
         address: data.address,
         type: data.type
       });
     }
-    user.recipients.push(newRecipient._id);
+    user.addresses.push(newAddress._id);
     await user.save();
 
     return res.status(201).json({
       message: "Add address successful.",
-      recipient: newRecipient
+      address: newAddress
     });
 
   } catch (err) {
@@ -67,57 +67,57 @@ const addRecipient = async (req, res) => {
   }
 };
 
-const deleteRecipient = async (req, res) => {
+const deleteAddress = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { recipientId } = req.params;
+    const { addressId } = req.params;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const index = user.recipients.findIndex(id => id.toString() === recipientId);
+    const index = user.addresses.findIndex(id => id.toString() === addressId);
     if (index === -1) {
-      return res.status(404).json({ message: 'Recipient not found in user list' });
+      return res.status(404).json({ message: 'Address not found in user list' });
     }
 
-    await Recipient.findByIdAndDelete(recipientId);
+    await Address.findByIdAndDelete(addressId);
 
-    user.recipients.splice(index, 1);
+    user.addresses.splice(index, 1);
     await user.save();
 
-    return res.status(200).json({ message: 'Recipient deleted successfully.' });
+    return res.status(200).json({ message: 'Address deleted successfully.' });
   } catch (err) {
     return res.status(500).json({ message: 'Server error: ' + err.message });
   }
 };
 
 
-const setDefaultRecipient = async (req, res) => {
+const patchAddress = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { recipientId } = req.params;
+    const { addressId } = req.params;
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const exists = user.recipients.find(
-      (id) => id.toString() === recipientId
+    const exists = user.addresses.find(
+      (id) => id.toString() === addressId
     );
     if (!exists) {
       return res
         .status(404)
-        .json({ message: 'Recipient not found in user list' });
+        .json({ message: 'Address not found in user list' });
     }
 
-    await Recipient.updateMany(
-      { _id: { $in: user.recipients } },
+    await Address.updateMany(
+      { _id: { $in: user.addresses } },
       { isDefault: false }
     );
 
-    await Recipient.findByIdAndUpdate(recipientId, { isDefault: true });
+    await Address.findByIdAndUpdate(addressId, { isDefault: true });
 
     return res.status(200).json({ message: 'Set default address successful.' });
   } catch (err) {
@@ -125,30 +125,30 @@ const setDefaultRecipient = async (req, res) => {
   }
 };
 
-const editRecipient = async (req, res) => {
-  const { recipient } = req.body;
-  if (!recipient) {
+const putAddress = async (req, res) => {
+  const { address } = req.body;
+  if (!address) {
     return res.status(400).json({
-      message: "Recipient is required."
+      message: "Address is required."
     });
   }
   try {
-    const isRecipient = await Recipient.findById(recipient.id);
-    if (!isRecipient) {
+    const isAddress = await Address.findById(address.id);
+    if (!isAddress) {
       return res.status(404).json({
-        message: "Recipient not found."
+        message: "Address not found."
       });
     }
-    const changeRecipient = await Recipient.findByIdAndUpdate(recipient.id, {
+    const changeAddress = await Address.findByIdAndUpdate(address.id, {
       $set: {
-        name: recipient.name,
-        phone: recipient.phone,
-        address: recipient.address
+        name: address.name,
+        phone: address.phone,
+        address: address.address
       }
     })
-    changeRecipient.save();
+    changeAddress.save();
     return res.status(200).json({
-      message: "Change recipient successful."
+      message: "Change address successful."
     })
   } catch (err) {
     return res.status(500).json({
@@ -157,4 +157,4 @@ const editRecipient = async (req, res) => {
   }
 
 }
-module.exports = { recipient, addRecipient, deleteRecipient, setDefaultRecipient, editRecipient };
+module.exports = { getAddress, postAddress, deleteAddress, patchAddress, putAddress };

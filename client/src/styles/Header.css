@@ -392,7 +392,7 @@
   white-space: nowrap;
 }
 
-.badge {
+.badge-hot {
   background-color: var(--badge-bg);
   color: var(--badge-text);
   font-size: 10px;

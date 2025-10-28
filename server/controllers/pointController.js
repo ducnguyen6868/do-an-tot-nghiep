@@ -57,4 +57,36 @@ const patch = async (req, res) => {
   }
 };
 
-module.exports = { patch };
+const shoping = async (req,res)=>{
+  const {userId , orderId,discountPoint} =req.body;
+
+  if(!userId||!orderId||!discountPoint){
+    return res.status(400).json({
+      message:'User, order id and point are require.'
+    });
+  }
+  const user= await User.findById(userId);
+  if(!user){
+    return res.status(404).json({
+      message:'User not found.'
+    });
+  }
+  const point = await Point.findById(user.point);
+  if(!point){
+    return res.status(404).json({
+      message:'Not found point info.'
+    });
+  }
+  point.quantity-=discountPoint;
+  const history = {
+    point:discountPoint*(-1),
+    action:'Payment for order '+orderId,
+  }
+  point.history.push(history);
+  await point.save();
+  return res.status(200).json({
+    message:'Update point succesful.' 
+  });
+
+}
+module.exports = { patch ,shoping};

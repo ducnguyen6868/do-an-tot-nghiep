@@ -17,6 +17,7 @@ import PaymentResultPage from './pages/PaymentResultPage';
 import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
 import OrderPage from './pages/OrderPage';
+import InfoPayment from './components/comon/InfoPayment';
 
 import User from './components/layout/User';
 import UserAuth from './hooks/userAuth';
@@ -34,6 +35,9 @@ function App() {
       <UserProvider>
         <ToastContainer position="top-right" autoClose={2000} />
         <Routes>
+
+          <Route path='check-modal' element={<InfoPayment/>}></Route>
+
           {/* Các route chính */}
           <Route path="login" element={<LoginPage />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>

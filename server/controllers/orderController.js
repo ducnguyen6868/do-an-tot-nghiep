@@ -45,7 +45,7 @@ const viewOrder = async (req, res) => {
 const createOrder = async (req, res) => {
     try {
         const { orderData, orderId, fromCart } = req.body;
-        const formData = orderData.formData;
+        const infoPayment = orderData.infoPayment;
         const productData = orderData.productData;
         const { total_amount, discount_amount, final_amount } = orderData;
 
@@ -74,15 +74,14 @@ const createOrder = async (req, res) => {
         const status = { present: 'Order Placed', time: Date.now() }
         const newOrder = new Order({
             code: orderId,
-            recipient: formData.recipientId,
-            name: formData.name,
-            phone: formData.phone,
-            address: formData.address,
-            type: formData.type,
+            name: infoPayment.name,
+            phone: infoPayment.phone,
+            address: infoPayment.address,
+            type: infoPayment.type,
             total_amount: parseFloat(total_amount),
             discount_amount: parseFloat(discount_amount || 0),
             final_amount: parseFloat(final_amount),
-            paymentMethod: formData.payment,
+            paymentMethod: infoPayment.payment,
             products: productData.map(p => ({
                 code: p.code,
                 name: p.name,
@@ -93,18 +92,14 @@ const createOrder = async (req, res) => {
         });
         newOrder.status.push(status);
         await newOrder.save();
-
-
-        if (formData.email) {
-            const user = await User.findOne({ email: formData.email });
+        
+        if (infoPayment.userId) {
+            const user = await User.findById(infoPayment.userId);
             if (!user) {
                 return res.status(404).json({ message: 'User not found.' });
             }
-            await Order.findByIdAndUpdate(newOrder.id, {
-                $set: {
-                    user: user.id
-                }
-            });
+            newOrder.user = infoPayment.userId;
+            await newOrder.save();
             //Delete product form cart
             if (fromCart) {
                 const cartIds = user.carts.map(cart => cart._id);
@@ -229,16 +224,16 @@ const checkPayment = async (req, res) => {
     }
 };
 
-const listOrder = async(req,res)=>{
-    let {order}= req.body;
-    if(!order){
+const listOrder = async (req, res) => {
+    let { order } = req.body;
+    if (!order) {
         return res.status(400).json({
-            message:'Order code is require.'
+            message: 'Order code is require.'
         });
     }
-    const orders= await Order.find({code:{$in:order}});
+    const orders = await Order.find({ code: { $in: order } });
     return res.status(200).json({
-        message:'Get list order successful.',
+        message: 'Get list order successful.',
         orders
     });
 }
@@ -250,7 +245,7 @@ const orders = async (req, res) => {
     const listOrder = [...orders].reverse();
     return res.status(200).json({
         message: 'Get list order successful.',
-        orders:listOrder
+        orders: listOrder
     });
 }
 
@@ -274,5 +269,5 @@ const changeStatus = async (req, res) => {
 module.exports = {
     view, viewOrder,
     createOrder, payment, callBack, checkPayment,
-    orders, listOrder,changeStatus
+    orders, listOrder, changeStatus
 };

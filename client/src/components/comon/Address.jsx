@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import "../../styles/Recipient.css";
 import { isValidPhoneNumber } from "../../utils/isValidPhoneNumber";
-import recipientApi from "../../api/recipientApi";
 import { toast } from "react-toastify";
 import { Icon } from "@iconify/react";
+import addressApi from "../../api/addressApi";
+import "../../styles/Address.css";
 
-export default function Recipient({ onClose, onChange, recipientData }) {
+export default function Address({ onClose, onChange, addressData }) {
   const [loading, setLoading] = useState(false);
 
-  const [recipient, setRecipient] = useState({
+  const [address, setAddress] = useState({
     name: "",
     phone: "",
     address: "",
@@ -16,51 +16,55 @@ export default function Recipient({ onClose, onChange, recipientData }) {
   });
 
   useEffect(() => {
-    if (recipientData) {
-      setRecipient({
-        name: recipientData.name,
-        phone: recipientData.phone,
-        address: recipientData.address,
-        type: recipientData.type,
-        id:recipientData._id
+    if (addressData) {
+      setAddress({
+        name: addressData.name,
+        phone: addressData.phone,
+        address: addressData.address,
+        type: addressData.type,
+        id: addressData._id
       })
     }
-  }, [recipientData]);
+  }, [addressData]);
+
+  const checkValidForm = ()=>{
+     if (!address.name.trim()) {
+      setErrors((prev) => ({ ...prev, name: "Please enter full name." }));
+      return false;
+    }
+
+    if (!address.phone) {
+      setErrors((prev) => ({ ...prev, phone: "Please enter your phone number." }));
+      return false;
+    }
+
+    if (!isValidPhoneNumber(address.phone)) {
+      setErrors((prev) => ({ ...prev, phone: "Invalid phone number format." }));
+      return false;
+    }
+
+    if (!address.address.trim()) {
+      setErrors((prev) => ({ ...prev, address: "Please enter address." }));
+      return false;
+    }
+    return true;
+  }
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRecipient((prev) => ({ ...prev, [name]: value }));
+    setAddress((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleAddRecipient = async (e) => {
+  const handlePostAddress = async (e) => {
     e.preventDefault();
-
-    if (!recipient.name.trim()) {
-      setErrors((prev) => ({ ...prev, name: "Please enter full name." }));
-      return;
-    }
-
-    if (!recipient.phone) {
-      setErrors((prev) => ({ ...prev, phone: "Please enter your phone number." }));
-      return;
-    }
-
-    if (!isValidPhoneNumber(recipient.phone)) {
-      setErrors((prev) => ({ ...prev, phone: "Invalid phone number format." }));
-      return;
-    }
-
-    if (!recipient.address.trim()) {
-      setErrors((prev) => ({ ...prev, address: "Please enter address." }));
-      return;
-    }
+    if(!checkValidForm()) return;
 
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     try {
-      const response = await recipientApi.addRecipient(recipient);
+      const response = await addressApi.postAddress(address);
       toast.success(response.message);
       onClose?.();
       onChange?.();
@@ -71,33 +75,14 @@ export default function Recipient({ onClose, onChange, recipientData }) {
     }
   };
 
-  const handleEditRecipient = async (e) => {
+  const handlePutAddress = async (e) => {
     e.preventDefault();
 
-    if (!recipient.name.trim()) {
-      setErrors((prev) => ({ ...prev, name: "Please enter full name." }));
-      return;
-    }
-
-    if (!recipient.phone) {
-      setErrors((prev) => ({ ...prev, phone: "Please enter your phone number." }));
-      return;
-    }
-
-    if (!isValidPhoneNumber(recipient.phone)) {
-      setErrors((prev) => ({ ...prev, phone: "Invalid phone number format." }));
-      return;
-    }
-
-    if (!recipient.address.trim()) {
-      setErrors((prev) => ({ ...prev, address: "Please enter address." }));
-      return;
-    }
-
+    if(!checkValidForm()) return;
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     try {
-      const response = await recipientApi.editRecipient(recipient);
+      const response = await addressApi.putAddress(address);
       toast.success(response.message);
       onClose?.();
       onChange?.();
@@ -109,18 +94,19 @@ export default function Recipient({ onClose, onChange, recipientData }) {
   };
 
   return (
-    <div className="recipient-container">
-      <div className="recipient-card">
-        <h2 className="recipient-title">Recipient Information</h2>
+    <div className="address-container">
+      <div className="address-card">
+        <h2 className="address-title">Address Information</h2>
 
-        <div className="recipient-form">
+        <div className="address-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
             <input
               type="text"
               id="name"
               name="name"
-              value={recipient.name}
+              className="input-adderss"
+              value={address.name}
               onChange={handleChange}
               required
             />
@@ -138,7 +124,8 @@ export default function Recipient({ onClose, onChange, recipientData }) {
               type="tel"
               id="phone"
               name="phone"
-              value={recipient.phone}
+              className="input-adderss"
+              value={address.phone}
               onChange={handleChange}
               required
             />
@@ -152,11 +139,12 @@ export default function Recipient({ onClose, onChange, recipientData }) {
 
           <div className="form-group">
             <label htmlFor="address">Address</label>
-            <textarea
+            <textarea 
               id="address"
               name="address"
               rows="3"
-              value={recipient.address}
+              className="input-adderss"
+              value={address.address}
               onChange={handleChange}
               required
             />
@@ -173,7 +161,7 @@ export default function Recipient({ onClose, onChange, recipientData }) {
               type="radio"
               name="type"
               value="Home"
-              checked={recipient.type === "Home"}
+              checked={address.type === "Home"}
               onChange={handleChange}
             />
             Home
@@ -183,7 +171,7 @@ export default function Recipient({ onClose, onChange, recipientData }) {
               type="radio"
               name="type"
               value="Office"
-              checked={recipient.type === "Office"}
+              checked={address.type === "Office"}
               onChange={handleChange}
             />
             Office
@@ -196,13 +184,13 @@ export default function Recipient({ onClose, onChange, recipientData }) {
                 Processing...
               </button>
             </>
-          ) : recipientData ? (
-            <button className="btn-submit" disabled={loading} onClick={handleEditRecipient}>
-              <span>Save Recipient</span>
+          ) : addressData ? (
+            <button className="btn-submit" disabled={loading} onClick={handlePutAddress}>
+              <span>Save address</span>
             </button>
           ) : (
-            <button className="btn-submit" disabled={loading} onClick={handleAddRecipient}>
-              <span>Save Recipient</span>
+            <button className="btn-submit" disabled={loading} onClick={handlePostAddress}>
+              <span>Save new address</span>
             </button>
           )}
         </div>

@@ -244,7 +244,7 @@ export default function Header() {
               <li className="nav-item">
                 <Link to="#" className="nav-link">
                   <span className="nav-text">New Arrivals</span>
-                  <span className="badge">Hot</span>
+                  <span className="badge-hot">Hot</span>
                 </Link>
               </li>
               <li className="nav-item">

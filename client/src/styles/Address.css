@@ -1,11 +1,11 @@
-.recipient-container {
+.address-container {
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
-.recipient-card {
+.address-card {
   background-color: var(--bg-primary);
   box-shadow: 0 10px 20px var(--shadow-lg);
   border-radius: 1rem;
@@ -14,27 +14,27 @@
   animation: fadeIn 0.5s ease-in-out;
 }
 
-.recipient-title {
+.address-title {
   text-align: center;
   color: var(--brand-color);
   margin-bottom: 1.5rem;
 }
 
-.recipient-form .form-group {
+.address-form .form-group {
   margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
 }
 
-.recipient-form label {
+.address-form label {
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
   font-weight: 600;
   font-size: 1rem;
 }
 
-.recipient-form input,
-.recipient-form textarea {
+.address-form input.input-address,
+.address-form textarea {
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   border-radius: 8px;
@@ -44,13 +44,13 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.recipient-form input:focus,
-.recipient-form textarea:focus {
+.address-form input:focus,
+.address-form textarea:focus {
   outline: none;
   border-color: var(--input-focus);
   box-shadow: 0 0 5px var(--input-focus);
 }
-.recipient-form input[type='radio']{
+.address-form input[type='radio']{
   margin:0 10px;
 }
 .btn-submit {

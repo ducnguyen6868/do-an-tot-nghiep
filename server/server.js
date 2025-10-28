@@ -9,7 +9,7 @@ const profileRoutes = require('./routers/profileRoutes');
 const productRoutes = require('./routers/productRoutes');
 const categoryRoutes = require('./routers/categoryRoutes');
 const brandRoutes = require('./routers/brandRoutes');
-const recipientRoutes = require('./routers/recipientRoutes');
+const addressRoutes = require('./routers/addressRoutes');
 const orderRoutes = require('./routers/orderRoutes');
 const reviewRoutes = require('./routers/reviewRoutes');
 const pointRoutes = require('./routers/pointRoutes');
@@ -34,7 +34,7 @@ app.use("/category", categoryRoutes);
 
 app.use("/brand", brandRoutes);
 
-app.use('/recipient', recipientRoutes);
+app.use('/address', addressRoutes);
 
 app.use('/order',orderRoutes);
 
