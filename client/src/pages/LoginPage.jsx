@@ -4,10 +4,10 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import "../styles/LoginPage.css";
 import { isValidEmail } from '../utils/isValidEmail';
-import ForgotPasswordModal from '../components/comon/ForgotPasswordModal';
+import ForgotPasswordModal from '../components/common/ForgotPasswordModal';
 import authApi from '../api/authApi';
+import loginImage from '../assets/login.png';
 
 export default function LoginPage() {
 
@@ -17,7 +17,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
-    email:'',
+    email: '',
     password: '',
     rememberMe: true,
   });
@@ -32,7 +32,7 @@ export default function LoginPage() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setErrors({...errors ,[name]:''});
+    setErrors({ ...errors, [name]: '' });
   };
 
   const handleLoginSubmit = async (e) => {
@@ -57,12 +57,12 @@ export default function LoginPage() {
         sessionStorage.setItem("token", response.token);
       }
       toast.success(response.message);
-      await setInfoUser(prev=>({
-        ...prev , name:response.user.name,
-        email:response.user.email,
-        avatar:response.user.avatar,
-        cart:response.user.carts?.length,
-        wishlist:response.user.wishlist?.length
+      await setInfoUser(prev => ({
+        ...prev, name: response.user.name,
+        email: response.user.email,
+        avatar: response.user.avatar,
+        cart: response.user.carts?.length,
+        wishlist: response.user.wishlist?.length
       }));
       navigate('/');
 
@@ -73,16 +73,22 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="login-section">
-        <div className="login-container">
-          <div className="login-header">
-            <h2 className="form-title">Welcome back !</h2>
-            <p className="form-subtitle">Get ready for hundreds of hot deals and exciting discounts!</p>
+
+      <div className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4"
+      >
+        <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
+        <div className="bg-white z-10 relative dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6 border border-gray-100 dark:border-gray-700">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-bold text-cyan-600">Welcome Back</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Get ready for hundreds of hot deals and exciting discounts!
+            </p>
           </div>
 
           {/* Email */}
-          <div className="form-group">
-            <label className="input-label" htmlFor="email">
+          <div>
+            <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <Icon icon="mdi:email-outline" width="18" />
               <span>Email Address</span>
             </label>
@@ -93,12 +99,11 @@ export default function LoginPage() {
               value={loginData.email}
               onChange={handleLoginChange}
               placeholder="your@email.com"
-              autoComplete='on'
-              className={errors.email ? "error" : ""}
-
+              autoComplete="on"
+              className={`w-full px-4 py-2 rounded-lg border text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'}`}
             />
             {errors.email && (
-              <div className="form-error">
+              <div className="flex items-center gap-1 mt-1 text-xs text-red-500">
                 <Icon icon="mdi:alert-circle" width="16" height="16" />
                 <span>{errors.email}</span>
               </div>
@@ -106,91 +111,102 @@ export default function LoginPage() {
           </div>
 
           {/* Password */}
-          <div className="form-group">
-            <label className="input-label" htmlFor="password">
+          <div>
+            <label htmlFor="password" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <Icon icon="mdi:lock-outline" width="18" />
               <span>Password</span>
             </label>
-            <div className="form-input-login">
+
+            <div className="relative">
               <input
                 type={isHiddenPassword ? "password" : "text"}
                 name="password"
                 id="password"
                 value={loginData.password}
                 onChange={handleLoginChange}
-                onKeyDown={(e)=>{
-                  if(e.key==='Enter'){
-                    handleLoginSubmit(e);
-                  }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleLoginSubmit(e);
                 }}
                 placeholder="••••••••"
-                autoComplete='current-password'
-                className={errors.password ? "error" : ""}
+                autoComplete="current-password"
+                className={`w-full px-4 py-2 rounded-lg border text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'}`}
               />
               <button
                 type="button"
                 onClick={() => setIsHiddenPassword(!isHiddenPassword)}
-                className="eye-btn"
+                className="absolute right-3 top-2.5 text-gray-500 hover:text-blue-500 transition"
               >
-                <Icon
-                  icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"}
-                  width="20"
-                />
+                <Icon icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width="20" />
               </button>
             </div>
 
             {errors.password && (
-              <div className="form-error">
+              <div className="flex items-center gap-1 mt-1 text-xs text-red-500">
                 <Icon icon="mdi:alert-circle" width="16" height="16" />
                 <span>{errors.password}</span>
               </div>
             )}
           </div>
-          {/* Checkboxes */}
-          <div className="checkbox-group">
-            <label className="checkbox-label">
+
+          {/* Checkbox + Forgot */}
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
               <input
                 type="checkbox"
                 name="rememberMe"
                 checked={loginData.rememberMe}
                 onChange={handleLoginChange}
+                className="w-4 h-4 accent-brand rounded"
               />
-              <span>
-                Remember me
-              </span>
+              <span>Remember me</span>
             </label>
-            <button className="forgot-btn" onClick={() => setIsModal(true)}>Forgot password ?</button>
+            <button
+              type="button"
+              onClick={() => setIsModal(true)}
+              className="text-brand hover:underline"
+            >
+              Forgot password?
+            </button>
           </div>
 
-          {/* Submit */}
-          <button className="submit-btn" onClick={handleLoginSubmit}>
+          {/* Submit button */}
+          <button
+            onClick={handleLoginSubmit}
+            className="w-full py-2 bg-brand hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition"
+          >
             Login
           </button>
 
           {/* Divider */}
-          <div className="divider">
-            <div className="line" />
+          <div className="flex items-center justify-center space-x-2 text-gray-400 text-sm">
+            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
             <span>Or continue with</span>
-            <div className="line" />
+            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
           </div>
 
           {/* Social buttons */}
-          <div className="social-buttons">
-            <button className="social-btn google">
+          <div className="flex items-center justify-center space-x-3">
+            <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:shadow transition">
               <Icon icon="logos:google-icon" width="20" />
-              <span>Google</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Google</span>
             </button>
-            <button className="social-btn facebook">
+
+            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               <Icon icon="logos:facebook" width="20" />
-              <span>Facebook</span>
+              <span className="text-sm font-medium">Facebook</span>
             </button>
           </div>
 
-          <p className="login-text">
-            No account? <Link to="../register" className="link">Sign Up</Link>
+          {/* Footer */}
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+            No account?{" "}
+            <Link to="../register" className="text-blue-600 font-medium hover:underline">
+              Sign Up
+            </Link>
           </p>
         </div>
       </div>
+
       {/* Forgot password modal */}
       {isModal && <ForgotPasswordModal onClose={() => setIsModal(false)} />}
     </>

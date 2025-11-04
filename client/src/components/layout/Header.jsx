@@ -1,267 +1,130 @@
-import { useState, useEffect } from 'react';
-import '../../styles/Header.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import websiteLogo from '../../assets/website-logo.png';
-import avatar from '../../assets/avatar-default.png';
-import { useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
-import { toast } from 'react-toastify';
-import ThemToggle from '../comon/ThemeToggle';
-import categoryApi from '../../api/categoryApi';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, User, ShoppingCart, Heart } from 'lucide-react';
+import websiteLogo from '../../assets/website-logo.png';
 
 export default function Header() {
-  //Get info User
-  const { infoUser, setLocale, currency, setCurrency } = useContext(UserContext);
+    const navigate = useNavigate();
 
-  const [category, setCategory] = useState([]);
+    const { infoUser } = useContext(UserContext);
+    const [logged, setLogged] = useState(false);
 
-  const [keyword, setKeyword] = useState('');
+    const [keyword, setKeyword] = useState('');
 
-  const [logged, setLogged] = useState(false);
+    useEffect(() => {
+        if (infoUser.name !== '') {
+            setLogged(true);
+        }
+    }, [infoUser]);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (infoUser && infoUser.name !== '') {
-      setLogged(true);
-    } else {
-      setLogged(false);
+    const handleSearch = () => {
+        if (keyword !== '') {
+            navigate(`/search?keyword=${keyword}`);
+        }
     }
-  }, [infoUser]);
+    return (
+        <>
+            {/* Header */}
+            <header
+                className="border-b border-border sticky top-0 z-50 shadow-sm transition-colors duration-500 "
+                style={{
+                    backgroundColor: 'var(--header-bg, var(--bg-primary))', // Fallback to bg-primary
+                    boxShadow: '0 1px 3px 0 var(--shadow-sm), 0 1px 2px -1px var(--shadow-sm)'
+                }}
+            >
+                <div className="max-w-7xl mx-auto px-4 py-2">
+                    <div className="flex items-center justify-between gap-12 ">
+                        {/* Tên Công Ty và Slogan */}
+                        <div className="flex flex-row gap-2 ">
+                            <img className='w-7' src={websiteLogo} alt='Logo' title='Logo' />
+                            <Link to='/'
+                                className="text-xl font-extrabold tracking-widest"
+                                style={{
+                                    // Sử dụng linear-gradient tùy chỉnh của bạn
+                                    background: 'linear-gradient(90deg, var(--brand-light, #3355ff), var(--brand-color, #00bcd4))',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    filter: 'drop-shadow(0 0 2px rgba(0, 188, 212, 0.4))'
+                                }}
+                            >
+                                TIMEPIECE
+                            </Link>
+                        </div>
 
-  useEffect(() => {
-    const getCategory = async () => {
-      try {
-        const reponse = await categoryApi.category();
-        setCategory(reponse.category);
-      } catch (err) {
-        toast.error(err.reponse?.data?.message || err.message);
-      }
-    }
-    getCategory();
-  }, []);
+                        <div className="flex flex-1 items-center justify-end gap-2 space-x-3 animate-fadeInRight">
+                            <div className="relative">
+                                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" onClick={()=>handleSearch()} />
+                                <input
+                                    type="text"
+                                    name='search'
+                                    placeholder="Search watches , collections, promotions ,..."
+                                    className="w-[600px] min-w-52 pl-9 pr-3 py-1.5 text-xs border border-solid border-brand rounded transition-all focus:outline-none"
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
 
-  const handleSearch = () => {
-    if (keyword && keyword.trim() !== "") {
-      navigate(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
-    }
-  };
-  const handleChangeCurrency = async ()=>{
-    if(currency==='USD'){
-      setLocale('vi-VN');
-      setCurrency('VND');
-    }else{
-      setLocale('en-US');
-      setCurrency('USD');
-    }
-  }
+                                />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                {/* Avatar / User */}
+                                <div className="relative group">
+                                    {logged ? (
+                                        <Link to='/user/profile'>
+                                            <img
+                                                src={`http://localhost:5000/${infoUser.avatar}`}
+                                                alt="User Avatar"
+                                                className="w-9 h-9 rounded-full object-cover border border-gray-300 shadow-sm group-hover:shadow-md transition-all duration-300"
+                                            />
+                                        </Link>
+                                    ) : (
+                                        <div className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300">
+                                            <User className="w-5 h-5 text-text-secondary" />
+                                        </div>
+                                    )}
+                                </div>
 
-  const handleViewOrder = ()=>{
-    if(infoUser.name){
-      navigate('/user/order',{state:{activeTab:'order'}});
-    }else{
-      navigate('/order');
-    }
-  }
-  return (
-    <>
-      <div className="announcement-bar">
-        <div className="announcement-text">
-          🎉 <strong>SPECIAL OFFER:</strong> Get 25% OFF on all luxury watches! Use code: LUXURY25 | Free Shipping Worldwide ✈️
-        </div>
-      </div>
+                                {/* Cart */}
+                                <Link to='/cart' className="relative group cursor-pointer">
+                                    <ShoppingCart className="w-6 h-6 text-text-secondary group-hover:text-primary transition-colors duration-300" />
+                                    <span className="absolute -top-2 -right-2 bg-bg-secondary text-brand text-xs font-medium rounded-full px-1.5 py-0.5 shadow">
+                                        {infoUser.cart}
+                                    </span>
+                                </Link>
 
-      {/* <!-- Main Header-- > */}
-      <header className="main-header">
-        {/* <!-- Top Header --> */}
-        <div className="header-top">
-          <div className="header-top-container">
-            <div className="contact-info">
-              <div className="contact-item">
-                <span>
-                  <Icon icon="noto:telephone" width="22" height="22" />
-                </span>
-                <span>1-800-WATCHES</span>
-              </div>
-              <div className="contact-item">
-                <span>
-                  <Icon icon="noto:love-letter" width="24" height="24" />
-                </span>
-                <span>info@timepiece.com</span>
-              </div>
-              <div className="contact-item">
-                <span>
-                  <Icon icon="noto:world-map" width="24" height="24" />
-                </span>
-                <span>123 Luxury Ave, New York</span>
-              </div>
-            </div>
-            <div className="header-links">
-              <button onClick={()=>handleViewOrder()}>Track Order</button>
-              <button >Help</button>
-              <button >Store Locator</button>
-              <button >English ▼</button>
-              <button 
-                onClick={() =>handleChangeCurrency()}>
-                {currency === 'USD' ? 'USD $' : 'VND ₫'}▼
-              </button>
-            </div>
-            <ThemToggle />
-          </div>
-        </div>
+                                {/* Wishlist */}
+                                <Link to='/wishlist' className="relative group cursor-pointer">
+                                    <Heart className="w-6 h-6 text-text-secondary group-hover:text-rose-500 transition-colors duration-300" />
+                                    <span className="absolute -top-2 -right-2 bg-bg-secondary text-brand text-xs font-medium rounded-full px-1.5 py-0.5 shadow">
+                                        {infoUser.wishlist}
+                                    </span>
+                                </Link>
+                            </div>
 
-        {/* <!-- Main Header Content --> */}
-        <div className="header-main">
-          <div className="header-container">
-            {/* <!-- Logo --> */}
-            <Link to="/" className="logo" style={{ margin: '0' }}>
-              <div className="logo-icon">
-                <img src={websiteLogo} alt='Website Logo' title='Website Logo' />
-              </div>
-              <div className="logo-text">
-                <div className="logo-title">TIMEPIECE</div>
-                <div className="logo-subtitle">Luxury Watches</div>
-              </div>
-            </Link>
 
-            {/* <!-- Mobile Menu Toggle --> */}
-            <div className="mobile-menu-toggle">
-              <span className="menu-bar"></span>
-              <span className="menu-bar"></span>
-              <span className="menu-bar"></span>
-            </div>
+                            {!logged && (
+                                <>
+                                    <Link to='/login' className="px-4 py-1.5 text-white text-xs rounded transition-all transform hover:scale-105 btn-brand"
+                                        style={{ backgroundColor: 'var(--brand-color)' }}>
+                                        Sign In
+                                    </Link>
 
-            {/* <!-- Search Bar --> */}
-            <div className="search-container">
-              <div className="search-bar">
-                <input type="text" className="search-input" name='search' value={keyword} onKeyDown={(e) => e.key === "Enter" && handleSearch()} onChange={(e) => setKeyword(e.target.value)} placeholder="Search for watches, brands, collections..." />
-                <button className="search-btn" onClick={handleSearch}>
-                  <Icon icon="noto:magnifying-glass-tilted-left" width="24" height="24" />
-                </button>
-              </div>
-            </div>
-
-            {/* <!-- Header Actions --> */}
-            <div className="header-actions">
-              <div className="header-action">
-                {logged ? (
-                  <>
-                    <Link to='/user/profile' >
-                      <div className="action-icon avatar-wave"  >
-                        <img src={infoUser.avatar ? `http://localhost:5000/` + infoUser.avatar : avatar} className="avatar-icon" alt="avatar" title="avatar" style={{
-                          width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", objectPosition: "center"
-                        }} />
-                      </div>
-                    </Link>
-                    <div className="action-label">{infoUser.name}</div>
-                  </>
-                ) : (
-                  <>
-                    <Link to='/login' >
-                      <div className="action-icon">
-                        <Icon icon="noto:bust-in-silhouette" width="32" height="32" />
-                      </div>
-                    </Link>
-                    <div className="action-label">Account</div>
-                  </>
-                )}
-              </div>
-              <div className="header-action">
-                <Link to="/wishlist">
-                  <div className="action-icon">
-                    <Icon icon="noto:red-heart" width="40" height="40" />
-                  </div>
-                  <div className="action-badge">{infoUser.wishlist}</div>
-                </Link>
-                <div className="action-label">Wishlist</div>
-              </div>
-              <div className="header-action">
-                <Link to="/cart">
-                  <div className="action-icon">
-                    <Icon icon="noto:shopping-cart" width="40" height="40" />
-                  </div>
-                  <div className="action-badge">{infoUser.cart}</div>
-                </Link>
-                <div className="action-label">Cart</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* <!-- Navigation --> */}
-        <nav className="main-nav">
-          <div className="nav-container">
-            <div className="category-dropdown">
-              <span className="category-icon">☰</span>
-              <span className="category-text">ALL CATEGORIES</span>
-              <span>▼</span>
-              <ul className='dropdown-menu'>
-                {category.map(cate =>
-                  <li key={cate._id} className='dropdown-item' >{cate.name}</li>
-                )}
-
-              </ul>
-            </div>
-
-            <ul className="nav-menu">
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-text">Men's Watches</span>
-                  <span>▼</span>
-                </Link>
-                <div className="dropdown-menu">
-                  <Link to="/product-detail" className="dropdown-item">Luxury Collection</Link>
-                  <Link to="#" className="dropdown-item">Sport Watches</Link>
-                  <Link to="#" className="dropdown-item">Dress Watches</Link>
-                  <Link to="#" className="dropdown-item">Smart Watches</Link>
+                                    <Link to='/register'
+                                        className="px-4 py-1.5 border text-xs rounded transition-all transform hover:scale-105"
+                                        style={{
+                                            borderColor: 'var(--brand-color)',
+                                            color: 'var(--brand-color)',
+                                        }}
+                                        onMouseEnter={(e) => { e.target.style.backgroundColor = 'var(--brand-color)'; e.target.style.color = 'white'; }}
+                                        onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; e.target.style.color = 'var(--brand-color)'; }}
+                                    >
+                                        Sign Up
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </div>
-              </li>
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-text">Women's Watches</span>
-                  <span>▼</span>
-                </Link>
-                <div className="dropdown-menu">
-                  <Link to="#" className="dropdown-item">Elegant Collection</Link>
-                  <Link to="#" className="dropdown-item">Fashion Watches</Link>
-                  <Link to="#" className="dropdown-item">Jewelry Watches</Link>
-                </div>
-              </li>
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-text">Brands</span>
-                  <span>▼</span>
-                </Link>
-                <div className="dropdown-menu">
-                  <Link to="#" className="dropdown-item">Rolex</Link>
-                  <Link to="#" className="dropdown-item">Omega</Link>
-                  <Link to="#" className="dropdown-item">Tag Heuer</Link>
-                  <Link to="#" className="dropdown-item">Cartier</Link>
-                </div>
-              </li>
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-text">New Arrivals</span>
-                  <span className="badge-hot">Hot</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-text">About</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="#" className="nav-link">
-                  <span className="nav-text">Contact</span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
-    </>
-
-  );
+            </header>
+        </>
+    )
 }

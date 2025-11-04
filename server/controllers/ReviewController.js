@@ -81,8 +81,6 @@ const list = async (req, res) => {
 
         const skip = (page - 1) * limit;
 
-        const listreviews = await Review.find({ code });
-        console.log(listreviews);
         const reviews = await Review.find({ code })
             .sort({ createdAt: -1 })   // review mới nhất trước
             .skip(skip)

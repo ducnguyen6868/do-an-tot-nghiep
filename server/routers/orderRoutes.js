@@ -1,5 +1,5 @@
 const {
-    view,
+    getOrders,
     viewOrder,
     createOrder,
     payment,
@@ -10,7 +10,7 @@ const verifyUser = require('../middlewares/authUser');
 const express = require('express');
 
 const router = express.Router();
-router.get('/', verifyUser, view);
+router.get('/', verifyUser, getOrders);
 router.get('/management', orders);
 router.get('/:orderId', viewOrder);
 router.post('/list-order',listOrder);

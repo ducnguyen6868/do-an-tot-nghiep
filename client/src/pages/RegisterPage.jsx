@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { isValidEmail } from '../utils/isValidEmail';
 import { useNavigate } from 'react-router-dom';
 import authApi from "../api/authApi";
+import loginImage from '../assets/login.png';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
@@ -75,18 +76,23 @@ export default function RegisterPage() {
     }
     return (
         <>
-            <div className="login-section register-section">
-                <div className="login-container register-container">
-                    <div className="login-header register-header">
-                        <h2 className="form-title">Create Your Account</h2>
-                        <p className="form-subtitle">Join our exclusive community of watch enthusiasts</p>
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-800 px-4">
+                <img className='fixed w-full h-full' src={loginImage} alt='Login' title='Login' />
+                <div className="relative z-10 w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl border border-gray-200">
+
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold text-cyan-600">Create Your Account</h2>
+                        <p className="text-gray-500 mt-2 text-sm">
+                            Join our exclusive community of watch enthusiasts
+                        </p>
                     </div>
 
                     {step === 1 && (
                         <>
                             {/* Full Name */}
-                            <div className="form-group">
-                                <label className="input-label">
+                            <div className="mb-5">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
                                     <Icon icon="mdi:account-outline" width="18" />
                                     <span>Full Name</span>
                                 </label>
@@ -96,161 +102,163 @@ export default function RegisterPage() {
                                     value={registerData.name}
                                     onChange={handleRegisterChange}
                                     placeholder="John Doe"
-                                    className={errors.name ? "error" : ""}
+                                    className={`w-full rounded-lg px-4 py-2 border ${errors.name ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
                                 />
                                 {errors.name && (
-                                    <div className="form-error">
+                                    <div className="flex items-center text-red-500 mt-1 text-sm">
                                         <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span>{errors.name}</span>
+                                        <span className="ml-1">{errors.name}</span>
                                     </div>
                                 )}
-
                             </div>
+
                             {/* Email */}
-                            <div className="form-group">
-                                <label className="input-label">
+                            <div className="mb-5">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
                                     <Icon icon="mdi:email-outline" width="18" />
                                     <span>Email Address</span>
                                 </label>
-
                                 <input
                                     type="email"
                                     name="email"
                                     value={registerData.email}
                                     onChange={handleRegisterChange}
                                     placeholder="your@email.com"
-                                    className={errors.email ? "error" : ""}
-
+                                    className={`w-full rounded-lg px-4 py-2 border ${errors.email ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
                                 />
                                 {errors.email && (
-                                    <div className="form-error">
+                                    <div className="flex items-center text-red-500 mt-1 text-sm">
                                         <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span>{errors.email}</span>
+                                        <span className="ml-1">{errors.email}</span>
                                     </div>
                                 )}
                             </div>
                         </>
-
                     )}
 
                     {step === 2 && (
                         <>
                             {/* Password */}
-                            <div className="form-group">
-                                <label className="input-label">
+                            <div className="mb-5">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
                                     <Icon icon="mdi:lock-outline" width="18" />
                                     <span>Password</span>
                                 </label>
-                                <div className="form-input-login">
+                                <div className="relative">
                                     <input
                                         type={isHiddenPassword ? "password" : "text"}
                                         name="password"
                                         value={registerData.password}
                                         onChange={handleRegisterChange}
                                         placeholder="••••••••"
-                                        className={errors.password ? "error" : ""}
+                                        className={`w-full rounded-lg px-4 py-2 border ${errors.password ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setIsHiddenPassword(!isHiddenPassword)}
-                                        className="eye-btn"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-500 transition"
                                     >
-                                        <Icon
-                                            icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"}
-                                            width="20"
-                                        />
+                                        <Icon icon={isHiddenPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width="20" />
                                     </button>
                                 </div>
                                 {errors.password && (
-                                    <div className="form-error">
+                                    <div className="flex items-center text-red-500 mt-1 text-sm">
                                         <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span>{errors.password}</span>
+                                        <span className="ml-1">{errors.password}</span>
                                     </div>
                                 )}
                             </div>
 
                             {/* Confirm Password */}
-                            <div className="form-group">
-                                <label className="input-label">
+                            <div className="mb-5">
+                                <label className="flex items-center gap-2 text-sm font-medium mb-1 text-gray-700">
                                     <Icon icon="mdi:shield-lock-outline" width="18" />
                                     <span>Confirm Password</span>
                                 </label>
-                                <div className="form-input-login">
+                                <div className="relative">
                                     <input
                                         type={isHiddenConfirm ? "password" : "text"}
                                         name="confirmPassword"
                                         value={registerData.confirmPassword}
                                         onChange={handleRegisterChange}
                                         placeholder="••••••••"
-                                        className={errors.confirmPassword ? "error" : ""}
-                                        onKeyDown={(e)=>e.key==='Enter'&&handleRegisterSubmit()}
+                                        onKeyDown={(e) => e.key === 'Enter' && handleRegisterSubmit()}
+                                        className={`w-full rounded-lg px-4 py-2 border ${errors.confirmPassword ? 'border-red-400' : 'border-gray-300'} focus:ring-2 focus:ring-cyan-500 focus:outline-none`}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setIsHiddenConfirm(!isHiddenConfirm)}
-                                        className="eye-btn"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-500 transition"
                                     >
-                                        <Icon
-                                            icon={isHiddenConfirm ? "mdi:eye-off-outline" : "mdi:eye-outline"}
-                                            width="20"
-                                        />
+                                        <Icon icon={isHiddenConfirm ? "mdi:eye-off-outline" : "mdi:eye-outline"} width="20" />
                                     </button>
                                 </div>
                                 {errors.confirmPassword && (
-                                    <div className="form-error">
+                                    <div className="flex items-center text-red-500 mt-1 text-sm">
                                         <Icon icon="mdi:alert-circle" width="16" height="16" />
-                                        <span>{errors.confirmPassword}</span>
+                                        <span className="ml-1">{errors.confirmPassword}</span>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Checkboxes */}
-                            <div className="checkbox-group">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        name="agreeTerms"
-                                        checked={registerData.agreeTerms}
-                                        onChange={handleRegisterChange}
-                                    />
-                                    <span>
-                                        I agree to the <Link to="#" className="link">Terms and Conditions</Link>
-                                    </span>
-                                </label>
-                                {errors.agreeTerms && <span className="error-text">{errors.agreeTerms}</span>}
+                            {/* Terms */}
+                            <div className="flex items-start gap-2 mb-6">
+                                <input
+                                    type="checkbox"
+                                    name="agreeTerms"
+                                    checked={registerData.agreeTerms}
+                                    onChange={handleRegisterChange}
+                                    className="mt-1 accent-cyan-500"
+                                />
+                                <span className="text-sm text-gray-600">
+                                    I agree to the{" "}
+                                    <Link to="#" className="text-cyan-600 hover:underline">
+                                        Terms and Conditions
+                                    </Link>
+                                </span>
                             </div>
+                            {errors.agreeTerms && <p className="text-sm text-red-500 mb-3">{errors.agreeTerms}</p>}
                         </>
                     )}
 
-                    {/* Submit */}
-                    <button className="submit-btn" onClick={handleMultipleButton}>
-                        {step === 1 ? 'Continue' : 'Create'}
+                    {/* Submit Button */}
+                    <button
+                        onClick={handleMultipleButton}
+                        className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 rounded-lg shadow-md transition duration-300"
+                    >
+                        {step === 1 ? "Continue" : "Create Account"}
                     </button>
 
                     {/* Divider */}
-                    <div className="divider">
-                        <div className="line" />
-                        <span>Or continue with</span>
-                        <div className="line" />
+                    <div className="flex items-center justify-center my-6">
+                        <div className="h-px w-1/4 bg-gray-200" />
+                        <span className="mx-3 text-sm text-gray-400">Or continue with</span>
+                        <div className="h-px w-1/4 bg-gray-200" />
                     </div>
 
-                    {/* Social buttons */}
-                    <div className="social-buttons">
-                        <button className="social-btn google">
+                    {/* Social Login */}
+                    <div className="flex gap-4">
+                        <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">
                             <Icon icon="logos:google-icon" width="20" />
                             <span>Google</span>
                         </button>
-                        <button className="social-btn facebook">
+                        <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
                             <Icon icon="logos:facebook" width="20" />
                             <span>Facebook</span>
                         </button>
                     </div>
 
-                    <p className="login-text">
-                        Already have an account? <Link to="../login" className="link">Sign In</Link>
+                    {/* Footer */}
+                    <p className="text-center text-sm text-gray-500 mt-6">
+                        Already have an account?{" "}
+                        <Link to="../login" className="text-cyan-600 hover:underline font-medium">
+                            Sign In
+                        </Link>
                     </p>
                 </div>
-            </div >
+            </div>
+
+
         </>
     );
 };

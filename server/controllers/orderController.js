@@ -7,19 +7,23 @@ const Cart = require('../models/Cart');
 const Detail = require('../models/Detail');
 const axios = require('axios');
 
-const view = async (req, res) => {
+const getOrders = async (req, res) => {
     const userId = req.user.id;
+
     const user = await User.findById(userId);
     if (!user) {
         return res.status(404).json({
             message: "User not found."
         });
     }
-    const ordersData = await Order.find({ user: userId }).populate('products');
-    const orders = [...ordersData].reverse();
+
+    const orders = await Order.find({ user: userId })
+        .sort({ createdAt: -1 })
+        .populate('products')
+
     return res.status(200).json({
         message: "Get orders successful",
-        orders,
+        orders
     });
 
 }
@@ -92,7 +96,7 @@ const createOrder = async (req, res) => {
         });
         newOrder.status.push(status);
         await newOrder.save();
-        
+
         if (infoPayment.userId) {
             const user = await User.findById(infoPayment.userId);
             if (!user) {
@@ -231,7 +235,7 @@ const listOrder = async (req, res) => {
             message: 'Order code is require.'
         });
     }
-    const orders = await Order.find({ code: { $in: order } });
+    const orders = await Order.find({ code: { $in: order } }).sort({ createdAt: -1 });
     return res.status(200).json({
         message: 'Get list order successful.',
         orders
@@ -241,11 +245,20 @@ const listOrder = async (req, res) => {
 //Adminstrator 
 
 const orders = async (req, res) => {
-    const orders = await Order.find();
-    const listOrder = [...orders].reverse();
+    const page = req.query.page||1;
+    const limit = req.query.limit||5;
+    const skip = (page-1)*limit;
+
+    const orders = await Order.find({})
+    .sort({createdAt:-1})
+    .skip(skip)
+    .limit(limit);
+
+    const total = await Order.countDocuments({});
+
     return res.status(200).json({
         message: 'Get list order successful.',
-        orders: listOrder
+        orders ,total
     });
 }
 
@@ -267,7 +280,7 @@ const changeStatus = async (req, res) => {
 
 }
 module.exports = {
-    view, viewOrder,
+    getOrders, viewOrder,
     createOrder, payment, callBack, checkPayment,
     orders, listOrder, changeStatus
 };

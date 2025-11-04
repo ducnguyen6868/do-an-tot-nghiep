@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-require('./Promotion');
 require('./Order');
 require('./Address');
 require('./Cart');
@@ -18,7 +17,7 @@ const userSchema = new Schema({
   resetPasswordOTP: { type: String },
   resetPasswordOTPExpiry: { type: Date },
   promotions: [{
-    promotion: { type: Schema.Types.ObjectId, ref: 'Promotion' },
+    code: { type: String },
     status: { type: String, enum: ['not used', 'used'], default: 'not used' }
   }],
   orders: [{

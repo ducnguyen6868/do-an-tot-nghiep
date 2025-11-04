@@ -3,18 +3,19 @@ const Schema = mongoose.Schema;
 require('./Product');
 
 const promotionSchema = new Schema({
-  name: { type: String, required: true },
-  avatar: { type: String, required: true },
-  code: { type: String, required: true, unique: true },
-  start_date: { type: Date, required: true },
-  end_date: { type: Date, required: true },
-  promo_count:{type:Number,required:true},
-  min_price: { type: Number, required: true }, // mức giá tối thiểu để áp dụng khuyến mãi
-  max_price: { type: Number, required: false }, // nếu có giới hạn mức giá tối đa
-  promo_description: { type: String, required: false }, // mô tả chi tiết về khuyến mãi
-  max_discount: { type: Number, required: false }, // mức giảm tối đa
-  discount_value: { type: Number, required: true },
-  applicable_products: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
+  code: { type: String },
+  titile:{type:String},
+  subtitle:{type:String},
+  image:{type:String},
+  discount:{type:Number},
+  maxDiscount:{type:Number},
+  minPurchase:{type:Number},
+  start:{type:Date},
+  end:{type:Date},
+  quantity:{type:Number},
+  brand:{type:String}
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Promotion', promotionSchema);
+

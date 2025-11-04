@@ -1,24 +1,29 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import userApi from '../api/userApi';
-import '../styles/CartPage.css';
-import { formatCurrency } from '../utils/formatCurrency';
-import { Link } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
-import { useContext } from 'react';
-import cart404 from '../assets/cart404.png';
+import { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    Trash2,
+    Plus,
+    Minus,
+    CreditCard,
+    Home,
+} from "lucide-react";
+import userApi from "../api/userApi";
+import { UserContext } from "../contexts/UserContext";
+import { formatCurrency } from "../utils/formatCurrency";
+import cart404 from "../assets/cart404.png";
 
 export default function CartPage() {
     const { setInfoUser } = useContext(UserContext);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
     const [carts, setCarts] = useState([]);
     const [total, setTotal] = useState(0);
     const [indexCart, setIndexCart] = useState(-1);
 
-    const [productData, setProductData] = useState([]);
+    const brandColor = "#00bcd4";
 
     const getCarts = async () => {
         try {
@@ -26,47 +31,35 @@ export default function CartPage() {
             setCarts(response.carts);
             const total = response.carts.reduce((t, c) => t + c.price * c.quantity, 0);
             setTotal(total);
-            const productData = await response.carts.map(cart => {
-                const product = {
-                    id: cart.productId,
-                    name: cart.name,
-                    code: cart.code,
-                    image: cart.image,
-                    price: cart.price,
-                    color: cart.color,
-                    quantity: cart.quantity,
-                    detailId: cart.detailId
-                }
-                return product
-            })
-            setProductData(productData);
+            
         } catch (err) {
             toast.error(err.response?.data?.message || err.message);
         }
-    }
+    };
+
     useEffect(() => {
         if (token) {
             getCarts();
         } else {
-            let cart = localStorage.getItem('cart');
+            let cart = localStorage.getItem("cart");
             if (cart) {
                 cart = JSON.parse(cart);
                 setCarts(cart);
                 const total = cart.reduce((t, c) => t + c.price * c.quantity, 0);
                 setTotal(total);
             } else {
-                cart = [];
-                setCarts(cart);
+                setCarts([]);
             }
         }
     }, [token]);
-    const handleQuantityChange = async (code, action, index) => {
+
+    const handleQuantityChange = (code, action, index) => {
         setIndexCart(index);
-        const updatedCarts = carts.map(cart => {
+        const updatedCarts = carts.map((cart) => {
             if (cart.code === code) {
                 let newQuantity = cart.quantity;
-                if (action === 'increase') newQuantity += 1;
-                else if (action === 'decrease' && newQuantity > 1) newQuantity -= 1;
+                if (action === "increase") newQuantity += 1;
+                else if (action === "decrease" && newQuantity > 1) newQuantity -= 1;
                 return { ...cart, quantity: newQuantity };
             }
             return cart;
@@ -78,10 +71,9 @@ export default function CartPage() {
 
     const handleSubmitQuantity = async (cartId, quantity) => {
         if (!token) {
-            localStorage.setItem('cart', JSON.stringify(carts));
-            toast.success("Update quantity successful");
+            localStorage.setItem("cart", JSON.stringify(carts));
+            toast.success("Updated quantity successfully");
             setIndexCart(-1);
-            setCarts(carts);
             return;
         }
         try {
@@ -90,115 +82,202 @@ export default function CartPage() {
             setIndexCart(-1);
             getCarts();
         } catch (err) {
-            toast.error(err.response?.data?.message || err.message)
+            toast.error(err.response?.data?.message || err.message);
         }
-    }
+    };
+
     const handleRemove = async (cartId) => {
         if (!token) {
-            const newCart = carts.filter(item => item.code !== cartId);
-            localStorage.setItem('cart', JSON.stringify(newCart));
+            const newCart = carts.filter((item) => item.code !== cartId);
+            localStorage.setItem("cart", JSON.stringify(newCart));
             setCarts(newCart);
-            setInfoUser(prev => ({ ...prev, cart: newCart.length }));
-            toast.success("Deleted product from cart.");
+            setInfoUser((prev) => ({ ...prev, cart: newCart.length }));
+            toast.success("Removed product from cart");
             return;
         }
         try {
             const response = await userApi.deleteCart(cartId);
             toast.success(response.message);
             getCarts();
-            setInfoUser(prev => ({ ...prev, cart: response.cart }));
+            setInfoUser((prev) => ({ ...prev, cart: response.cart }));
         } catch (err) {
-            toast.error(err.response?.data?.message || err.message)
+            toast.error(err.response?.data?.message || err.message);
         }
-    }
+    };
+
     const handleShopping = () => {
-        if (!token) {
-            const productData = carts.map(cart => {
-                const product = {
-                    id: cart.id,
-                    name: cart.name,
-                    code: cart.code,
-                    image: cart.image,
-                    price: cart.price,
-                    color: cart.color,
-                    quantity: cart.quantity,
-                    detailId: cart.detailId
-                }
-                return product
-            })
-            setProductData(productData);
-            navigate('/product/checkout?cart=all', { state: { productData } });
-        } else {
-            navigate('/product/checkout?cart=all', { state: { productData } });
-        }
-    }
+        const productData = carts.map((cart) => ({
+            id: cart.id,
+            name: cart.name,
+            code: cart.code,
+            image: cart.image,
+            price: cart.price,
+            color: cart.color,
+            quantity: cart.quantity,
+            detailId: cart.detailId,
+        }));
+        navigate("/product/checkout?cart=all", { state: { productData } });
+    };
+
     return (
-        <>
-            <div className="cart-container">
-                {(carts?.length === 0) ? (
-                    <>
-                        <div className='empty-container'>
-                            <img className='empty-image' alt="Cart Empty" title="Cart Empty" src={cart404} />
-                            <Link to='/' className='shopping-btn'>Shopping now</Link>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className="cart-content">
-                            <div className="cart-items">
-                                {
-                                    carts?.map((cart, index) => (
-                                        <div key={index} className="cart-item">
-                                            <div className="item-image">
-                                                <img src={`http://localhost:5000${cart.image}`} alt={cart.image} title={cart.image} />
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6 md:px-16 transition-all">
+            {carts?.length === 0 ? (
+                <div className="flex flex-col items-center justify-center text-center gap-6">
+                    <img src={cart404} alt="Empty Cart" className="w-60 animate-bounce" />
+                    <p className="text-gray-500 text-lg">Your cart is empty</p>
+                    <Link
+                        to="/"
+                        className="bg-[var(--brand)] text-white font-medium py-3 px-6 rounded-lg hover:scale-105 transition-all"
+                        style={{ backgroundColor: brandColor }}
+                    >
+                        Continue Shopping
+                    </Link>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    {/* 🛒 Cart Items */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <AnimatePresence>
+                            {carts.map((cart, index) => (
+                                <motion.div
+                                    key={cart.code}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="flex items-center gap-6 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                                >
+                                    <img
+                                        src={`http://localhost:5000${cart.image}`}
+                                        alt={cart.name}
+                                        className="w-28 h-28 object-cover rounded-lg"
+                                    />
+
+                                    <div className="flex-1 space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <Link
+                                                to={`/product?code=${cart.code}`}
+                                                className="text-lg font-semibold text-gray-800 dark:text-gray-200 hover:text-[var(--brand)] transition-colors"
+                                                style={{ color: brandColor }}
+                                            >
+                                                {cart.name}
+                                            </Link>
+                                            <button
+                                                onClick={() => handleRemove(cart._id || cart.code)}
+                                                className="text-red-500 hover:scale-110 transition-transform"
+                                            >
+                                                <Trash2 size={20} />
+                                            </button>
+                                        </div>
+
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            Color: {cart.color}
+                                        </p>
+
+                                        <div className="flex items-center justify-between mt-3">
+                                            <div className='flex flex-row gap-8 items-center'>
+                                                <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1">
+                                                    <button
+                                                        onClick={() =>
+                                                            handleQuantityChange(cart.code, "decrease", index)
+                                                        }
+                                                        className="text-gray-600 dark:text-gray-300 hover:text-[var(--brand)] transition"
+                                                    >
+                                                        <Minus size={18} />
+                                                    </button>
+                                                    <span className="w-6 text-center font-medium">
+                                                        {cart.quantity}
+                                                    </span>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleQuantityChange(cart.code, "increase", index)
+                                                        }
+                                                        className="text-gray-600 dark:text-gray-300 hover:text-[var(--brand)] transition"
+                                                    >
+                                                        <Plus size={18} />
+                                                    </button>
+                                                </div>
+
+                                                <motion.button
+                                                    onClick={() =>
+                                                        handleSubmitQuantity(cart._id || cart.code, cart.quantity)
+                                                    }
+                                                    whileTap={{ scale: 0.95 }}
+                                                    className={`px-4 py-2 text-sm font-medium rounded-lg text-white shadow transition-all ${indexCart === index
+                                                            ? "opacity-100"
+                                                            : "opacity-0 pointer-events-none"
+                                                        }`}
+                                                    style={{ backgroundColor: brandColor }}
+                                                >
+                                                    Update
+                                                </motion.button>
                                             </div>
-                                            <div className="item-details">
-                                                <div className="item-header">
-                                                    <Link to={`/product?code=${cart.code}`} className="item-name">{cart.name}</Link>
-                                                    <div className="item-price">{formatCurrency(cart.price, 'en-US', 'USD')}</div>
-                                                </div>
-                                                <p className="item-description">{cart.description}</p>
-                                                <div className='item-color'>Color:{cart.color}</div>
-                                                <div className="item-controls">
-                                                    <div className="quantity-control">
-                                                        <button className="qty-btn" onClick={() => handleQuantityChange(cart.code, 'decrease', index)}>−</button>
-                                                        <div className="quantity">{cart.quantity}</div>
-                                                        <button className="qty-btn" onClick={() => handleQuantityChange(cart.code, 'increase', index)}>+</button>
-                                                    </div>
-                                                    <button className={`quantity-change ${indexCart === index ? 'show' : ' '}`} onClick={() => handleSubmitQuantity(cart._id || cart.code, cart.quantity)}>Ok</button>
-                                                    <button className="item-remove" onClick={() => handleRemove(cart._id || cart.code)}>Remove</button>
-                                                </div>
+
+                                            <div className="font-semibold text-gray-800 dark:text-gray-200">
+                                                {formatCurrency(cart.price * cart.quantity, "en-US", "USD")}
                                             </div>
                                         </div>
-                                    ))
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
 
-                                }
-                            </div>
-                        </div>
-                        <div className="cart-summary">
-                            <div className="summary-title">Order Summary</div>
-                            <div className="summary-row">
+                    {/* 💳 Summary */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 60 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg h-fit sticky top-20"
+                    >
+                        <h2
+                            className="text-2xl font-bold mb-6 text-center"
+                            style={{ color: brandColor }}
+                        >
+                            Order Summary
+                        </h2>
+
+                        <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                            <div className="flex justify-between">
                                 <span>Subtotal:</span>
-                                <span>{formatCurrency(total, 'en-US', 'USD')}</span>
+                                <span>{formatCurrency(total, "en-US", "USD")}</span>
                             </div>
-                            <div className="summary-row">
+                            <div className="flex justify-between">
                                 <span>Shipping:</span>
-                                <span className='free'>FREE</span>
+                                <span className="text-green-500 font-semibold">Free</span>
                             </div>
-                            <div className="summary-row">
+                            <div className="flex justify-between">
                                 <span>Tax:</span>
-                                <span>{formatCurrency(total * 0.1, 'en-US', 'USD')}</span>
+                                <span>{formatCurrency(total * 0.1, "en-US", "USD")}</span>
                             </div>
-                            <div className="summary-row total">
+                            <hr className="my-3 border-gray-200 dark:border-gray-700" />
+                            <div className="flex justify-between text-lg font-semibold">
                                 <span>Total:</span>
-                                <span>{formatCurrency(total + total * 0.1, 'en-US', 'USD')}</span>
+                                <span>
+                                    {formatCurrency(total + total * 0.1, "en-US", "USD")}
+                                </span>
                             </div>
-                            <button className="checkout-btn" onClick={() => handleShopping()}>Proceed to Checkout</button>
-                            <button className="continue-shopping">Continue Shopping</button>
                         </div>
-                    </>
-                )}
-            </div >
-        </>
-    )
+
+                        <div className="mt-6 flex flex-col gap-3">
+                            <button
+                                onClick={handleShopping}
+                                className="flex items-center justify-center gap-2 text-white py-3 rounded-lg font-semibold shadow-md hover:scale-105 transition-transform"
+                                style={{ backgroundColor: brandColor }}
+                            >
+                                <CreditCard size={20} /> Proceed to Checkout
+                            </button>
+
+                            <Link
+                                to="/"
+                                className="flex items-center justify-center gap-2 py-3 rounded-lg font-semibold border border-gray-300 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                            >
+                                <Home size={20} /> Continue Shopping
+                            </Link>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+        </div>
+    );
 }

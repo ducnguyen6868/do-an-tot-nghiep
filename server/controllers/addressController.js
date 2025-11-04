@@ -92,7 +92,6 @@ const deleteAddress = async (req, res) => {
   }
 };
 
-
 const patchAddress = async (req, res) => {
   try {
     const userId = req.user.id;

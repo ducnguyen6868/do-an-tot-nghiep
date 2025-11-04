@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Route, Routes, BrowserRouter ,Navigate } from 'react-router-dom';
 //Notification
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,17 +17,23 @@ import PaymentResultPage from './pages/PaymentResultPage';
 import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
 import OrderPage from './pages/OrderPage';
-import InfoPayment from './components/comon/InfoPayment';
 
 import User from './components/layout/User';
 import UserAuth from './hooks/userAuth';
 import ProfilePage from './pages/ProfilePage';
 import PointPage from './pages/PointPage';
+import PromotionPage from './pages/PromotionPage';
+import SettingPage from './pages/SettingPage';
 
 
 import Admin from './components/layout/Admin';
-import Overview from './pages/admin/Overview';
-import OrderManagement from './pages/admin/OrderManagement';
+import OverviewDashboard from './pages/OverviewDashboard';
+import ProductManagement from './pages/ProductManagement';
+import OrderManagement from './pages/OrderManagement';
+import PromotionManagement from './pages/PromotionManagement';
+import UserManagement from './pages/UserManagement';
+import ChatManagement from './pages/ChatManagement';
+import AdminSettingPage from './pages/AdminSettingPage';
 
 function App() {
   return (
@@ -35,9 +41,6 @@ function App() {
       <UserProvider>
         <ToastContainer position="top-right" autoClose={2000} />
         <Routes>
-
-          <Route path='check-modal' element={<InfoPayment/>}></Route>
-
           {/* Các route chính */}
           <Route path="login" element={<LoginPage />}></Route>
           <Route path="register" element={<RegisterPage />}></Route>
@@ -55,16 +58,25 @@ function App() {
           {/* Các route danh cho User */}
           <Route path="/user" element={<User />}>
             <Route index path='profile' element={<UserAuth><ProfilePage /></UserAuth>}></Route>
-            <Route path='address' element={<UserAuth><AddressPage /></UserAuth>}></Route>
-            <Route path='order' element={<UserAuth><OrderPage /></UserAuth>}></Route>
             <Route path='point' element={<UserAuth><PointPage /></UserAuth>}></Route>
+            <Route path='promotions' element={<UserAuth><PromotionPage /></UserAuth>}></Route>
+            <Route path='orders' element={<UserAuth><OrderPage /></UserAuth>}></Route>
+            <Route path='address' element={<UserAuth><AddressPage /></UserAuth>}></Route>
+            <Route path='wishlist' element={<UserAuth><WishlistPage /></UserAuth>}></Route>
+            <Route path='settings' element={<UserAuth><SettingPage /></UserAuth>}></Route>
           </Route>
 
 
           {/* Các route dành cho admin */}
-          <Route path="/admin" element={<Admin />}>
-            <Route index path="overview" element={<Overview />}></Route>
-            <Route path="orders" element={<OrderManagement />}></Route>
+          <Route path='/admin' element={<Admin />}>
+            <Route index element={<Navigate to="overview" replace />} />
+            <Route path='overview' element={<OverviewDashboard />}></Route>
+            <Route path='products' element={<ProductManagement />}></Route>
+            <Route path='orders' element={<OrderManagement />}></Route>
+            <Route path='promotions' element={<PromotionManagement />}></Route>
+            <Route path='users' element={<UserManagement />}></Route>
+            <Route path='chats' element={<ChatManagement />}></Route>
+            <Route path='settings' element={<AdminSettingPage />}></Route>
           </Route>
         </Routes>
 

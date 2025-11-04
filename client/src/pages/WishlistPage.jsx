@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import wishlist404 from '../assets/wishlist404.png';
-import ListProduct from '../components/comon/ListProduct';
+import ListProduct from '../components/common/ListProduct';
 import productApi from '../api/productApi';
 import userApi from '../api/userApi';
 
 export default function WishlistPage() {
     const [products, setProducts] = useState([]);
     const [change, setChange] = useState(false);
+    
     useEffect(() => {
         const token = localStorage.getItem('token');
         const getProducts = async () => {

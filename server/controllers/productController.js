@@ -4,9 +4,9 @@ const Review = require('../models/Review');
 const product = async (req, res) => {
   try {
     const products = await Product.find({})
-    .sort({createdAt:-1})
-    .limit(20)
-    .populate("detail brand category");
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .populate("detail brand category");
     if (!products) {
       res.status(400).json({
         message: "No product found."
@@ -81,15 +81,15 @@ const detail = async (req, res) => {
         message: "Product not found."
       });
     }
-    const five = await Review.countDocuments({rating:5});
-    const four = await Review.countDocuments({rating:4});
-    const three = await Review.countDocuments({rating:3});
-    const two = await Review.countDocuments({rating:2});
-    const one = await Review.countDocuments({rating:1});
+    const five = await Review.countDocuments({ rating: 5 });
+    const four = await Review.countDocuments({ rating: 4 });
+    const three = await Review.countDocuments({ rating: 3 });
+    const two = await Review.countDocuments({ rating: 2 });
+    const one = await Review.countDocuments({ rating: 1 });
 
-    const stars={five,four,three,two,one};
+    const stars = { five, four, three, two, one };
     return res.status(200).json({
-      message: "Get product successful.", product,stars
+      message: "Get product successful.", product, stars
     });
 
   } catch (err) {
@@ -119,4 +119,65 @@ const wishlist = async (req, res) => {
     products,
   });
 }
-module.exports = { product, search, detail, wishlist };
+
+const getTrendingProducts = async (req, res) => {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 5;
+    const skip = (page - 1) * limit;
+    const products = await Product.find({}).populate('detail brand category')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      message: 'Get trending products successful', products
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error:' + err
+    });
+  }
+}
+
+const getVibeFinderProducts = async (req, res) => {
+  const { cateId } = req.params;
+  if (!cateId) {
+    return res.status(400).json({
+      message: 'CateId is required.'
+    });
+  }
+
+  try {
+    const products = await Product.find({ category: cateId }).populate('detail');
+    return res.status(200).json({
+      message: 'Get vibe finder products successful.', products
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error:' + err.message
+    });
+  }
+}
+
+const getFlashSaleProducts = async (req, res) => {
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 4;
+  const skip = (page - 1) * limit;
+  try {
+    const flashsales = await Product.find({ flashSale: true })
+      .populate('detail')
+      .skip(skip)
+      .limit(limit);
+    return res.status(200).json({
+      message: 'Get flashsale products successful.',flashsales
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error: ' + err.message
+    });
+  }
+
+}
+module.exports = { product, search, detail, wishlist, 
+  getTrendingProducts, getVibeFinderProducts ,getFlashSaleProducts};

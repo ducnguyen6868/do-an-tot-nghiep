@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import '../styles/SearchResultsPage.css';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
-import ListProduct from '../components/comon/ListProduct';
-import LoadingAnimations from '../components/comon/LoadingAnimations';
+import ListProduct from '../components/common/ListProduct';
+import LoadingAnimations from '../components/common/LoadingAnimations';
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -21,8 +20,6 @@ export default function SearchResultsPage() {
   const [filteredResults, setFilteredResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('relevance');
-  const [isOpen, setIsOpen] = useState(false);
-
 
   // Filters
   const [filters, setFilters] = useState({
@@ -40,35 +37,27 @@ export default function SearchResultsPage() {
     const applyFiltersAndSort = () => {
       let filtered = [...results];
 
-      // Apply price filter
+      // Apply filters (logic giữ nguyên)
       if (filters.priceMin) {
         filtered = filtered.filter(item => item.detail[0]?.price >= parseFloat(filters.priceMin));
       }
       if (filters.priceMax) {
         filtered = filtered.filter(item => item.detail[0]?.price <= parseFloat(filters.priceMax));
       }
-
-      // Apply brand filter
       if (filters.brand !== 'all') {
         filtered = filtered.filter(item => item.brand.name === filters.brand);
       }
-
-      // Apply audience filter
       if (filters.audience !== 'all') {
         filtered = filtered.filter(item => item.target_audience === filters.audience);
       }
-
-      // Apply movement filter
       if (filters.movement !== 'all') {
         filtered = filtered.filter(item => item.movement_type === filters.movement);
       }
-
-      // Apply rating filter
       if (filters.minRating > 0) {
         filtered = filtered.filter(item => item.ratings >= filters.minRating);
       }
 
-      // Apply sorting
+      // Apply sorting (logic giữ nguyên)
       switch (sortBy) {
         case 'price-low':
           filtered.sort((a, b) => a.detail[0]?.price - b.detail[0]?.price);
@@ -80,10 +69,9 @@ export default function SearchResultsPage() {
           filtered.sort((a, b) => b.ratings - a.ratings);
           break;
         case 'newest':
-          filtered.sort((a, b) => a.createdAt < b.createdAt);
+          filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           break;
         default:
-          // relevance - keep as is
           break;
       }
 
@@ -127,7 +115,7 @@ export default function SearchResultsPage() {
         setBrands(response.brand);
 
       } catch (err) {
-        toast.err(err.response?.data?.message | err.message);
+        toast.error(err.response?.data?.message || err.message);
       }
     }
     getBrands();
@@ -152,234 +140,205 @@ export default function SearchResultsPage() {
   };
 
   const renderStars = (rating) => {
-    return '⭐'.repeat(Math.floor(rating));
+    const safeRating = Math.max(0, Math.floor(rating));
+    return '⭐'.repeat(safeRating);
   };
 
   return (
     <>
-      <div className="search-results-page">
-        <div className="results-layout">
-          <div className="filters-container">
-            {/* Bong bóng nhỏ */}
-            {!isOpen && (
-              <motion.div
-                className="filter-bubble"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(true)}
-              >
-                🔍 Filter
-              </motion.div>
-            )}
-
-            {/* Sidebar với hiệu ứng macOS */}
-            <AnimatePresence>
-              {isOpen && (
-                <motion.aside
-                  className="filters-sidebar"
-                  initial={{ scale: 0.3, opacity: 0, borderRadius: "50%", y: 60 }}
-                  animate={{
-                    scale: 1,
-                    opacity: 1,
-                    borderRadius: "20px",
-                    y: 0,
-                    transition: {
-                      type: "spring",
-                      stiffness: 120,
-                      damping: 15,
-                    },
-                  }}
-                  exit={{
-                    scale: 0.3,
-                    opacity: 0,
-                    borderRadius: "50%",
-                    y: 60,
-                    transition: {
-                      duration: 0.4,
-                      ease: "easeInOut",
-                    },
-                  }}
-                >
-                  <div className="filters-header">
-                    <h3>Filters</h3>
-                    <button className="close-btn" onClick={() => setIsOpen(false)}>
-                      ✕
-                    </button>
-                  </div>
-
-                  {/* Price Range */}
-                  <div className="filter-group">
-                    <h4>Price Range</h4>
-                    <div className="price-inputs">
-                      <input
-                        type="number"
-                        placeholder="Min"
-                        value={filters.priceMin}
-                        onChange={(e) => handleFilterChange("priceMin", e.target.value)}
-                      />
-                      <input
-                        type="number"
-                        placeholder="Max"
-                        value={filters.priceMax}
-                        onChange={(e) => handleFilterChange("priceMax", e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Brand */}
-                  <div className="filter-group filters-group">
-                    <div className='brand-filter'>
-                      <h4>Brand</h4>
-                      <select
-                        value={filters.brand}
-                        onChange={(e) => handleFilterChange("brand", e.target.value)}
-                      >
-                        <option value="All brand">All brand</option>
-                        {brands.map((brand) => (
-                          <option key={brand._id} value={brand.name}>
-                            {brand.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {/* Movement Type */}
-                    <div className='movement-filter'>
-                      <h4>Movement Type</h4>
-                      <select
-                        value={filters.movement}
-                        onChange={(e) => handleFilterChange('movement', e.target.value)}
-                      >
-                        <option value="all">All Types</option>
-                        <option value="Automatic">Automatic</option>
-                        <option value="Quartz">Quartz</option>
-                        <option value="Mechanical">Mechanical</option>
-                      </select>
-                    </div>
-                  </div>
-
-
-                  {/* Target Audience */}
-                  <div className="filter-group">
-                    <div className='audience-filter'>
-                      <h4>For</h4>
-                      <div className="radio-group">
-                        <label>
-                          <input
-                            type="radio"
-                            name="audience"
-                            value="all"
-                            checked={filters.audience === 'all'}
-                            onChange={(e) => handleFilterChange('audience', e.target.value)}
-                          />
-                          All
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="audience"
-                            value="Male"
-                            checked={filters.audience === 'Male'}
-                            onChange={(e) => handleFilterChange('audience', e.target.value)}
-                          />
-                          Men
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="audience"
-                            value="Female"
-                            checked={filters.audience === 'Female'}
-                            onChange={(e) => handleFilterChange('audience', e.target.value)}
-                          />
-                          Women
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="audience"
-                            value="Unisex"
-                            checked={filters.audience === 'Unisex'}
-                            onChange={(e) => handleFilterChange('audience', e.target.value)}
-                          />
-                          Unisex
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Rating Filter */}
-                  <div className="filter-group">
-                    <h4>Minimum Rating</h4>
-                    <div className="rating-filter">
-                      {[4, 3, 2, 1].map(rating => (
-                        <label key={rating} className="rating-option">
-                          <input
-                            type="radio"
-                            name="rating"
-                            checked={filters.minRating === rating}
-                            onChange={() => handleFilterChange('minRating', rating)}
-                          />
-                          <span>{renderStars(rating)} and up</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <button className="clear-btn" onClick={clearFilters}>
-                    Clear All
-                  </button>
-                </motion.aside>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Main Content */}
-          <main className="results-content">
-            {/* Results Header */}
-            <div className="results-header">
-              <div className="results-info">
-                <h2>Search Results for "{keyword}"</h2>
-                <p>{filteredResults.length} products found</p>
+      {/* Container chính, padding nhỏ (p-4) và chữ nhỏ lại (text-sm) */}
+      <div className="container mx-auto p-4 text-sm flex flex-row gap-4 flex-wrap">
+        {/* Sidebar Filter */}
+        <AnimatePresence>
+          <motion.aside
+            // Fixed/Block, z-50/z-auto, p-4 (nhỏ lại), shadow-lg (nhỏ hơn)
+            className=" bg-white dark:bg-gray-800 p-4 lg:p-0 shadow-lg lg:shadow-none rounded-md w-max max-w-[562px]"
+            initial={{ scale: 0.5, opacity: 0, borderRadius: "50%", y: 60 }}
+            animate={{
+              scale: 1,
+              opacity: 1,
+              borderRadius: "6px", // radius nhỏ: rounded-md (6px)
+              y: 0,
+              transition: {
+                type: "spring",
+                stiffness: 120,
+                damping: 15,
+              },
+            }}
+            exit={{
+              scale: 0.5,
+              opacity: 0,
+              borderRadius: "50%",
+              y: 60,
+              transition: {
+                duration: 0.3,
+                ease: "easeInOut",
+              },
+            }}
+          >
+            {/* Price Range */}
+            <div className="mb-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600 w-full">
+              <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Price Range</h4>
+              <div className="flex gap-2 ">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  // Kích thước nhỏ: p-1.5, text-sm, rounded-sm
+                  className="w-32 p-1.5 border border-gray-300 rounded-sm text-sm"
+                  value={filters.priceMin}
+                  onChange={(e) => handleFilterChange("priceMin", e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Max"
+                  className="w-32 p-1.5 border border-gray-300 rounded-sm text-sm "
+                  value={filters.priceMax}
+                  onChange={(e) => handleFilterChange("priceMax", e.target.value)}
+                />
               </div>
+            </div>
 
-              <div className="results-controls">
+            {/* Brand & Movement Type */}
+            <div className="mb-3 space-y-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              <div>
+                <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Brand</h4>
                 <select
-                  className="sort-select"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full p-1.5 border border-gray-300 rounded-sm text-sm "
+                  value={filters.brand}
+                  onChange={(e) => handleFilterChange("brand", e.target.value)}
                 >
-                  <option value="relevance">Most Relevant</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="newest">Newest First</option>
+                  <option value="all">All Brands</option>
+                  {brands.map((brand) => (
+                    <option key={brand._id} value={brand.name}>
+                      {brand.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Movement Type */}
+              <div>
+                <h4 className="text-base font-medium mb-1 text-gray-800 dark:text-gray-200">Movement Type</h4>
+                <select
+                  className="w-full p-1.5 border border-gray-300 rounded-sm text-sm"
+                  value={filters.movement}
+                  onChange={(e) => handleFilterChange('movement', e.target.value)}
+                >
+                  <option value="all">All Types</option>
+                  <option value="Automatic">Automatic</option>
+                  <option value="Quartz">Quartz</option>
+                  <option value="Mechanical">Mechanical</option>
                 </select>
               </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-              <LoadingAnimations option="skeleton" />
-            )}
 
-            {/* No Results */}
-            {!loading && filteredResults.length === 0 && (
-              <div className="no-results">
-                <div className="no-results-icon">🔍</div>
-                <h3>No products found</h3>
-                <p>Try adjusting your filters or search query</p>
-                <button className="clear-filters-btn" onClick={clearFilters}>
-                  Clear All Filters
-                </button>
+            {/* Target Audience */}
+            <div className="mb-3 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              <div>
+                <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">For</h4>
+                <div className="flex flex-wrap gap-x-3 gap-y-1">
+                  {['all', 'Male', 'Female', 'Unisex'].map(val => (
+                    <label key={val} className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
+                      <input
+                        type="radio"
+                        name="audience"
+                        value={val}
+                        checked={filters.audience === val}
+                        onChange={(e) => handleFilterChange('audience', e.target.value)}
+                        // Kích thước nhỏ hơn: h-3 w-3
+                        className="form-radio text-indigo-600 focus:ring-indigo-500 h-3 w-3"
+                      />
+                      <span>{val === 'all' ? 'All' : val}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            )}
+            </div>
 
-            {/* Results Grid/List */}
-            {!loading && filteredResults.length > 0 && (
-              <ListProduct products={filteredResults} search={true} />
-            )}
-          </main>
-        </div>
+            {/* Rating Filter */}
+            <div className="mb-4 p-3 border rounded-sm bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              <h4 className="text-base font-medium mb-2 text-gray-800 dark:text-gray-200">Min Rating</h4>
+              <div className="space-y-1">
+                {[4, 3, 2, 1].map(rating => (
+                  <label key={rating} className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 text-sm cursor-pointer">
+                    <input
+                      type="radio"
+                      name="rating"
+                      checked={filters.minRating === rating}
+                      onChange={() => handleFilterChange('minRating', rating)}
+                      // Kích thước nhỏ hơn: h-3 w-3
+                      className="form-radio text-indigo-600 focus:ring-indigo-500 h-3 w-3"
+                    />
+                    <span className='whitespace-nowrap'>{renderStars(rating)} <span className='text-xs'>(and up)</span></span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Clear Filters Button */}
+            <button
+              // Kích thước nhỏ hơn: py-1.5, text-sm, rounded-sm
+              className="w-full py-1.5 text-sm bg-red-500 text-white font-semibold rounded-sm shadow-sm hover:bg-red-600 transition duration-300"
+              onClick={clearFilters}
+            >
+              Clear All Filters
+            </button>
+          </motion.aside>
+        </AnimatePresence>
+
+        {/* Main Content */}
+        <main className="lg:flex-1">
+          {/* Results Header */}
+          <div className="flex justify-between items-center mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
+            <div className="results-info">
+              {/* Chữ nhỏ hơn: text-base sm:text-lg */}
+              <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">Results for "<span className="text-indigo-600">{keyword}</span>"</h2>
+              <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">{filteredResults.length} products found</p>
+            </div>
+
+            <div className="results-controls">
+              <select
+                // Kích thước nhỏ hơn: p-1.5, rounded-sm
+                className="p-1.5 border border-gray-300 rounded-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="relevance">Most Relevant</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Loading State */}
+          {loading && (
+            <div className="min-h-96 flex items-center justify-center">
+              <LoadingAnimations option="skeleton" />
+            </div>
+          )}
+
+          {/* No Results */}
+          {!loading && filteredResults.length === 0 && (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 bg-white dark:bg-gray-800 rounded-md shadow-lg text-center border dark:border-gray-700">
+              <div className="text-5xl mb-3">🔍</div>
+              <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">No products found</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">Try adjusting your filters or search query</p>
+              <button
+                className="py-1.5 px-4 text-sm bg-indigo-600 text-white font-semibold rounded-sm shadow-md hover:bg-indigo-700 transition duration-300"
+                onClick={clearFilters}
+              >
+                Clear All Filters
+              </button>
+            </div>
+          )}
+
+          {/* Results Grid/List */}
+          {!loading && filteredResults.length > 0 && (
+            <ListProduct products={filteredResults} search={true} />
+          )}
+        </main>
       </div>
     </>
   )
