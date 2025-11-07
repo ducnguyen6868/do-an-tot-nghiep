@@ -7,7 +7,8 @@ require('./Cart');
 require('./Point');
 
 const userSchema = new Schema({
-  name: { type: String },
+  id:{type:String , unique:true},
+  fullName: { type: String },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String },

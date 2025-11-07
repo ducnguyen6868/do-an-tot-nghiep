@@ -7,7 +7,7 @@ const bcrypt= require('bcrypt');
 const profile= async (req,res)=>{
     const id= req.user.id;
     const user= await User.findById(id).populate('point addresses');
-    const point = user.point;
+    const point = user.point||[];
     const addresses = user.addresses;
     return res.status(200).json({message:"You are logged",user,point, addresses});
 }

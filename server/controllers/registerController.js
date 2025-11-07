@@ -20,7 +20,8 @@ const registerController = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const user = await User.create({
-            name,
+            id:'TP'+new Date().getTime(),
+            fullName:name,
             email,
             password: hashedPassword
         });

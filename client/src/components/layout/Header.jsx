@@ -3,6 +3,7 @@ import { UserContext } from '../../contexts/UserContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, User, ShoppingCart, Heart } from 'lucide-react';
 import websiteLogo from '../../assets/website-logo.png';
+import defaultImage from '../../assets/default-image.jpg';
 
 export default function Header() {
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ export default function Header() {
 
                         <div className="flex flex-1 items-center justify-end gap-2 space-x-3 animate-fadeInRight">
                             <div className="relative">
-                                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" onClick={()=>handleSearch()} />
+                                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" onClick={() => handleSearch()} />
                                 <input
                                     type="text"
                                     name='search'
@@ -69,11 +70,12 @@ export default function Header() {
                                 {/* Avatar / User */}
                                 <div className="relative group">
                                     {logged ? (
-                                        <Link to='/user/profile'>
+                                        <Link to='/user/profile' className="block w-9 h-9">
                                             <img
                                                 src={`http://localhost:5000/${infoUser.avatar}`}
+                                                onError={(e) => e.target.src = defaultImage}
                                                 alt="User Avatar"
-                                                className="w-9 h-9 rounded-full object-cover border border-gray-300 shadow-sm group-hover:shadow-md transition-all duration-300"
+                                                className="h-9 rounded-full object-cover border border-gray-300 shadow-sm group-hover:shadow-md transition-all duration-300"
                                             />
                                         </Link>
                                     ) : (

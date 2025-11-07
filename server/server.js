@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const path = require("path");
+const { Server } = require("socket.io");
+const http = require("http");
 
 const app = express();
+
 
 const userRoutes = require('./routers/userRoutes');
 const profileRoutes = require('./routers/profileRoutes');
@@ -15,6 +18,7 @@ const reviewRoutes = require('./routers/reviewRoutes');
 const pointRoutes = require('./routers/pointRoutes');
 const promotionRoutes = require('./routers/promotionRoutes');
 const collectionRoutes = require('./routers/collectionRoutes');
+const chatRoutes = require('./routers/chatRoutes');
 
 const connectDB = require('./config/db');
 connectDB();
@@ -38,16 +42,44 @@ app.use("/brand", brandRoutes);
 
 app.use('/address', addressRoutes);
 
-app.use('/order',orderRoutes);
+app.use('/order', orderRoutes);
 
-app.use('/review',reviewRoutes);
+app.use('/review', reviewRoutes);
 
-app.use('/point',pointRoutes);
+app.use('/point', pointRoutes);
 
-app.use('/promotion',promotionRoutes);
+app.use('/promotion', promotionRoutes);
 
-app.use('/collection',collectionRoutes);
+app.use('/collection', collectionRoutes);
 
-app.listen(5000, (req, res) => {
-    console.log("Server listen port 5000");
+app.use('/chat', chatRoutes);
+
+
+// Create HTTP + Socket server
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: "*" },
+});
+
+// Socket.io events
+io.on("connection", (socket) => {
+  console.log("⚡ New client connected:", socket.id);
+
+  socket.on("join", (id) => {
+    socket.join(id); // mỗi user vào room riêng
+  });
+
+  socket.on("sendMessage", async (message) => {
+    io.to(message.receiver.id).emit("receiveMessage", message);
+    console.log(message);
+    console.log('Message sent to ' + message.receiver.id);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("❌ Client disconnected:", socket.id);
+  });
+});
+
+server.listen(5000, (req, res) => {
+  console.log("Server listen port 5000");
 });

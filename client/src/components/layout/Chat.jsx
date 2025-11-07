@@ -1,23 +1,30 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import {
-    MessageSquare, Send, X, Clock, User
+    MessageSquare, Send, X, User
 } from 'lucide-react';
+import { UserContext } from '../../contexts/UserContext';
+import io from "socket.io-client";
+import profileApi from '../../api/profileApi';
+import chatApi from '../../api/chatApi';
 
-// Màu thương hiệu (Teal/Xanh ngọc)
-const BRAND_COLOR_CLASSES = 'bg-teal-500 hover:bg-teal-600 text-white';
-
-// Dữ liệu giả lập tin nhắn
-const initialMessages = [
-    { id: 1, text: "Welcome to TIMEPIECE Support! How may I assist you today?", sender: 'Support', timestamp: '10:00 AM' },
-    { id: 2, text: "I need help tracking my order (ORD-9014).", sender: 'User', timestamp: '10:02 AM' },
-];
+const socket = io("http://localhost:5000");
 
 // ************************************************
 // Reusable Component: Chat Modal
 // ************************************************
 const ChatModal = ({ onClose }) => {
-    const [messages, setMessages] = useState(initialMessages);
-    const [input, setInput] = useState('');
+    const { infoUser, setInfoUser } = useContext(UserContext);
+    const [logged, setLogged] = useState(false);
+    const [checked, setChecked] = useState(false);
+
+    const [conversationId, setConversationId] = useState('');
+
+    const [messages, setMessages] = useState([]);
+
+    const [text, setText] = useState('');
+
+    const [user, setUser] = useState({});
+
     const messagesEndRef = useRef(null);
     const [isTyping, setIsTyping] = useState(false);
 
@@ -26,70 +33,206 @@ const ChatModal = ({ onClose }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
+    // Scroll when messages change
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
 
-    // Giả lập trả lời từ bộ phận hỗ trợ
-    const simulateResponse = (userMessage) => {
-        setIsTyping(true);
-        setTimeout(() => {
-            const botResponse = generateBotResponse(userMessage);
-            const now = new Date();
-            setMessages(prev => [...prev, {
-                id: prev.length + 1,
-                text: botResponse,
-                sender: 'Support',
-                timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }]);
-            setIsTyping(false);
-        }, 1500); // Trả lời sau 1.5 giây
-    };
-    
-    // Logic trả lời đơn giản hóa
-    const generateBotResponse = (msg) => {
-        const lowerMsg = msg.toLowerCase();
-        if (lowerMsg.includes('tracking') || lowerMsg.includes('ord-9014')) {
-            return "Your order ORD-9014 was shipped on 2025-10-28 and is currently in transit. The tracking link is: [Link].";
-        }
-        if (lowerMsg.includes('return') || lowerMsg.includes('refund')) {
-            return "You can initiate a return via the 'My Orders' section in your profile within 30 days of delivery.";
-        }
-        if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-            return "Hello! Thank you for reaching out. How can I help you further?";
-        }
-        return "I apologize, I need to connect you to a human agent. Please wait a moment.";
-    };
+    //User Authentication
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const response = await profileApi.profile();
+                setUser({
+                    id: response.user.id || 'UnknownId',
+                    fullName: response.user.fullName || 'Unknown',
+                    avatar: response.user.avatar
+                });
+                setLogged(true);
+            } catch (err) {
+                localStorage.removeItem('token');
+                let userLocal = localStorage.getItem('user');
 
-    const handleSendMessage = (e) => {
-        e.preventDefault();
-        if (input.trim() === '') return;
+                if (!userLocal) {
+                    const user = {
+                        id: new Date().getTime().toString(),
+                        fullName: 'Unknown',
+                        avatar: ''
+                    }
+                    setUser(user);
+                    localStorage.setItem('user', JSON.stringify(user));
+                } else {
+                    const user = JSON.parse(userLocal);
+                    setUser(user);
+                }
+            } finally {
+                setChecked(true);
+            }
+        }
+        getUser();
+    }, []);
 
-        const now = new Date();
-        const newMessage = {
-            id: messages.length + 1,
-            text: input.trim(),
-            sender: 'User',
-            timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    // Set conversationId based on logged status
+    useEffect(() => {
+        if (!checked) return;
+
+        if (logged) {
+            if (infoUser.conversationId) {
+                setConversationId(infoUser.conversationId);
+            } else {
+                setConversationId('');
+            }
+        } else {
+            // For non-logged users, get conversationId from localStorage
+            const localConvId = localStorage.getItem('conversationId');
+            setConversationId(localConvId || '');
+        }
+    }, [checked, logged, infoUser.conversationId]);
+
+    // Load messages when conversationId is set
+    useEffect(() => {
+        if (!checked || !conversationId) return;
+
+        const getMessages = async () => {
+            try {
+                const response = await chatApi.getMessages(conversationId);
+                setMessages(response.messages || []);
+            } catch (err) {
+                console.log(err.response?.data?.message || err.message);
+                // Clear invalid conversationId
+                if (logged) {
+                    setInfoUser(prev => ({ ...prev, conversationId: '' }));
+                } else {
+                    localStorage.removeItem('conversationId');
+                }
+                setMessages([]);
+                setConversationId('');
+            }
+        }
+        getMessages();
+    }, [conversationId, checked]);
+
+    // Kết nối socket
+    useEffect(() => {
+        if (!user.id) return;
+
+        socket.emit('join', user.id);
+
+        socket.on("receiveMessage", (message) => {
+            setMessages(prev => ([...prev, message]));
+        });
+
+        return () => {
+            socket.off("receiveMessage");
         };
-        
-        setMessages(prev => [...prev, newMessage]);
-        const userMessageText = input.trim();
-        setInput('');
-        simulateResponse(userMessageText);
+    }, [user.id]);
+
+    const postConversation = async () => {
+        if (!user || !user.id) return null;
+        try {
+            const sender = user;
+            const receiver = {
+                id: 'mid24',
+                fullName: 'FAKER',
+                avatar: 'Azir'
+            }
+            const response = await chatApi.postConversation(sender, receiver);
+            const newConvId = response.conversation._id;
+
+            if (logged) {
+                setInfoUser(prev => ({ ...prev, conversationId: newConvId }));
+            } else {
+                localStorage.setItem('conversationId', newConvId);
+            }
+
+            setConversationId(newConvId);
+            return newConvId;
+        } catch (err) {
+            console.log(err.response?.data?.message || err.message);
+            return null;
+        }
+    }
+
+    const sendMessage = async () => {
+        if (!user || !text.trim()) return;
+
+        let currentConvId = conversationId;
+
+        // Create conversation if it doesn't exist
+        if (!currentConvId) {
+            currentConvId = await postConversation();
+            if (!currentConvId) return; // Failed to create conversation
+        }
+        const message = {
+            conversationId: currentConvId,
+            sender: user,
+            receiver: {
+                id: 'mid24',
+                fullName: 'FAKER',
+                avatar: 'Azir'
+            },
+            text: text,
+            createdAt: new Date()
+        };
+
+        // Optimistically add message to UI
+        setMessages(prev => [...prev, message]);
+        setText("");
+
+        // Gửi đến server qua socket
+        socket.emit("sendMessage", message);
+
+        try {
+            await chatApi.postMessage(message);
+        } catch (err) {
+            console.log(err.response?.data?.message || err.message);
+            // Remove the optimistically added message on error
+            setMessages(prev => prev.filter(m => m !== message));
+
+            // Clear invalid conversationId
+            if (logged) {
+                setInfoUser(prev => ({ ...prev, conversationId: '' }));
+            } else {
+                localStorage.removeItem('conversationId');
+            }
+            setConversationId('');
+        }
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        if (date.toDateString() === today.toDateString()) return "Today";
+        if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        });
+    };
+
+    const formatTime = (dateString) => {
+        return new Date(dateString).toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        });
+    };
     return (
-        <div className="fixed bottom-20 right-6 w-2/5 h-[450px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
-            
+        <div className="fixed bottom-20 right-6 w-[500px] h-[450px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
+
             {/* Header */}
-            <div className={`p-4 rounded-t-xl flex justify-between items-center ${BRAND_COLOR_CLASSES}`}>
+            <div className={`p-4 rounded-t-xl flex justify-between items-center bg-brand hover:bg-brand-hover tex-white`}>
                 <div className="flex items-center space-x-2">
                     <User className="w-6 h-6 p-1 bg-white rounded-full text-teal-600" />
                     <span className="font-semibold text-white">Live Support</span>
                 </div>
-                <button 
-                    onClick={onClose} 
+                <button
+                    onClick={onClose}
                     className="p-1 rounded-full hover:bg-teal-700 transition"
                     title="Close Chat"
                 >
@@ -99,28 +242,29 @@ const ChatModal = ({ onClose }) => {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 custom-scrollbar">
-                {messages.map(msg => (
-                    <div 
-                        key={msg.id} 
-                        className={`flex ${msg.sender === 'User' ? 'justify-end' : 'justify-start'}`}
-                    >
-                        <div className={`max-w-[75%] p-3 rounded-xl shadow-sm text-sm ${
-                            msg.sender === 'User' 
-                                ? 'bg-teal-500 text-white rounded-br-none' 
-                                : 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
-                        }`}>
-                            {msg.text}
-                            <div className={`text-xs mt-1 ${msg.sender === 'User' ? 'text-teal-200' : 'text-gray-400'} flex justify-end items-center`}>
-                                <Clock className="w-3 h-3 mr-1" />{msg.timestamp}
-                            </div>
+                {/* Message Area */}
+                {messages?.length > 0 && messages?.map((chat, index) => (
+
+                    <div key={index} className={`flex ${chat.sender?.id === user.id ? 'justify-end' : 'justify-start'}`}>
+                        <div className={
+                            `max-w-xs lg:max-w-md p-3 rounded-xl shadow-md  ${chat.sender?.id === user.id
+                                ? 'bg-teal-500 text-white rounded-br-none'
+                                : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
+                            }`}
+                        >
+                            <p className="text-sm">{chat.text}</p>
+                            <span className={`block mt-1 text-right text-xs ${chat.sender?.id === user.id ? 'text-teal-200' : 'text-gray-400'}`}>
+                                {formatDate(chat.createdAt)} • {formatTime(chat.createdAt)}
+                            </span>
                         </div>
                     </div>
                 ))}
+                <div className="h-0.5"></div>
 
                 {/* Typing Indicator */}
                 {isTyping && (
                     <div className="flex justify-start">
-                         <div className="max-w-[75%] p-3 rounded-xl bg-white text-gray-800 rounded-tl-none border border-gray-100 shadow-sm text-sm">
+                        <div className="max-w-[75%] p-3 rounded-xl bg-white text-gray-800 rounded-tl-none border border-gray-100 shadow-sm text-sm">
                             <div className="flex items-center space-x-1">
                                 <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-0"></span>
                                 <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-150"></span>
@@ -129,30 +273,29 @@ const ChatModal = ({ onClose }) => {
                         </div>
                     </div>
                 )}
-                
+
                 <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSendMessage} className="p-3 border-t border-gray-200 bg-white">
+            <div className="p-3 border-t border-gray-200 bg-white">
                 <div className="flex items-center space-x-2">
                     <input
                         type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
                         placeholder="Type your message..."
                         className="flex-1 p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-teal-500 focus:border-teal-500"
-                        disabled={isTyping}
+                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                     />
                     <button
-                        type="submit"
-                        className={`p-2 rounded-full transition ${BRAND_COLOR_CLASSES} disabled:bg-gray-400`}
-                        disabled={input.trim() === '' || isTyping}
+                        type="button"
+                        className={`p-2 rounded-full transition bg-brand hover:bg-brand-hover tex-white disabled:bg-gray-400`}
                     >
-                        <Send className="w-5 h-5" />
+                        <Send className="w-5 h-5 text-white" onClick={() => sendMessage()} />
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     );
 };
@@ -167,18 +310,18 @@ export default function Chat() {
         <>
             {/* 1. Chat Modal (Cửa sổ chat) */}
             {isChatOpen && <ChatModal onClose={() => setIsChatOpen(false)} />}
-            
+
             {/* 2. Floating Chat Button (Nút nổi) */}
             <button
                 onClick={() => setIsChatOpen(!isChatOpen)}
                 className={`fixed bottom-6 right-6 p-4 rounded-full shadow-2xl transition-all z-50 
-                    ${BRAND_COLOR_CLASSES}
+                    bg-brand hover:bg-brand-hover tex-white
                     ${isChatOpen ? 'rotate-90 scale-90' : 'hover:scale-105'}`
                 }
                 title={isChatOpen ? "Minimize Chat" : "Open Live Chat"}
             >
                 {isChatOpen ? (
-                   <></>
+                    <></>
                 ) : (
                     <MessageSquare className="w-7 h-7" />
                 )}

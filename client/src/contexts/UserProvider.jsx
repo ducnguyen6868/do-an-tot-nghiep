@@ -17,7 +17,8 @@ export const UserProvider = ({ children }) => {
         email: '',
         avatar: '',
         wishlist: wishlist?.length || 0,
-        cart: cart?.length || 0
+        cart: cart?.length || 0,
+        conversationId:''
     });
 
     useEffect(() => {
