@@ -3,6 +3,8 @@ import {
     MessageSquare, Send, X, User
 } from 'lucide-react';
 import { UserContext } from '../../contexts/UserContext';
+import {formatDate} from '../../utils/formatDate';
+import {formatTime} from '../../utils/formatTime';
 import io from "socket.io-client";
 import profileApi from '../../api/profileApi';
 import chatApi from '../../api/chatApi';
@@ -199,29 +201,6 @@ const ChatModal = ({ onClose }) => {
         }
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-
-        if (date.toDateString() === today.toDateString()) return "Today";
-        if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
-
-        return date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        });
-    };
-
-    const formatTime = (dateString) => {
-        return new Date(dateString).toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-        });
-    };
     return (
         <div className="fixed bottom-20 right-6 w-[500px] h-[450px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-300">
 

@@ -3,20 +3,18 @@
  * @param {string} format - ví dụ: 'DD/MM/YYYY HH:mm:ss' hoặc 'YYYY-MM-DD'
  * @returns {string}
  */
-export const  formatDate= (date, format = 'YYYY-MM-DD HH:mm')=> {
-  const d = (date instanceof Date) ? date : new Date(date);
-  if (isNaN(d)) return 'Invalid Date';
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
 
-  const pad = (n, z = 2) => String(n).padStart(z, '0');
+  if (date.toDateString() === today.toDateString()) return "Today";
+  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
 
-  const replacements = {
-    YYYY: d.getFullYear(),
-    MM: pad(d.getMonth() + 1),
-    DD: pad(d.getDate()),
-    HH: pad(d.getHours()),
-    mm: pad(d.getMinutes()),
-  };
-
-  return format.replace(/YYYY|MM|DD|HH|mm/g, match => replacements[match]);
-}
-
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};

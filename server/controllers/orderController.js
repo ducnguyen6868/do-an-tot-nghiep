@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Cart = require('../models/Cart');
 const Detail = require('../models/Detail');
 const axios = require('axios');
+const fillMissing = require('../utils/fillMissing');
 
 const getOrders = async (req, res) => {
     const userId = req.user.id;
@@ -245,20 +246,20 @@ const listOrder = async (req, res) => {
 //Adminstrator 
 
 const orders = async (req, res) => {
-    const page = req.query.page||1;
-    const limit = req.query.limit||5;
-    const skip = (page-1)*limit;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 5;
+    const skip = (page - 1) * limit;
 
     const orders = await Order.find({})
-    .sort({createdAt:-1})
-    .skip(skip)
-    .limit(limit);
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
     const total = await Order.countDocuments({});
 
     return res.status(200).json({
         message: 'Get list order successful.',
-        orders ,total
+        orders, total
     });
 }
 
@@ -279,8 +280,301 @@ const changeStatus = async (req, res) => {
     });
 
 }
+
+const getTopSelling = async (req, res) => {
+    try {
+        let time = req.query.time || '7day';
+        const DAY = 1000 * 60 * 60 * 24;
+        time = time === '7day' ? DAY * 7 : time === '30day' ? DAY * 30 : Date.now();
+        const topProducts = await Order.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(Date.now() - time)
+                    },
+                    status: { $exists: true, $ne: [] },
+                    $expr: {
+                        $ne: [
+                            { $arrayElemAt: ["$status.present", -1] },
+                            "Canceled"
+                        ]
+                    }
+                }
+            },
+            { $unwind: "$products" },
+            {
+                $group: {
+                    _id: "$products.code",           // gom theo mã sản phẩm
+                    name: { $first: "$products.name" },
+                    image: { $first: "$products.image" },
+                    totalSold: { $sum: "$products.quantity" }
+                }
+            },
+            { $sort: { totalSold: -1 } },        // sắp xếp bán nhiều nhất
+            { $limit: 6 }                        // lấy 6 sản phẩm
+        ]);
+        return res.status(200).json({
+            message: 'Get top selling successful.',
+            topProducts
+        });
+    } catch (err) {
+        return res.status(500).json({
+            message: 'Server error : ' + err.message
+        });
+    }
+}
+
+// const getRevenueData = async (req, res) => {
+//     try {
+//         const { range } = req.query;
+//         const now = new Date();
+//         let startDate = new Date();
+
+//         switch (range) {
+//             case '7days':
+//                 startDate.setDate(now.getDate() - 7);
+//                 break;
+//             case '30days':
+//                 startDate.setDate(now.getDate() - 30);
+//                 break;
+//             case '3months':
+//                 startDate.setMonth(now.getMonth() - 3);
+//                 break;
+//             case '6months':
+//                 startDate.setMonth(now.getMonth() - 6);
+//                 break;
+//             case 'alltime':
+//                 startDate = new Date(0);
+//                 break;
+//         }
+//         const revenueData = await Order.aggregate([
+//             {
+//                 $match: {
+//                     createdAt: { $gte: startDate },
+//                     $expr: {
+//                         $eq: [
+//                             {
+//                                 $ifNull: [
+//                                     { $arrayElemAt: ["$status.present", -1] },
+//                                     null
+//                                 ]
+//                             },
+//                             "Delivered Successfully"
+//                         ]
+//                     }
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: {
+//                         year: { $year: "$createdAt" },
+//                         month: { $month: "$createdAt" },
+//                         day: { $dayOfMonth: "$createdAt" }
+//                     },
+//                     revenue: { $sum: "$final_amount" },
+//                     orders: { $sum: 1 }
+//                 }
+//             },
+//             { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+//             {
+//                 $project: {
+//                     _id: 0,
+//                     date: {
+//                         $dateToString: {
+//                             format: "%Y %b %d",
+//                             date: {
+//                                 $dateFromParts: {
+//                                     year: "$_id.year",
+//                                     month: "$_id.month",
+//                                     day: "$_id.day"
+//                                 }
+//                             }
+//                         }
+//                     },
+//                     revenue: 1,
+//                     orders: 1
+//                 }
+//             }
+//         ]);
+
+//         const totalRevenue = revenueData.reduce((sum, item) => sum + item.revenue, 0);
+
+//         return res.status(200).json({ revenueData, totalRevenue });
+
+//     } catch (err) {
+//         return res.status(500).json({
+//             message: 'Server error : ' + err.message
+//         });
+//     }
+// };
+
+const getRevenueData = async (req, res) => {
+    try {
+        const { range } = req.query;
+        const now = new Date();
+        now.setHours(23, 59, 59, 999); // End of today
+
+        let startDate = new Date();
+        startDate.setHours(0, 0, 0, 0); // Start of day
+
+        // ===== 1. CALCULATE START DATE =====
+        switch (range) {
+            case "7days":
+                startDate.setDate(now.getDate() - 6); // Today + 6 days back = 7 days
+                break;
+            case "30days":
+                startDate.setDate(now.getDate() - 29); // Today + 29 days back = 30 days
+                break;
+            case "3months":
+                startDate.setMonth(now.getMonth() - 3);
+                break;
+            case "6months":
+                startDate.setMonth(now.getMonth() - 6);
+                startDate.setDate(1); // Start from 1st of month
+                break;
+            case "alltime":
+                startDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 2); // Start from Unix epoch
+                break;
+            default:
+                return res.status(400).json({ message: "Invalid range parameter" });
+        }
+
+        // ===== 2. DETERMINE GROUPING STRATEGY =====
+        let groupId, dateFormat, sortFields;
+
+        if (range === "7days" || range === "30days") {
+            // Group by day
+            groupId = {
+                year: { $year: "$createdAt" },
+                month: { $month: "$createdAt" },
+                day: { $dayOfMonth: "$createdAt" }
+            };
+            dateFormat = "%Y-%m-%d";
+            sortFields = { "_id.year": 1, "_id.month": 1, "_id.day": 1 };
+
+        } else if (range === "3months") {
+            // Group by ISO week
+            groupId = {
+                year: { $isoWeekYear: "$createdAt" },
+                week: { $isoWeek: "$createdAt" }
+            };
+            sortFields = { "_id.year": 1, "_id.week": 1 };
+
+        } else {
+            // Group by month (6months, alltime)
+            groupId = {
+                year: { $year: "$createdAt" },
+                month: { $month: "$createdAt" }
+            };
+            dateFormat = "%Y-%m";
+            sortFields = { "_id.year": 1, "_id.month": 1 };
+        }
+
+        // ===== 3. AGGREGATION PIPELINE =====
+        const pipeline = [
+            // Stage 1: Filter orders
+            {
+                $match: {
+                    createdAt: { $gte: startDate, $lte: now },
+                    $expr: {
+                        $eq: [
+                            { $arrayElemAt: ["$status.present", -1] },
+                            "Delivered Successfully"
+                        ]
+                    }
+                }
+            },
+            // Stage 2: Group by time period
+            {
+                $group: {
+                    _id: groupId,
+                    revenue: { $sum: "$final_amount" },
+                    orders: { $sum: 1 }
+                }
+            },
+            // Stage 3: Sort
+            {
+                $sort: sortFields
+            },
+            // Stage 4: Format output
+            {
+                $project: {
+                    _id: 0,
+                    date: buildDateExpression(range, dateFormat),
+                    revenue: { $round: ["$revenue", 2] },
+                    orders: 1
+                }
+            }
+        ];
+
+        const rawData = await Order.aggregate(pipeline);
+
+        // ===== 4. FILL MISSING DATES =====
+        const filled = fillMissing(range, startDate, rawData);
+
+        // ===== 5. CALCULATE TOTALS =====
+        const totalRevenue = filled.reduce((sum, item) => sum + item.revenue, 0);
+        const totalOrders = filled.reduce((sum, item) => sum + item.orders, 0);
+        const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
+        return res.status(200).json({
+            success: true,
+            range,
+            startDate: startDate.toISOString(),
+            endDate: now.toISOString(),
+            revenueData: filled,
+            summary: {
+                totalRevenue,
+                totalOrders,
+                avgOrderValue,
+            }
+        });
+
+    } catch (err) {
+        console.error('❌ Error in getRevenueData:', err);
+        return res.status(500).json({
+            success: false,
+            message: "Server error: " + err.message,
+            error: process.env.NODE_ENV === 'development' ? err.stack : undefined
+        });
+    }
+};
+
+// Helper function to build date expression based on range
+function buildDateExpression(range, dateFormat) {
+    if (range === "3months") {
+        // Format: "Week 23 2024"
+        return {
+            $concat: [
+                "Week ",
+                { $toString: "$_id.week" },
+                " ",
+                { $toString: "$_id.year" }
+            ]
+        };
+    } else {
+        // Format dates using $dateToString
+        return {
+            $dateToString: {
+                format: dateFormat,
+                date: {
+                    $dateFromParts: {
+                        year: "$_id.year",
+                        month: "$_id.month",
+                        day: range === "7days" || range === "30days"
+                            ? "$_id.day"
+                            : 1 // Use day 1 for monthly grouping
+                    }
+                }
+            }
+        };
+    }
+}
+
+
+
 module.exports = {
     getOrders, viewOrder,
     createOrder, payment, callBack, checkPayment,
-    orders, listOrder, changeStatus
+    orders, listOrder, changeStatus,
+    getTopSelling, getRevenueData
 };

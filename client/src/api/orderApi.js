@@ -1,5 +1,7 @@
 import axiosClient from "./axiosClient";
 const orderApi={
+    getRevenueData:(range)=>axiosClient.get(`/order/revenue?range=${range}`),
+    getTopSelling:(time)=>axiosClient.get(`/order/top-selling?time=${time}`),
     getOrders:()=>axiosClient.get(`/order`),
     viewOrder:(orderId) =>axiosClient.get(`/order/${orderId}`),
     viewList:(order)=>axiosClient.post('/order/list-order',{order}),
@@ -7,6 +9,6 @@ const orderApi={
     payment:(final_amount) =>axiosClient.post('/order/payment',{final_amount}),
     transitionStatus:(orderId) =>axiosClient.post('/order/transition-status',{orderId}),
     orders:(page, limit)=>axiosClient.get(`/order/management?page=${page}&&limit=${limit}`),
-    changeStatus:(orderId ,status)=>axiosClient.patch('/order/status',{orderId ,status})
+    changeStatus:(orderId ,status)=>axiosClient.patch('/order/status',{orderId ,status}),
 }
 export default orderApi;

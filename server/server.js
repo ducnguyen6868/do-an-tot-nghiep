@@ -71,8 +71,6 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", async (message) => {
     io.to(message.receiver.id).emit("receiveMessage", message);
-    console.log(message);
-    console.log('Message sent to ' + message.receiver.id);
   });
 
   socket.on("disconnect", () => {

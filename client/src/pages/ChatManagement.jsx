@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import {
     MessageSquare, Send, Search,
 } from 'lucide-react';
+import {formatDate} from '../utils/formatDate';
+import {formatTime} from '../utils/formatTime';
 import chatApi from '../api/chatApi';
 import io from "socket.io-client";
 import avatarError from '../assets/avatar-error.png';
@@ -149,30 +151,6 @@ const Message = () => {
         const parts = name.trim().split(/\s+/);
         const initials = parts.map(part => part[0].toUpperCase()).join('');
         return initials;
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-
-        if (date.toDateString() === today.toDateString()) return "Today";
-        if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
-
-        return date.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        });
-    };
-
-    const formatTime = (dateString) => {
-        return new Date(dateString).toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-        });
     };
 
     return (
