@@ -72,7 +72,7 @@ export default function Header() {
                                     {logged ? (
                                         <Link to='/user/profile' className="block w-9 h-9">
                                             <img
-                                                src={`http://localhost:5000/${infoUser.avatar}`}
+                                                src={infoUser.avatar}
                                                 onError={(e) => e.target.src = defaultImage}
                                                 alt="User Avatar"
                                                 className="h-9 rounded-full object-cover border border-gray-300 shadow-sm group-hover:shadow-md transition-all duration-300"

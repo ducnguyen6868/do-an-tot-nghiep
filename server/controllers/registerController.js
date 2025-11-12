@@ -1,8 +1,8 @@
 require('dotenv').config();
 const User = require('../models/User');
 const Point = require('../models/Point');
-const bcrypt= require('bcrypt');
-const saltRounds=parseInt(process.env.SALT_ROUNDS);
+const bcrypt = require('bcrypt');
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
 const registerController = async (req, res) => {
     const { name, email, password } = req.body;
@@ -15,15 +15,16 @@ const registerController = async (req, res) => {
     try {
         const isExist = await User.findOne({ email });
         if (isExist) {
-            return res.status(400).json({message:"Email has been registered."});
+            return res.status(400).json({ message: "Email has been registered." });
         }
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-
+        const code = 'CUS_' + new Date().getTime();
         const user = await User.create({
-            id:'TP'+new Date().getTime(),
-            fullName:name,
+            code,
+            fullName: name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            avatar:`https://api.dicebear.com/8.x/avataaars/svg?seed=${code}`
         });
         const point = await Point.create({});
         user.point = point._id;
@@ -37,4 +38,4 @@ const registerController = async (req, res) => {
         });
     }
 }
-module.exports= registerController;
+module.exports = registerController;

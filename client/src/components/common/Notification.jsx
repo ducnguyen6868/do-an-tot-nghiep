@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { CheckCircle, XCircle, AlertTriangle, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -19,9 +19,9 @@ const bgColors = {
 export default function Notification({
   show = false,
   message = "",
-  type = "info",
+  type = "success",
   onClose,
-  duration = 3000,
+  duration = 2000,
 }) {
   useEffect(() => {
     if (show && duration && onClose) {
@@ -37,7 +37,7 @@ export default function Notification({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
           className={`fixed top-6 right-6 z-50 flex items-center space-x-3 p-4 rounded-xl shadow-lg ${bgColors[type]} border border-gray-200 dark:border-gray-700`}
         >
           {icons[type]}

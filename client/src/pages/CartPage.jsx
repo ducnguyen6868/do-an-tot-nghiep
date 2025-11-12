@@ -2,13 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-    Trash2,
-    Plus,
-    Minus,
-    CreditCard,
-    Home,
-} from "lucide-react";
+import { Trash2, Plus, Minus, CreditCard, Home, } from "lucide-react";
 import userApi from "../api/userApi";
 import { UserContext } from "../contexts/UserContext";
 import { formatCurrency } from "../utils/formatCurrency";
@@ -31,7 +25,7 @@ export default function CartPage() {
             setCarts(response.carts);
             const total = response.carts.reduce((t, c) => t + c.price * c.quantity, 0);
             setTotal(total);
-            
+
         } catch (err) {
             toast.error(err.response?.data?.message || err.message);
         }
@@ -113,14 +107,14 @@ export default function CartPage() {
             image: cart.image,
             price: cart.price,
             color: cart.color,
+            index:cart.index,
             quantity: cart.quantity,
-            detailId: cart.detailId,
         }));
         navigate("/product/checkout?cart=all", { state: { productData } });
     };
-
+console.log(carts);
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6 md:px-16 transition-all">
+        <div className=" bg-gray-50 dark:bg-gray-900 py-4 px-8 transition-all">
             {carts?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center text-center gap-6">
                     <img src={cart404} alt="Empty Cart" className="w-60 animate-bounce" />
@@ -204,8 +198,8 @@ export default function CartPage() {
                                                     }
                                                     whileTap={{ scale: 0.95 }}
                                                     className={`px-4 py-2 text-sm font-medium rounded-lg text-white shadow transition-all ${indexCart === index
-                                                            ? "opacity-100"
-                                                            : "opacity-0 pointer-events-none"
+                                                        ? "opacity-100"
+                                                        : "opacity-0 pointer-events-none"
                                                         }`}
                                                     style={{ backgroundColor: brandColor }}
                                                 >

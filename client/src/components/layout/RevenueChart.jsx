@@ -37,10 +37,10 @@ export default function RevenueChart() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-teal-50 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-teal-50">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="mb-8 flex flex-row justify-between items-center">
+        <div className="mb-4 flex flex-row justify-between items-center">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-200">
               <TrendingUp className="text-white" size={24} />
@@ -61,7 +61,7 @@ export default function RevenueChart() {
                   key={option.value}
                  className="text-black bg-white"
                 >
-                  <span className="hidden md:inline">{option.label}</span>
+                  {option.label}
                 </option>
               );
             })}

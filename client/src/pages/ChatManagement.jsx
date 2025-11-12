@@ -13,7 +13,7 @@ const socket = io("http://localhost:5000");
 const Message = () => {
     // Dữ liệu giả định cho Chat
     const user = {
-        id: 'mid24',
+        code: 'mid24',
         fullName: 'FAKER',
         avatar: 'Azir'
     }
@@ -58,11 +58,12 @@ const Message = () => {
     }, [activeConversation]);
 
     useEffect(() => {
-        socket.emit('join', user.id);
+        socket.emit('join', user.code);
         
         socket.on('receiveMessage', async (message) => {
             if (conversations && conversations.length > 0) {
                 const index = conversations.findIndex(c => c._id === message.conversationId);
+                await new Promise(resolve=>(resolve,setTimeout(resolve,1000)));
                 if (index === -1) {
                     getConversations();
                     return;
@@ -73,7 +74,7 @@ const Message = () => {
                         ...updated[index],
                         lastMessage: {
                             text: message.text,
-                            senderId: message.sender.id,
+                            senderCode: message.sender.code,
                             createdAt: message.createdAt,
                         },
                         isRead: false
@@ -181,12 +182,11 @@ const Message = () => {
                             onClick={() => handleActiveConversation(conver)}
                         >
                             {
-                                conver.participants[0]?.id === user.id ? (
+                                conver.participants[0]?.code === user.code ? (
                                     <div className='flex gap-4 flex-start items-center'>
                                         <p className={`w-14 h-14 rounded-full flex items-center justify-center text-white relative`}
-                                            style={{ backgroundColor: getColorFromName(conver.participants[1].fullName) }}
                                         >
-                                            {getName(conver.participants[1].fullName)}
+                                            <img className='w-full h-full rounded-full' src={conver.participants[1].avatar} alt="Avatar" title='Avatar' />
                                             <span className={`absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white 
                                     ${conver?.status === 'online' ? 'bg-green-400' : 'bg-gray-400'}`}
                                             ></span>
@@ -199,9 +199,8 @@ const Message = () => {
                                 ) : (
                                     <div className='flex gap-4 flex-start items-center'>
                                         <p className={`w-14 h-14 rounded-full flex items-center justify-center text-white relative`}
-                                            style={{ backgroundColor: getColorFromName(conver.participants[0].fullName) }}
                                         >
-                                            {getName(conver.participants[0].fullName)}
+                                            <img className='w-full h-full rounded-full' src={conver.participants[0].avatar} alt="Avatar" title='Avatar' />
                                             <span className={`absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white 
                                     ${conver?.status === 'online' ? 'bg-green-400' : 'bg-gray-400'}`}
                                             ></span>
@@ -225,7 +224,7 @@ const Message = () => {
                         {/* Chat Header */}
                         <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
 
-                            {activeConversation.participants[0]?.id === user.id ? (
+                            {activeConversation.participants[0]?.id === user.code ? (
                                 <div className='flex justify-start items-center'>
                                     <img src={activeConversation.participants[1].avatar || avatarError} alt={activeConversation.participants[1].fullName || 'Unknown'} className="w-14 h-14 rounded-full object-cover" />
                                     <div className="ml-3">
@@ -251,15 +250,15 @@ const Message = () => {
                         </div>
                         <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-gray-100">
                             {messages?.map((msg, index) => (
-                                <div key={index} className={`flex ${msg.sender?.id === user.id ? 'justify-end' : 'justify-start'}`}>
+                                <div key={index} className={`flex ${msg.sender?.code === user.code ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-xs lg:max-w-md p-3 rounded-xl shadow-md 
-                                        ${msg.sender?.id === user.id
+                                        ${msg.sender?.code === user.code
                                             ? 'bg-teal-500 text-white rounded-br-none'
                                             : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
                                         }`}
                                     >
                                         <p className="text-sm">{msg.text}</p>
-                                        <span className={`block mt-1 text-right text-xs ${msg.sender?.id === user.id ? 'text-teal-200' : 'text-gray-400'}`}>
+                                        <span className={`block mt-1 text-right text-xs ${msg.sender?.code === user.code ? 'text-teal-200' : 'text-gray-400'}`}>
                                             {formatDate(msg.createdAt)} • {formatTime(msg.createdAt)}
                                         </span>
                                     </div>

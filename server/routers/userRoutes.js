@@ -1,11 +1,10 @@
 const registerController = require('../controllers/registerController');
 const loginController = require('../controllers/loginController');
 const { forgotPassword, verifyOtp, resetPassword } = require('../controllers/otpController');
-const { addCart, viewCart, deleteCart,
-    updateCartQuantity,
-    addWishlist,
-    getWishlist,
-    removeWishlist} = require('../controllers/userController');
+const { 
+    addCart, viewCart, deleteCart,updateCartQuantity,
+    addWishlist,getWishlist,removeWishlist,
+    getList,patchStatusUser} = require('../controllers/userController');
 const verifyUser = require('../middlewares/authUser');
 const express = require('express');
 
@@ -22,5 +21,6 @@ router.patch('/cart/change-quantity', verifyUser, updateCartQuantity);
 router.post('/wishlist/add', verifyUser, addWishlist);
 router.get('/wishlist', verifyUser, getWishlist);
 router.post('/wishlist/delete', verifyUser, removeWishlist);
-
+router.get('/user',getList);
+router.patch('/user/change',patchStatusUser);
 module.exports = router;

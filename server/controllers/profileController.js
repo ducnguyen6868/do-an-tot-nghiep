@@ -5,11 +5,17 @@ const saltRounds = parseInt(process.env.SALT_ROUNDS);
 const bcrypt= require('bcrypt');
 
 const profile= async (req,res)=>{
-    const id= req.user.id;
-    const user= await User.findById(id).populate('point addresses');
-    const point = user.point||[];
-    const addresses = user.addresses;
-    return res.status(200).json({message:"You are logged",user,point, addresses});
+    try{
+        const id= req.user.id;
+        const user= await User.findById(id).populate('addresses');
+        const point = user.point||[];
+        const addresses = user.addresses;
+        return res.status(200).json({message:"You are logged",user,point, addresses});
+    }catch(err){
+        return res.status(500).json({
+            message:'Server error : '+err.message
+        });
+    }
 }
 
 const changePassword = async (req, res) => {

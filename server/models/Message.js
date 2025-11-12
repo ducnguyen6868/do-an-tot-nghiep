@@ -8,12 +8,12 @@ const MessageSchema = new Schema({
         required: true,
     },
     sender: {
-        id: { type: String },
+        code: { type: String },
         fullName: { type: String },
         avatar: { type: String },
     },
     receiver: {
-        id: { type: String },
+        code: { type: String },
         fullName: { type: String },
         avatar: { type: String },
     },

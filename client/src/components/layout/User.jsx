@@ -22,18 +22,21 @@ const sidebarMenu = [
 const SidebarLink = ({ item, isActive, onClick }) => (
   <button
     onClick={onClick}
-    className={`relative flex items-center space-x-3 w-full text-left px-4 py-2.5 rounded-lg transition-all group
+    className={`relative flex items-center space-x-3 w-full text-left px-4 py-2.5 rounded-lg transition-all group text-white hover:text-black
       ${isActive
-        ? 'bg-gradient-to-r from-teal-100 to-teal-50 text-brand font-semibold shadow-sm'
-        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+        ? 'bg-white text-brand font-semibold shadow-sm'
+        : 'text-white hover:bg-gray-50 '
       }`}
   >
     <item.icon
       className={`w-5 h-5 transition-transform duration-300 ${
-        isActive ? 'text-brand scale-110' : 'text-gray-500 group-hover:scale-105'
+        isActive ? 'text-brand scale-110' : ' group-hover:scale-105'
       }`}
     />
-    <span className="text-sm">{item.name}</span>
+    <span className={`text-sm ${isActive
+        ? 'bg-white text-brand font-semibold shadow-sm'
+        : ''
+      }`}>{item.name}</span>
   </button>
 );
 
@@ -94,6 +97,7 @@ export default function UserLayout() {
 
             <img
               src={`http://localhost:5000/${infoUser.avatar}`}
+              onError={(e)=>e.target.src=infoUser.avatar}
               alt="Avatar"
               className="w-8 h-8 rounded-full border border-gray-300 object-cover hover:scale-105 transition-transform"
             />
@@ -104,8 +108,8 @@ export default function UserLayout() {
       {/* MAIN */}
       <div className="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* SIDEBAR */}
-        <aside className="lg:col-span-3 bg-white rounded-xl shadow-md border border-gray-100 p-5">
-          <h2 className="text-xs uppercase text-gray-500 mb-3 tracking-wide font-medium">Dashboard</h2>
+        <aside className="lg:col-span-3 bg-white rounded-xl shadow-md border border-gray-100 p-5 bg-gradient-to-bl from-blue-500 to-pink-600">
+          <h2 className="text-xs uppercase text-white mb-3 tracking-wide font-medium">Dashboard</h2>
           <nav className="flex flex-col space-y-1.5">
             {sidebarMenu.map(item => (
               <SidebarLink
@@ -120,7 +124,7 @@ export default function UserLayout() {
           <div className="mt-8 pt-4 border-t border-gray-100">
             <button
               onClick={() => setLogout(true)}
-              className="flex items-center space-x-3 w-full px-4 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 transition-all"
+              className="flex items-center space-x-3 w-full px-4 py-2.5 rounded-lg text-sm text-orange-600 bg-red-50 transition-all"
             >
               <LogOut className="w-5 h-5" />
               <span>Logout</span>

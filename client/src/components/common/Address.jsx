@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  AlertCircle,
-  Loader2,
-  Home,
-  Building2,
-  User,
-  Phone,
-  MapPin,
-  Save,
-  X,
-} from "lucide-react";
+import {  AlertCircle,Loader2,Home,Building2,User,Phone,MapPin,Save,X,} from "lucide-react";
 import { isValidPhoneNumber } from "../../utils/isValidPhoneNumber";
 import addressApi from "../../api/addressApi";
 

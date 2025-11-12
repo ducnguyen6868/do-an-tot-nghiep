@@ -3,8 +3,8 @@ const {getConversations,getMessages,postConversation,postMessage} = require('../
 
 const router = express.Router();
 
-router.get('/conversation',getConversations);
 router.get('/message/:conversationId',getMessages);
+router.get('/conversation',getConversations);
 router.post('/create',postConversation);
 router.post('/send',postMessage);
 

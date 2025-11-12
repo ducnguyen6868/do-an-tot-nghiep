@@ -14,12 +14,16 @@ const loginController = async(req,res)=>{
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password!" });
         }
-
+        
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password!" });
         }
-
+        if(user.status==='suspended'){
+            return res.status(403).json({
+                message:'Your account has been banned. Contact admin for more info.'
+            });
+        }
         const token = jwt.sign(
             {
                 id: user._id,

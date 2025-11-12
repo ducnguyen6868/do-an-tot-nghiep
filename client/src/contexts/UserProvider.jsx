@@ -40,6 +40,7 @@ export const UserProvider = ({ children }) => {
                     })
                 } catch (err) {
                     toast.error(err.response?.data?.message || err.message);
+                    localStorage.removeItem('token');
                 }
             }
         }

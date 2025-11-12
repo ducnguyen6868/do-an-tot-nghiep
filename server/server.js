@@ -65,12 +65,13 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("⚡ New client connected:", socket.id);
 
-  socket.on("join", (id) => {
-    socket.join(id); // mỗi user vào room riêng
+  socket.on("join", (code) => {
+    socket.join(code);
   });
 
   socket.on("sendMessage", async (message) => {
-    io.to(message.receiver.id).emit("receiveMessage", message);
+    io.to(message.receiver.code).emit("receiveMessage", message);
+    console.log("Sent message to "+ message.receiver.code);
   });
 
   socket.on("disconnect", () => {

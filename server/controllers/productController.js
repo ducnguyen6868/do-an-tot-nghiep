@@ -1,11 +1,19 @@
 const Product = require('../models/Product');
 const Review = require('../models/Review');
 
-const product = async (req, res) => {
+const getProducts = async (req, res) => {
   try {
+    const page = req.query.page||1;
+    const limit = req.query.limit||3;
+
+    const skip= (page-1)*limit;
+    
+    const total = await Product.countDocuments({});
+
     const products = await Product.find({})
       .sort({ createdAt: -1 })
-      .limit(20)
+      .skip(skip)
+      .limit(limit)
       .populate("detail brand category");
     if (!products) {
       res.status(400).json({
@@ -13,7 +21,7 @@ const product = async (req, res) => {
       });
     } else {
       res.status(200).json({
-        message: "Get product successful.", products
+        message: "Get products successful.", products , total
       });
     }
   } catch (err) {
@@ -98,6 +106,24 @@ const detail = async (req, res) => {
     });
   }
 }
+const deleteProduct = async(req,res)=>{
+  try{
+    const {productId}= req.params;
+    if(!productId){
+      return res.status(400).json({
+        message:'Product ID is required.'
+      });
+    }
+    await Product.findByIdAndDelete(productId);
+    return res.status(200).json({
+      message:'Product has deleted.'
+    });
+  }catch(err){
+    return res.status(500).json({
+      message:'Server error: '+ err.message
+    });
+  }
+}
 
 const wishlist = async (req, res) => {
   const wishlist = req.body;
@@ -179,5 +205,35 @@ const getFlashSaleProducts = async (req, res) => {
   }
 
 }
-module.exports = { product, search, detail, wishlist, 
-  getTrendingProducts, getVibeFinderProducts ,getFlashSaleProducts};
+
+const patchStock = async(req,res)=>{
+  try{
+    const productId = req.query.productId;
+    const index= req.query.index;
+    const stock = req.query.stock;
+    if(!productId||!index||!stock){
+      return res.status(400).json({
+        message:'ProductID ,index and stock are required.'
+      });
+    }
+    const product = await Product.findById(productId);
+    if(!product){
+      return res.status(404).json({
+        messsage:'Product not found.'
+      });
+    }
+    product.detail[index].quantity= stock;
+    await product.save();
+    return res.status(200).json({
+      message:'Update stock successful.'
+    });
+  }catch(err){
+    return res.status(500).json({
+      message:"Server error : "+err.message
+    });
+  }
+}
+module.exports = { getProducts, search, detail, deleteProduct,wishlist, 
+  getTrendingProducts, getVibeFinderProducts ,getFlashSaleProducts,
+  patchStock
+};

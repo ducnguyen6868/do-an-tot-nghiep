@@ -25,11 +25,13 @@ export default function ProfilePage() {
     return (
         <>
             {/* 1. Profile Overview (Default Content) */}
-            <div className="bg-white px-8 pt-4 rounded-xl shadow-lg border border-gray-200">
+            <>
 
                 {/* User Card */}
                 <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
-                    <img src={`http://localhost:5000/${user?.avatar}`} alt={user.name} className="w-20 h-20 rounded-full object-cover border-4 border-teal-500" />
+                    <img src={`http://localhost:5000/${user?.avatar}`} 
+                    alt={user.name} className="w-20 h-20 rounded-full object-cover border-4 border-teal-500"
+                    onError={(e)=>e.target.src=user?.avatar} />
                     <div>
                         <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
                         <p className="text-gray-600 mb-1">{user.email}</p>
@@ -74,7 +76,7 @@ export default function ProfilePage() {
                         <StatCard icon={MapPin} label="Saved Addresses" value={user.addresses?.length} color="orange" />
                     </div>
                 </div>
-            </div>
+            </>
         </>
     );
 }

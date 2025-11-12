@@ -118,7 +118,7 @@ export default function CheckoutPage() {
                   <div className="flex justify-between text-sm">
                     <span>Qty: {p.quantity}</span>
                     <span className="font-semibold text-gray-800 dark:text-gray-100">
-                      ${p.price.toFixed(2)}
+                      ${p.price?.toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export default function CheckoutPage() {
               <span className="text-gray-700 dark:text-gray-300 flex items-center gap-1">
                 <Coins className="w-4 h-4 text-yellow-500" />
                 You have <strong>{point.quantity}</strong> points (
-                {availablePoint.toFixed(2)} available)
+                {availablePoint?.toFixed(2)} available)
               </span>
               <button
                 onClick={() => setUsePoint(!usePoint)}
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
           <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>${subtotal?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span>Shipping</span>
@@ -176,7 +176,7 @@ export default function CheckoutPage() {
             {usePoint && (
               <div className="flex justify-between">
                 <span>Discount</span>
-                <span>- ${discount.toFixed(2)}</span>
+                <span>- ${discount?.toFixed(2)}</span>
               </div>
             )}
             <div className="flex justify-between text-base font-semibold pt-2 border-t border-gray-200 dark:border-gray-700">
@@ -189,8 +189,8 @@ export default function CheckoutPage() {
         </div>
 
         {/* -------- Right Section: Payment Info -------- */}
-        
-          <InfoPayment onSubmit={handleSubmit} total={total} />
+
+        <InfoPayment onSubmit={handleSubmit} total={total} />
       </div>
 
       {/* -------- Promotion Modal -------- */}

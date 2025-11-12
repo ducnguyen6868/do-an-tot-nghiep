@@ -146,9 +146,9 @@ export default function OrderManagementPage() {
         <>
             {/* Actions and Filters Bar */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-teal-600">All Orders ({total})</h2>
+                <h2 className="text-2xl font-bold text-brand">All Orders ({total})</h2>
                 <div className="flex space-x-3">
-                    <div className="relative hidden sm:block">
+                    <div className="relative hidden sm:block animate-fadeInUp">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             name='order'
@@ -158,11 +158,11 @@ export default function OrderManagementPage() {
                             className="w-64 pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:border-teal-500 bg-gray-50"
                         />
                     </div>
-                    <button className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                    <button className="animate-fadeInUp flex items-center space-x-2 px-4 py-2 text-sm font-semibold border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
                         <Filter className="w-4 h-4" />
                         <span>Filter Status</span>
                     </button>
-                    <button className={`flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-brand hover:bg-brand-hover text-white shadow-md`}>
+                    <button className={`animate-fadeInUp flex items-center space-x-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-brand hover:bg-brand-hover text-white shadow-md`}>
                         <Plus className="w-4 h-4" />
                         <span>Create New Order</span>
                     </button>
@@ -173,13 +173,13 @@ export default function OrderManagementPage() {
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-brand text-white animate-fadeInUp">
                             <tr>
                                 {/* Table Headers */}
                                 {tableHeaders.map(header => (
                                     <th
                                         key={header}
-                                        className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                        className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer hover:bg-teal-400"
                                         onClick={() => header !== 'Actions' && header !== 'Payment' && handleSort(formatHeaderKey(header))}
                                     >
                                         <div className="flex items-center">
@@ -192,8 +192,10 @@ export default function OrderManagementPage() {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {sortedOrders.length > 0 ? (
-                                sortedOrders.map((order) => (
-                                    <tr key={order._id} className="hover:bg-gray-50 transition-colors">
+                                sortedOrders.map((order,index) => (
+                                    <tr key={index} className="hover:bg-cyan-50 transition-colors animate-fadeInUp"
+                                        style={{animationDelay:`${index*0.1}s`}}
+                                    >
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{order.code}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{order.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.createdAt)}</td>

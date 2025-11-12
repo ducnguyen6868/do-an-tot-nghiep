@@ -100,7 +100,7 @@ export default function Admin() {
 
                 {/* Header / Top Nav */}
                 <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30 flex flex-row justify-between items-center pl-8">
-                    <h3 className='size-5 text-teal-600 w-max font-black' >Good morning , Admin !</h3>
+                    <h3 className='size-5 text-brand w-max font-black' >Good morning , Admin !</h3>
                     <div className="flex items-center p-4 gap-4">
                         <button className="text-gray-600 hover:text-teal-600 transition-colors">
                             <Bell className="w-5 h-5" />

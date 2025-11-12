@@ -5,14 +5,14 @@ const ConversationSchema = new Schema(
   {
     participants: [
       {
-        id: { type: String, required: true },
+        code: { type: String, required: true },
         fullName: { type: String },
         avatar: { type: String },
       },
     ],
     lastMessage: {
       text: { type: String },
-      senderId: { type: String },
+      senderCode: { type: String },
       createdAt: { type: Date },
     },
     isRead:{type:Boolean , default:false}

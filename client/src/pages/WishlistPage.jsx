@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import wishlist404 from '../assets/wishlist404.png';
-import ListProduct from '../components/common/ListProduct';
+import ProductCard from '../components/common/ProductCard';
 import productApi from '../api/productApi';
 import userApi from '../api/userApi';
 
 export default function WishlistPage() {
     const [products, setProducts] = useState([]);
     const [change, setChange] = useState(false);
-    
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         const getProducts = async () => {
@@ -43,8 +43,12 @@ export default function WishlistPage() {
     return (
         <>
             {products.length > 0 ? (
-                <div className='wishlist-container' style={{ backgroundColor: 'var(--bg-secondary)', padding: '1rem' }}>
-                    <ListProduct products={products} wishlist={true} onChange={() => setChange(!change)} />
+                <div className='flex flex-row gap-4 justify-center py-4'>
+                    {products.map((product, index) => 
+                        (
+                            <ProductCard key={index} product={product} onChange={()=>setChange(!change)} />
+                        )
+                    )}
                 </div>
             ) : (
                 <div className='empty-container'>

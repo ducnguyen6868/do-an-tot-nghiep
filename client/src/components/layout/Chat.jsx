@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect, useContext } from 'react';
-import {
-    MessageSquare, Send, X, User
-} from 'lucide-react';
+import {MessageSquare, Send, X, User} from 'lucide-react';
 import { UserContext } from '../../contexts/UserContext';
 import {formatDate} from '../../utils/formatDate';
 import {formatTime} from '../../utils/formatTime';
@@ -45,10 +43,11 @@ const ChatModal = ({ onClose }) => {
         const getUser = async () => {
             try {
                 const response = await profileApi.profile();
+                const code=response.user.code || 'UnknownId';
                 setUser({
-                    id: response.user.id || 'UnknownId',
+                    code,
                     fullName: response.user.fullName || 'Unknown',
-                    avatar: response.user.avatar
+                    avatar: response.user.avatar ||`https://api.dicebear.com/8.x/avataaars/svg?seed=${code}`
                 });
                 setLogged(true);
             } catch (err) {
@@ -56,10 +55,11 @@ const ChatModal = ({ onClose }) => {
                 let userLocal = localStorage.getItem('user');
 
                 if (!userLocal) {
+                    const code= new Date().getTime().toString() ;
                     const user = {
-                        id: new Date().getTime().toString(),
+                        code,
                         fullName: 'Unknown',
-                        avatar: ''
+                        avatar: `https://api.dicebear.com/8.x/avataaars/svg?seed=${code}`
                     }
                     setUser(user);
                     localStorage.setItem('user', JSON.stringify(user));
@@ -115,10 +115,11 @@ const ChatModal = ({ onClose }) => {
     }, [conversationId, checked]);
 
     // Kết nối socket
-    useEffect(() => {
-        if (!user.id) return;
+    useEffect(() => {       
+        if (!user.code) return;
 
-        socket.emit('join', user.id);
+        socket.emit('join', user.code);
+        console.log(user.code + ' joined');           
 
         socket.on("receiveMessage", (message) => {
             setMessages(prev => ([...prev, message]));
@@ -127,14 +128,14 @@ const ChatModal = ({ onClose }) => {
         return () => {
             socket.off("receiveMessage");
         };
-    }, [user.id]);
+    }, [user.code]);
 
     const postConversation = async () => {
-        if (!user || !user.id) return null;
+        if (!user || !user.code) return null;
         try {
             const sender = user;
             const receiver = {
-                id: 'mid24',
+                code: 'mid24',
                 fullName: 'FAKER',
                 avatar: 'Azir'
             }
@@ -169,7 +170,7 @@ const ChatModal = ({ onClose }) => {
             conversationId: currentConvId,
             sender: user,
             receiver: {
-                id: 'mid24',
+                code: 'mid24',
                 fullName: 'FAKER',
                 avatar: 'Azir'
             },
@@ -224,15 +225,15 @@ const ChatModal = ({ onClose }) => {
                 {/* Message Area */}
                 {messages?.length > 0 && messages?.map((chat, index) => (
 
-                    <div key={index} className={`flex ${chat.sender?.id === user.id ? 'justify-end' : 'justify-start'}`}>
+                    <div key={index} className={`flex ${chat.sender?.code === user.code ? 'justify-end' : 'justify-start'}`}>
                         <div className={
-                            `max-w-xs lg:max-w-md p-3 rounded-xl shadow-md  ${chat.sender?.id === user.id
+                            `max-w-xs lg:max-w-md p-3 rounded-xl shadow-md  ${chat.sender?.code === user.code
                                 ? 'bg-teal-500 text-white rounded-br-none'
                                 : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
                             }`}
                         >
                             <p className="text-sm">{chat.text}</p>
-                            <span className={`block mt-1 text-right text-xs ${chat.sender?.id === user.id ? 'text-teal-200' : 'text-gray-400'}`}>
+                            <span className={`block mt-1 text-right text-xs ${chat.sender?.code === user.code ? 'text-teal-200' : 'text-gray-400'}`}>
                                 {formatDate(chat.createdAt)} • {formatTime(chat.createdAt)}
                             </span>
                         </div>
@@ -302,7 +303,7 @@ export default function Chat() {
                 {isChatOpen ? (
                     <></>
                 ) : (
-                    <MessageSquare className="w-7 h-7" />
+                    <MessageSquare className="w-7 h-7 text-white" />
                 )}
             </button>
 

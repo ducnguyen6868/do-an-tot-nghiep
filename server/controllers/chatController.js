@@ -23,15 +23,6 @@ const getMessages = async (req, res) => {
         message: 'Conversation ID is required.'
       });
     }
-    
-    const conversation = await Conversation.findById(conversationId);
-    if(!conversation){
-      return res.status(404).json({
-        message:'Conversation not found.'
-      });
-    }
-    conversation.isRead=true;
-    await conversation.save();
 
     const messages = await Message.find({ conversationId: conversationId })
       .sort({ createdAt: 1 });
@@ -55,8 +46,8 @@ const postConversation = async (req, res) => {
   try {
     const conversation = await Conversation.create({});
     conversation.participants.push(sender, receiver);
+    conversation.isRead=false;
     await conversation.save();
-
     return res.status(200).json({
       message: 'Create conversation succefully.', conversation
     });
@@ -83,11 +74,14 @@ const postMessage = async (req, res) => {
         message: 'Conversation`s not found.'
       });
     }
-    conversation.lastMessage.text = message.text || 'NULL';
-    conversation.lastMessage.senderId = message.sender.id || 'NULL';
-    conversation.lastMessage.createdAt = message.sender.createdAt || new Date();
+    const lastMessage = {
+      text:message.text||'NULL',
+      senderCode:message.sender.code||'NULL',
+      createdAt:message.sender.createdAt||new Date()
+    }
+    conversation.isRead=false;
+    conversation.lastMessage=lastMessage;
     await conversation.save();
-
     const newMessage = await Message.create(message);
     return res.status(200).json({
       message: 'Create message succesfully', newMessage

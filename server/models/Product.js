@@ -10,7 +10,14 @@ const productSchema = new Schema({
   name: { type: String, required: true , unique:true },
   description: { type: String },
   detail:[{
-    type:Schema.Types.ObjectId , ref:"Detail"
+    currentPrice:{type:Number},
+    flashSalePrice:{type:Number},
+    originalPrice:{type:Number},
+    color:{type:String},
+    colorCode:{type:String},
+    quantity:{type:Number},
+    stock:{type:Number},
+    sold:{type:Number}
   }],
   images: [{ type: String }], // Danh sách đường dẫn hình ảnh
   category: { type: Schema.Types.ObjectId, ref: 'Category' },

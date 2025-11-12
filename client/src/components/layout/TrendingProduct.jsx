@@ -5,7 +5,6 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { UserContext } from '../../contexts/UserContext';
-import Notification from '../common/Notification';
 import productApi from '../../api/productApi';
 import userApi from '../../api/userApi';
 
@@ -15,22 +14,16 @@ export default function TrendingProduct() {
     const { setInfoUser } = useContext(UserContext);
 
     const [trendingProducts, setTrendingProducts] = useState([]);
-    const [notify, setNotify] = useState(false);
-    const [message, setMessage] = useState('');
-    const [type, setType] = useState('');
 
     useEffect(() => {
         const getTrendingProducts = async () => {
             try {
                 const page = 1;
-                const limit = 5;
+                const limit = 3;
                 const response = await productApi.getTrending(page, limit);
                 setTrendingProducts(response.products);
-                setMessage(response.message);
-                setType('success');
             } catch (err) {
-                setMessage(err.response?.data?.message || err.message);
-                setType('error');
+                console.log(err.response?.data?.message || err.message);
             }
         }
         getTrendingProducts();
@@ -44,10 +37,9 @@ export default function TrendingProduct() {
         const description = product.description;
         const quantity = 1;
         const color = product.detail[0]?.color;
-        const price = product.detail[0]?.price;
-        const detailId = product.detail[0]?._id;
+        const price = product.detail[0]?.currentPrice;
         const productData = [{
-            id, code, name, image, description, quantity, color, price, detailId
+            id, code, name, image, description, quantity, color, price
         }]
         navigate('/product/checkout', { state: { productData } });
     }
@@ -64,8 +56,8 @@ export default function TrendingProduct() {
             description: product.description,
             quantity: 1,
             color: detail.color,
-            price: detail.price,
-            detailId: detail._id,
+            price: detail.currentPrice,
+            index:0
         };
 
         const token = localStorage.getItem("token");
@@ -136,20 +128,19 @@ export default function TrendingProduct() {
 
     return (
         <>
-            <Notification notify={notify} message={message} type={type} onClose={() => setNotify(false)} />
             {/* Trending Products */}
-            <section className="py-6 bg-bg-primary transition-colors duration-500" id='trending-container'>
+            <section className=" min-w-96 flex-1 py-6 transition-colors duration-500 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg" id='trending-container'>
                 <div className="max-w-7xl mx-auto px-4">
                     <div
                         id="trending-header"
                         data-animate
-                        className={`text-center mb-10 animate-fadeInUp visible`}
+                        className={`text-center text-white mb-4 animate-fadeInUp visible`}
                     >
-                        <h2 className="text-3xl font-bold mb-2 text-text-primary">Trending Products</h2>
-                        <p className="text-text-secondary text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
+                        <h2 className="text-3xl font-bold mb-2">Our Best Seller</h2>
+                        <p className="text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         {trendingProducts.map((product, idx) => (
                             <div
                                 key={product._id}
@@ -176,7 +167,7 @@ export default function TrendingProduct() {
                                     <Link to={`/product?code=${product.code}`} className="font-semibold text-sm mb-1 text-text-primary truncate animate-textSlideLeft translate-x-6"
                                         style={{ animationDelay: `${idx * 0.15}s` }}
                                     >{product.name}</Link>
-                                    <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.originalPrice, 'en-Us', 'USD')}</p>
+                                    <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
                                     <div className='flex items-center justify-center gap-2'>
                                         <button
                                             className="py-1 px-4 bg-gray-400 text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCart(product)}

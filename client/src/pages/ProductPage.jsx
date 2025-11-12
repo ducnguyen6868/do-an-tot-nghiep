@@ -1,17 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {
-  ShoppingCart,
-  Heart,
-  Zap,
-  Truck,
-  ShieldCheck,
-  Gem,
-  Minus,
-  Plus,
-  Star
-} from 'lucide-react';
+import { ShoppingCart, Heart,Zap,Truck,ShieldCheck, Gem, Minus, Plus, Star} from 'lucide-react';
 import { UserContext } from '../contexts/UserContext';
 import { formatCurrency } from '../utils/formatCurrency';
 import userApi from '../api/userApi';
@@ -65,10 +55,11 @@ export default function ProductPage() {
         code: product.code,
         brand: product.brand.name,
         image: product.images[0],
-        price: selectedDetail.price,
+        price: selectedDetail.currentPrice,
+        index : selectedDetailIndex,
         color: selectedDetail.color,
         quantity: quantity,
-        detailId: selectedDetail._id
+
       }
     ];
     navigate('../product/checkout', { state: { productData } });
@@ -87,7 +78,7 @@ export default function ProductPage() {
         description: product.description,
         quantity: 1,
         color: selectedDetail.color,
-        price: selectedDetail.price,
+        price: selectedDetail.currentPrice,
         detailId: selectedDetail._id
       };
       const response = await userApi.addCart(data);
@@ -176,7 +167,7 @@ export default function ProductPage() {
 
             <div className="flex items-center gap-2">
               {renderStars(product.ratings)}
-              <span className="text-gray-700 font-medium">{product.ratings.toFixed(1)}</span>
+              <span className="text-gray-700 font-medium">{product?.ratings.toFixed(1)}</span>
               <span className="text-gray-400 text-sm">
                 ({product.reviews || 0} Reviews)
               </span>
@@ -184,9 +175,9 @@ export default function ProductPage() {
 
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-semibold text-blue-600">
-                {formatCurrency(selectedDetail.price, locale, currency)}
+                {formatCurrency(selectedDetail.currentPrice, locale, currency)}
               </span>
-              {selectedDetail.originalPrice > selectedDetail.price && (
+              {selectedDetail.originalPrice > selectedDetail.currentPrice && (
                 <>
                   <span className="line-through text-gray-400">
                     {formatCurrency(selectedDetail.originalPrice, locale, currency)}
@@ -194,7 +185,7 @@ export default function ProductPage() {
                   <span className="text-green-600 text-sm font-medium">
                     Save{' '}
                     {formatCurrency(
-                      selectedDetail.originalPrice - selectedDetail.price,
+                      selectedDetail.originalPrice - selectedDetail.currentPrice,
                       locale,
                       currency
                     )}
@@ -223,14 +214,14 @@ export default function ProductPage() {
                           : 'border-gray-300'
                       }`}
                       style={{
-                        backgroundColor: item.color?.toLowerCase() || '#ccc'
+                        backgroundColor: item.colorCode || '#ccc'
                       }}
                     />
                   ))}
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
                   Selected: {selectedDetail.color} –{' '}
-                  {formatCurrency(selectedDetail.price, locale, currency)} (
+                  {formatCurrency(selectedDetail.currentPrice, locale, currency)} (
                   {selectedDetail.quantity || 0} in stock)
                 </p>
               </div>

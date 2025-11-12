@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
-import ListProduct from '../components/common/ListProduct';
+import ProductCard from '../components/common/ProductCard';
 import LoadingAnimations from '../components/common/LoadingAnimations';
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -287,7 +287,7 @@ export default function SearchResultsPage() {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main className="lg:flex-1">
+        <main className="flex-1">
           {/* Results Header */}
           <div className="flex justify-between items-center mb-4 p-3 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700">
             <div className="results-info">
@@ -335,9 +335,15 @@ export default function SearchResultsPage() {
           )}
 
           {/* Results Grid/List */}
-          {!loading && filteredResults.length > 0 && (
-            <ListProduct products={filteredResults} search={true} />
-          )}
+          {!loading && filteredResults.length > 0 &&
+          <div className=' grid lg:grid-cols-3 gap-4'>
+            {
+              filteredResults.map((product,index)=>(
+                <ProductCard key={index} product={product}/>
+              ))
+            }
+          </div>
+          }
         </main>
       </div>
     </>

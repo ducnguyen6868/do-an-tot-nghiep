@@ -43,7 +43,7 @@ const addCart = async (req, res) => {
     const newCart = await Cart.create({
       userId,
       productId: id,
-      code, name, image, description, price,quantity,color, detailId
+      code, name, image, description, price, quantity, color, detailId
     });
 
     await User.findByIdAndUpdate(userId, { $push: { carts: newCart._id } });
@@ -205,7 +205,60 @@ const removeWishlist = async (req, res) => {
   })
 }
 
+const getList = async (req, res) => {
+  try {
+    const role = req.query.role;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 5;
+    const skip = (page - 1) * limit;
+
+    const total = await User.countDocuments({ role });
+    const totalUser = await User.countDocuments({ role: 'user' });
+    const totalStaff = await User.countDocuments({ role: 'admin' });
+
+    const usersData = await User.find({ role })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    return res.status(200).json({
+      message: 'Get list user succsessful.', usersData, total, totalUser, totalStaff
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error : ' + err.message
+    });
+  }
+}
+
+const patchStatusUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const status = req.query.status;
+    if (!userId || !status) {
+      return res.status(400).json({
+        message: 'UserID and status are required.'
+      });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found."
+      });
+    }
+    user.status = status;
+    await user.save();
+    return res.status(200).json({
+      message: 'Updated status.'
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error: ' + err.message
+    });
+  }
+
+}
 module.exports = {
   addCart, viewCart, deleteCart,
-  updateCartQuantity, addWishlist, getWishlist, removeWishlist
+  updateCartQuantity, addWishlist, getWishlist, removeWishlist,
+  getList,patchStatusUser
 };

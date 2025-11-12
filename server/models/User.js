@@ -7,12 +7,12 @@ require('./Cart');
 require('./Point');
 
 const userSchema = new Schema({
-  id:{type:String , unique:true},
+  code:{type:String , required:true, unique:true },
   fullName: { type: String },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String },
-  status: { type: String, enum: ['banded', 'normal'], default: 'normal' },
+  status: { type: String, enum: ['suspended', 'inActive', 'actived'], default: 'inActive' },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   last_login: { type: Date },
   resetPasswordOTP: { type: String },

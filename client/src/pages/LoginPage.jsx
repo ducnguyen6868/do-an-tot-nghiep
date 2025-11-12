@@ -178,22 +178,21 @@ export default function LoginPage() {
           </button>
 
           {/* Divider */}
-          <div className="flex items-center justify-center space-x-2 text-gray-400 text-sm">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-            <span>Or continue with</span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+          <div className="flex items-center justify-center my-6">
+            <div className="h-px w-1/4 bg-gray-200" />
+            <span className="mx-3 text-sm text-gray-400">Or continue with</span>
+            <div className="h-px w-1/4 bg-gray-200" />
           </div>
 
-          {/* Social buttons */}
-          <div className="flex items-center justify-center space-x-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:shadow transition">
+          {/* Social Login */}
+          <div className="flex gap-4">
+            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">
               <Icon icon="logos:google-icon" width="20" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Google</span>
+              <span>Google</span>
             </button>
-
-            <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <button className="flex-1 flex items-center justify-center gap-2 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
               <Icon icon="logos:facebook" width="20" />
-              <span className="text-sm font-medium">Facebook</span>
+              <span>Facebook</span>
             </button>
           </div>
 

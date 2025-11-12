@@ -4,7 +4,7 @@ var secretkey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Cart = require('../models/Cart');
-const Detail = require('../models/Detail');
+const Product = require('../models/Product');
 const axios = require('axios');
 const fillMissing = require('../utils/fillMissing');
 
@@ -53,26 +53,19 @@ const createOrder = async (req, res) => {
         const infoPayment = orderData.infoPayment;
         const productData = orderData.productData;
         const { total_amount, discount_amount, final_amount } = orderData;
-
         // Update quantity
         for (const product of productData) {
-            const detail = await Detail.findById(product.detailId);
-            if (!detail) continue;
-
-            const newQuantity = detail.quantity - product.quantity;
+           const newProduct = await Product.findById(product.id);
+           if(!newProduct) continue;
+            const newQuantity = newProduct.detail[product.index].quantity - product.quantity;
             if (newQuantity < 0) {
                 return res.status(403).json({
                     message: "Quantity exceeds product in stock."
                 })
             }
-            const newSold = (detail.sold || 0) + product.quantity;
-
-            await Detail.findByIdAndUpdate(product.detailId, {
-                $set: {
-                    quantity: newQuantity >= 0 ? newQuantity : 0,
-                    sold: newSold,
-                },
-            });
+            newProduct.detail[product.index].quantity=newQuantity;
+            newProduct.detail[product.index].sold  += product.quantity;
+            await newProduct.save();
         };
 
         // create new order
@@ -323,90 +316,6 @@ const getTopSelling = async (req, res) => {
         });
     }
 }
-
-// const getRevenueData = async (req, res) => {
-//     try {
-//         const { range } = req.query;
-//         const now = new Date();
-//         let startDate = new Date();
-
-//         switch (range) {
-//             case '7days':
-//                 startDate.setDate(now.getDate() - 7);
-//                 break;
-//             case '30days':
-//                 startDate.setDate(now.getDate() - 30);
-//                 break;
-//             case '3months':
-//                 startDate.setMonth(now.getMonth() - 3);
-//                 break;
-//             case '6months':
-//                 startDate.setMonth(now.getMonth() - 6);
-//                 break;
-//             case 'alltime':
-//                 startDate = new Date(0);
-//                 break;
-//         }
-//         const revenueData = await Order.aggregate([
-//             {
-//                 $match: {
-//                     createdAt: { $gte: startDate },
-//                     $expr: {
-//                         $eq: [
-//                             {
-//                                 $ifNull: [
-//                                     { $arrayElemAt: ["$status.present", -1] },
-//                                     null
-//                                 ]
-//                             },
-//                             "Delivered Successfully"
-//                         ]
-//                     }
-//                 }
-//             },
-//             {
-//                 $group: {
-//                     _id: {
-//                         year: { $year: "$createdAt" },
-//                         month: { $month: "$createdAt" },
-//                         day: { $dayOfMonth: "$createdAt" }
-//                     },
-//                     revenue: { $sum: "$final_amount" },
-//                     orders: { $sum: 1 }
-//                 }
-//             },
-//             { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
-//             {
-//                 $project: {
-//                     _id: 0,
-//                     date: {
-//                         $dateToString: {
-//                             format: "%Y %b %d",
-//                             date: {
-//                                 $dateFromParts: {
-//                                     year: "$_id.year",
-//                                     month: "$_id.month",
-//                                     day: "$_id.day"
-//                                 }
-//                             }
-//                         }
-//                     },
-//                     revenue: 1,
-//                     orders: 1
-//                 }
-//             }
-//         ]);
-
-//         const totalRevenue = revenueData.reduce((sum, item) => sum + item.revenue, 0);
-
-//         return res.status(200).json({ revenueData, totalRevenue });
-
-//     } catch (err) {
-//         return res.status(500).json({
-//             message: 'Server error : ' + err.message
-//         });
-//     }
-// };
 
 const getRevenueData = async (req, res) => {
     try {

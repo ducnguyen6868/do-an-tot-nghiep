@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import productApi from "../../api/productApi";
+import { Flame, BadgePercent,ChevronsRight } from "lucide-react";
 import { formatCurrency } from '../../utils/formatCurrency';
-import { Link ,useNavigate} from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
+import { Icon } from '@iconify/react';
+import productApi from "../../api/productApi";
 
 export default function FlashSale() {
     const navigate = useNavigate();
@@ -37,9 +39,19 @@ export default function FlashSale() {
         const getFlashSales = async () => {
             try {
                 const page = 1;
-                const limit = 4;
+                const limit = 5;
                 const response = await productApi.getFlashsale(page, limit);
-                setFlashSaleProducts(response.flashsales);
+                let updatedProducts = response.flashsales;
+
+                updatedProducts = updatedProducts.map(product => {
+                    const detail = product.detail;
+                    const sold = detail.reduce((t, d) => t + d.sold, 0);
+                    const quantity = detail.reduce((t, d) => t + d.quantity, 0);
+                    const percent = sold / quantity * 100;
+                    return { ...product, percent, sold };
+                });
+
+                setFlashSaleProducts(updatedProducts);
             } catch (err) {
                 console.log(err.response?.data?.message || err.message);
             }
@@ -47,106 +59,101 @@ export default function FlashSale() {
         getFlashSales();
     }, []);
 
-    const handleCheckout = (product) => {
-        const id = product._id;
-        const code = product.code;
-        const name = product.name;
-        const image = product.images[0];
-        const description = product.description;
-        const quantity = 1;
-        const color = product.detail[0]?.color;
-        const price = product.detail[0]?.price;
-        const detailId = product.detail[0]?._id;
-        const productData = [{
-            id, code, name, image, description, quantity, color, price, detailId
-        }]
-        navigate('/product/checkout',{state:{productData}});
+    const handleNavigate = (code) => {
+        navigate(`/product?code=${code}`);
     }
+
     return (
         <>
 
             {/* Flash Sale Products (NEW SECTION) */}
-            <section className="py-6 bg-bg-secondary transition-colors duration-500">
+            <section className="py-6 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400">
                 <div className="max-w-7xl mx-auto px-4">
-                    <div
-                        id="flash-header"
-                        data-animate
-                        className={`text-center mb-10 animate-fadeInUp visible' : ''}`}
-                    >
-                        <h2 className="text-3xl font-extrabold mb-2 text-text-primary flex items-center justify-center space-x-3">
-                            <span className="text-sale-color animate-pulse-slow">🔥</span>
-                            <span>Flash Sale - Limited Time!</span>
-                            <span className="text-sale-color animate-pulse-slow">🔥</span>
-                        </h2>
-                        <p className="text-text-secondary text-sm">Grab these luxury watches before the timer runs out!</p>
+                    <div className="flex items-center space-x-1.5 relative text-white">
+                        <Icon icon="noto:fire" width="18" height="18" />
+                        <span className='font-bold text-xl '>FLASH SALE</span>
+                        <Icon icon="noto:fire" width="18" height="18" />
 
-                        {/* Countdown Timer */}
-                        <div className='mt-5 flex justify-center'>
-                            <div className='px-6 py-3 rounded-full font-mono text-xl font-black shadow-2xl transition-all text-white bg-red-600'
-                            >
-                                <div className="flex items-center justify-center space-x-2 font-mono">
-                                    <span className="text-xl font-semibold text-white tracking-wide uppercase">
-                                        ENDS IN:
-                                    </span>
+                        {/* Hours */}
+                        <span className="text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.hours).padStart(2, '0')}</span>
 
-                                    <div className="flex items-center space-x-1.5">
-                                        {/* Hours */}
-                                        <div className=" border border-blue-500/30 bg-bg-secondary rounded-md flex items-center justify-center shadow-sm">
-                                            <div className="text-xl font-bold text-brand p-1">{String(timeLeft.hours).padStart(2, '0')}</div>
-                                        </div>
+                        {/* Minutes */}
+                        <span className="text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.minutes).padStart(2, '0')}</span>
 
-                                        <span className="text-xl font-semibold bg-bg-secondary/70">:</span>
 
-                                        {/* Minutes */}
-                                        <div className=" border border-blue-500/30 bg-bg-secondary rounded-md flex items-center justify-center shadow-sm">
-                                            <div className="text-xl font-bold text-brand p-1">{String(timeLeft.minutes).padStart(2, '0')}</div>
-                                        </div>
+                        {/* Seconds */}
+                        <span className="text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.seconds).padStart(2, '0')}</span>
 
-                                        <span className="text-xl font-semibold bg-bg-secondary/70">:</span>
-
-                                        {/* Seconds */}
-                                        <div className=" border border-blue-500/30 bg-bg-secondary rounded-md flex items-center justify-center shadow-sm">
-                                            <div className="text-xl font-bold text-brand p-1">{String(timeLeft.seconds).padStart(2, '0')}</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                        <Link to='#' className='absolute right-0 flex flex-row gap-1 text-base hover:text-red-600 hover:underline'>
+                        View all <ChevronsRight/>
+                        </Link>
                     </div>
 
-                    <div className="flex flex-row justify-center items-center gap-6">
+                    <div className="flex flex-row justify-center items-center gap-2 mt-2">
                         {flashSaleProducts?.map((product, idx) => (
                             <div
                                 key={product._id}
                                 data-animate
-                                className={`bg-white rounded-xl max-w-80 overflow-hidden shadow-2xl border border-sale-color/30 transform transition-all duration-500 hover:scale-[1.02] animate-fadeInUp visible`}
+                                className={`bg-white cursor-pointer rounded-xl max-w-80 overflow-hidden shadow-2xl border border-sale-color/30 transform transition-all duration-500 hover:scale-[1.02] animate-fadeInUp visible`}
                                 style={{ animationDelay: `${idx * 0.15 + 0.3}s` }}
+                                onClick={() => handleNavigate(product.code)}
                             >
-                                <div className="relative bg-bg-tertiary overflow-hidden">
-                                    {/* Sale Tag */}
-                                    <span className="absolute top-2 left-2 bg-sale-color text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-md">
+
+                                <div className="relative group overflow-hidden shadow-lg bg-white border border-gray-100">
+                                    {/* Discount Badge */}
+                                    <span
+                                        className="absolute top-0 right-0 flex items-center gap-1
+                                     text-white text-xs font-bold px-3 py-1 z-20
+                                        bg-gradient-to-r from-red-500 to-orange-400 shadow-lg rounded-bl-lg">
+                                        <BadgePercent size={14} />
+                                        - {Math.ceil((1 - product.detail[0].flashSalePrice / product.detail[0].originalPrice) * 100)}%
                                     </span>
-                                    <img
-                                        src={`http://localhost:5000${product?.images[0]}`}
-                                        alt={product.name}
-                                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE'; }}
-                                        className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500"
-                                    />
-                                </div>
-                                <div className="p-4 flex flex-col items-center text-center">
-                                    <Link to={`/product?code=${product.code}`} className="cursor-pointer text-base font-medium tracking-wide text-gray-800 dark:text-gray-100 
-hover:text-brand transition-all duration-500 line-clamp-1 text-center italic">
-                                        {product.name}
-                                    </Link>                                    <div className="mb-4">
-                                        <p className="text-sm   text-red-600 line-through">{formatCurrency(product.detail[0]?.originalPrice, 'en-Us', 'USD')}</p>
-                                        <p className="text-3xl font-black   text-red-600">{formatCurrency(product.detail[0]?.price, 'en-Us', 'USD')}</p>
+
+                                    {/* Product Image */}
+                                    <div className="relative overflow-hidden">
+                                        <img
+                                            src={`http://localhost:5000${product?.images[0]}`}
+                                            alt={product.name}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
+                                            }}
+                                            className="w-full aspect-square object-cover transition-all duration-700 group-hover:scale-110"
+                                        />
+
                                     </div>
-                                    <button
-                                        className="w-full py-3 text-white text-sm rounded-md transition-all transform hover:scale-[1.03] shadow-lg font-semibold bg-red-600" onClick={()=>handleCheckout}
+
+                                    {/* Flash Sale Ribbon */}
+                                    <span className="absolute bottom-1 left-1 bg-orange-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 text-xs shadow-md">
+                                        <Flame size={14} className="text-yellow-300" />
+                                        Flash Sale
+                                    </span>
+                                </div>
+
+
+                                <div className="p-4 flex flex-col items-center text-center">
+                                    <div className="text-2xl font-black text-red-600">
+                                        {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
+                                    </div>
+                                    <div
+                                        className="w-full relative rounded-full bg-gray-300 h-5 mt-2 overflow-hidden shadow-inner"
                                     >
-                                        Buy Now
-                                    </button>
+                                        <div
+                                            className="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center"
+                                            style={{ width: `${product.percent}%` }}
+                                        >
+                                            {product.percent !== '0%' && (
+                                                <Icon icon="noto:fire" width="12" height="12" />
+                                            )}
+                                        </div>
+                                        {/* Hiển thị văn bản "Đã bán" */}
+                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <span className="text-xs font-semibold text-gray-800">
+                                                SOLD <span className='text-red-700'>{product.sold}</span>
+                                            </span>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         ))}

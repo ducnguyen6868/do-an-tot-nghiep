@@ -55,10 +55,10 @@ export default function VibeFinder() {
         const description = product.description;
         const quantity = 1;
         const color = product.detail[0]?.color;
-        const price = product.detail[0]?.price;
-        const detailId = product.detail[0]?._id;
+        const price = product.detail[0]?.currentPrice;
+        const index=0;
         const productData = [{
-            id, code, name, image, description, quantity, color, price, detailId
+            id, code, name, image, description, quantity, color, price, index
         }]
         navigate('/product/checkout', { state: { productData } });
     }
@@ -75,8 +75,8 @@ export default function VibeFinder() {
             description: product.description,
             quantity: 1,
             color: detail.color,
-            price: detail.price,
-            detailId: detail._id,
+            price: detail.currentPrice,
+            index:0
         };
 
         const token = localStorage.getItem("token");
@@ -203,7 +203,7 @@ export default function VibeFinder() {
                                 </div>
                                 <div className="p-3">
                                     <Link to={`/product?code=${product.code}`} className="font-semibold text-sm mb-1 text-text-primary truncate animate-fadeInDown">{product.name}</Link>
-                                    <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.originalPrice, 'en-Us', 'USD')}</p>
+                                    <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
                                     <div className='flex items-center justify-center gap-2'>
                                         <button
                                             className="py-1 px-4 bg-gray-400 text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCart(product)}
