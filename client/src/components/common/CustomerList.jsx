@@ -1,7 +1,7 @@
 import {
     UserCheck, UserX, Clock, Mail, Phone,
     Edit, UndoDot, Eye, ShoppingBag, Calendar,
-    TrendingUp, Star, Crown, Zap, Ban
+    TrendingUp, Star, Crown, Zap, Ban ,ShieldCheck
 } from 'lucide-react';
 import { useState } from 'react';
 import { formatDate } from '../../utils/formatDate';
@@ -168,7 +168,15 @@ export default function CustomerList({ customersData, onChange }) {
                                                 >
                                                     <UndoDot className="w-4 h-4" />
                                                 </button>
-                                            ) : (
+                                            ) : customer.status === 'inActive'?(
+                                                <button title="Active"
+                                                    className="p-2 text-violet-600 hover:bg-violet-100 
+                                            rounded-lg transition-all duration-200 transform hover:scale-110"
+                                                    onClick={() => handleChangeStatus(customer)}
+                                                >
+                                                    <ShieldCheck className="w-4 h-4" />
+                                                </button>
+                                            ): (
                                                 <button title="Supesened"
                                                     className="p-2 text-red-600 hover:bg-red-100 rounded-lg
                                             transition-all duration-200 transform hover:scale-110"

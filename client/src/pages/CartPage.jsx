@@ -17,7 +17,6 @@ export default function CartPage() {
     const [total, setTotal] = useState(0);
     const [indexCart, setIndexCart] = useState(-1);
 
-    const brandColor = "#00bcd4";
 
     const getCarts = async () => {
         try {
@@ -112,7 +111,7 @@ export default function CartPage() {
         }));
         navigate("/product/checkout?cart=all", { state: { productData } });
     };
-console.log(carts);
+
     return (
         <div className=" bg-gray-50 dark:bg-gray-900 py-4 px-8 transition-all">
             {carts?.length === 0 ? (
@@ -121,8 +120,7 @@ console.log(carts);
                     <p className="text-gray-500 text-lg">Your cart is empty</p>
                     <Link
                         to="/"
-                        className="bg-[var(--brand)] text-white font-medium py-3 px-6 rounded-lg hover:scale-105 transition-all"
-                        style={{ backgroundColor: brandColor }}
+                        className="bg-brand text-white font-medium py-3 px-6 rounded-lg hover:scale-105 transition-all"
                     >
                         Continue Shopping
                     </Link>
@@ -142,7 +140,7 @@ console.log(carts);
                                     className="flex items-center gap-6 p-5 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow"
                                 >
                                     <img
-                                        src={`http://localhost:5000${cart.image}`}
+                                        src={`http://localhost:5000/${cart.image}`}
                                         alt={cart.name}
                                         className="w-28 h-28 object-cover rounded-lg"
                                     />
@@ -150,14 +148,14 @@ console.log(carts);
                                     <div className="flex-1 space-y-2">
                                         <div className="flex justify-between items-center">
                                             <Link
-                                                to={`/product?code=${cart.code}`}
-                                                className="text-lg font-semibold text-gray-800 dark:text-gray-200 hover:text-[var(--brand)] transition-colors"
-                                                style={{ color: brandColor }}
+                                                to={`/product/${cart.slug}`}
+                                                className="text-lg font-semibold dark:text-gray-200 
+                                                hover:text-brand-hover transition-colors text-brand"
                                             >
                                                 {cart.name}
                                             </Link>
                                             <button
-                                                onClick={() => handleRemove(cart._id || cart.code)}
+                                                onClick={() => handleRemove(cart._id || cart.slug)}
                                                 className="text-red-500 hover:scale-110 transition-transform"
                                             >
                                                 <Trash2 size={20} />
@@ -197,11 +195,11 @@ console.log(carts);
                                                         handleSubmitQuantity(cart._id || cart.code, cart.quantity)
                                                     }
                                                     whileTap={{ scale: 0.95 }}
-                                                    className={`px-4 py-2 text-sm font-medium rounded-lg text-white shadow transition-all ${indexCart === index
+                                                    className={`px-4 py-2 text-sm font-medium rounded-lg 
+                                                        bg-brand text-white shadow transition-all ${indexCart === index
                                                         ? "opacity-100"
                                                         : "opacity-0 pointer-events-none"
                                                         }`}
-                                                    style={{ backgroundColor: brandColor }}
                                                 >
                                                     Update
                                                 </motion.button>
@@ -225,8 +223,7 @@ console.log(carts);
                         className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg h-fit sticky top-20"
                     >
                         <h2
-                            className="text-2xl font-bold mb-6 text-center"
-                            style={{ color: brandColor }}
+                            className="text-2xl font-bold mb-6 text-center text-brand"
                         >
                             Order Summary
                         </h2>
@@ -256,8 +253,9 @@ console.log(carts);
                         <div className="mt-6 flex flex-col gap-3">
                             <button
                                 onClick={handleShopping}
-                                className="flex items-center justify-center gap-2 text-white py-3 rounded-lg font-semibold shadow-md hover:scale-105 transition-transform"
-                                style={{ backgroundColor: brandColor }}
+                                className="flex items-center justify-center gap-2 text-white py-3 rounded-lg 
+                                font-semibold shadow-md hover:scale-105 transition-transform bg-brand"
+                                
                             >
                                 <CreditCard size={20} /> Proceed to Checkout
                             </button>

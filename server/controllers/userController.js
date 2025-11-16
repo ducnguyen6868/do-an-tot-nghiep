@@ -18,18 +18,19 @@ const addCart = async (req, res) => {
   try {
     const userId = req.user.id;
     const { cart } = req.body;
-    const { id, code, name, image, description, quantity, color, price, detailId } = cart;
+
+    const { slug, name, image, quantity, color, price } = cart;
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    if (!id || !code || !name || !description || quantity == null || !color || price == null) {
+    if (!slug || !name || quantity == null || !color || price == null) {
       return res.status(400).json({ message: "Fields are missing." });
     }
 
-    const existingCart = await Cart.findOne({ userId, productId: id, color: color });
+    const existingCart = await Cart.findOne({ userId,slug, color: color });
 
     if (existingCart) {
       existingCart.quantity += quantity;
@@ -41,9 +42,7 @@ const addCart = async (req, res) => {
     }
 
     const newCart = await Cart.create({
-      userId,
-      productId: id,
-      code, name, image, description, price, quantity, color, detailId
+      userId, slug, name, image, price, quantity, color
     });
 
     await User.findByIdAndUpdate(userId, { $push: { carts: newCart._id } });
@@ -257,8 +256,11 @@ const patchStatusUser = async (req, res) => {
   }
 
 }
+
+
+
 module.exports = {
   addCart, viewCart, deleteCart,
   updateCartQuantity, addWishlist, getWishlist, removeWishlist,
-  getList,patchStatusUser
+  getList, patchStatusUser
 };

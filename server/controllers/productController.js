@@ -1,5 +1,4 @@
 const Product = require('../models/Product');
-const Review = require('../models/Review');
 
 const getProducts = async (req, res) => {
   try {
@@ -74,30 +73,23 @@ const search = async (req, res) => {
   }
 };
 
-const detail = async (req, res) => {
-  const { code } = req.query;
-
+const getProduct = async (req, res) => {
+  const { slug } = req.params;
   try {
-    if (!code) {
+    if (!slug) {
       return res.status(401).json({
-        message: "Code is required."
+        message: "Slug is required."
       });
     }
-    const product = await Product.findOne({ code }).populate("detail brand category");
+    const product = await Product.findOne({ slug }).populate("detail brand category");
     if (!product) {
       return res.status(404).json({
         message: "Product not found."
       });
     }
-    const five = await Review.countDocuments({ rating: 5 });
-    const four = await Review.countDocuments({ rating: 4 });
-    const three = await Review.countDocuments({ rating: 3 });
-    const two = await Review.countDocuments({ rating: 2 });
-    const one = await Review.countDocuments({ rating: 1 });
 
-    const stars = { five, four, three, two, one };
     return res.status(200).json({
-      message: "Get product successful.", product, stars
+      message: "Get product successful.", product
     });
 
   } catch (err) {
@@ -134,7 +126,7 @@ const wishlist = async (req, res) => {
   }
   let products = [];
   for (const wish of wishlist) {
-    const product = await Product.findOne({ code: wish.code }).populate('brand detail');
+    const product = await Product.findOne({ slug: wish.code }).populate('brand detail');
     if (product) {
       products.push(product);
     }
@@ -162,26 +154,6 @@ const getTrendingProducts = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       message: 'Server error:' + err
-    });
-  }
-}
-
-const getVibeFinderProducts = async (req, res) => {
-  const { cateId } = req.params;
-  if (!cateId) {
-    return res.status(400).json({
-      message: 'CateId is required.'
-    });
-  }
-
-  try {
-    const products = await Product.find({ category: cateId }).populate('detail');
-    return res.status(200).json({
-      message: 'Get vibe finder products successful.', products
-    });
-  } catch (err) {
-    return res.status(500).json({
-      message: 'Server error:' + err.message
     });
   }
 }
@@ -233,7 +205,7 @@ const patchStock = async(req,res)=>{
     });
   }
 }
-module.exports = { getProducts, search, detail, deleteProduct,wishlist, 
-  getTrendingProducts, getVibeFinderProducts ,getFlashSaleProducts,
+module.exports = { getProducts, search, getProduct, deleteProduct,wishlist, 
+  getTrendingProducts ,getFlashSaleProducts,
   patchStock
 };

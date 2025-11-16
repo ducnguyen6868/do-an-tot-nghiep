@@ -1,4 +1,4 @@
-const {getProducts,search,detail,deleteProduct,
+const {getProducts,search,getProduct,deleteProduct,
     wishlist
     ,getTrendingProducts ,getVibeFinderProducts, getFlashSaleProducts,
     patchStock
@@ -7,13 +7,12 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/',getProducts);
 router.get('/search',search);
-router.get('/detail',detail);
 router.delete('/delete/:productId',deleteProduct);
 router.get('/trending',getTrendingProducts);
-router.get('/category/:cateId',getVibeFinderProducts);
-router.get('/flashsale',getFlashSaleProducts);
+router.get('/flash-sale',getFlashSaleProducts);
 router.post('/wishlist',wishlist);
 router.patch('/stock/update',patchStock);
+router.get('/:slug',getProduct);
+router.get('/',getProducts);
 module.exports= router;

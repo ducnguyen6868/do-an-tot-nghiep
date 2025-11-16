@@ -12,7 +12,6 @@ router.get('/management', orders);
 router.get('/top-selling',getTopSelling);
 router.get('/revenue',getRevenueData);
 router.get('/:orderId', viewOrder);
-
 router.post('/list-order',listOrder);
 router.post('/create', createOrder);
 router.post('/payment', payment);

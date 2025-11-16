@@ -9,6 +9,7 @@ require('./Point');
 const userSchema = new Schema({
   code:{type:String , required:true, unique:true },
   fullName: { type: String },
+  phone:{type:String},
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String },

@@ -1,70 +1,122 @@
-[{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fecf"
+[
+  {
+    "name": "Rolex",
+    "banner": "uploads/brands/rolex_banner.png",
+    "thumbnail": "uploads/brands/rolex_thumbnail.jpg",
+    "description": "An icon of luxury and precision, this Swiss brand is known for classic dive watches and chronographs, symbolizing status and achievement.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Rolex",
-  "avatar": "/uploads/brands/rolex.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed0"
+  {
+    "name": "Apple",
+    "banner": "uploads/brands/apple_banner.png",
+    "thumbnail": "uploads/brands/apple_thumbnail.jpg",
+    "description": "A global technology giant. The Apple Watch seamlessly integrates with the Apple ecosystem, offering advanced health, fitness, and communication features.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Omega",
-  "avatar": "/uploads/brands/omega.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed1"
+  {
+    "name": "Longines",
+    "banner": "uploads/brands/longines_banner.png",
+    "thumbnail": "uploads/brands/longines_thumbnail.jpg",
+    "description": "A prestigious Swiss brand known for elegance and performance. Famous for sophisticated designs, reliable movements, and a rich heritage in sports timekeeping.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Casio",
-  "avatar": "/uploads/brands/casio.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed2"
+  {
+    "name": "Swatch",
+    "banner": "uploads/brands/swatch_banner.png",
+    "thumbnail": "uploads/brands/swatch_thumbnail.jpg",
+    "description": "This Swiss brand is famous for revitalizing the industry with innovative, colorful, and affordable quartz watches, making accessible fashion statements.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Tissot",
-  "avatar": "/uploads/brands/tissot.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed3"
+  {
+    "name": "Seiko",
+    "banner": "uploads/brands/seiko_banner.png",
+    "thumbnail": "uploads/brands/seiko_thumbnail.jpg",
+    "description": "A Japanese brand renowned for in-house manufacturing and innovation. Seiko offers high-quality mechanical, quartz, and solar watches, from affordable to Grand Seiko luxury.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Seiko",
-  "avatar": "/uploads/brands/seiko.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed4"
+  {
+    "name": "Cartier",
+    "banner": "uploads/brands/cartier_banner.png",
+    "thumbnail": "uploads/brands/cartier_thumbnail.jpg",
+    "description": "A legendary French luxury brand for jewelry and iconic watches like the Tank and Santos. Celebrated for distinctive designs and enduring, elegant style.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Citizen",
-  "avatar": "/uploads/brands/citizen.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed5"
+  {
+    "name": "Timex",
+    "banner": "uploads/brands/timex_banner.png",
+    "thumbnail": "uploads/brands/timex_thumbnail.jpg",
+    "description": "An American watch company known for reliable, affordable, and stylish watches for everyday wear. Offers a wide range with innovations like the INDIGLO® night-light.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Longines",
-  "avatar": "/uploads/brands/longines.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed6"
+  {
+    "name": "Casio",
+    "banner": "uploads/brands/casio_banner.png",
+    "thumbnail": "uploads/brands/casio_thumbnail.jpg",
+    "description": "A Japanese electronics manufacturer famous for durable, feature-rich watches. The G-Shock line is renowned for its toughness, shock resistance, and superior water resistance.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Apple",
-  "avatar": "/uploads/brands/apple-watch.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed7"
+  {
+    "name": "Omega",
+    "banner": "uploads/brands/omega_banner.png",
+    "thumbnail": "uploads/brands/omega_thumbnail.jpg",
+    "description": "This Swiss brand is celebrated for pioneering innovation and its role in space exploration (first watch on the moon) and cinema (James Bond). Known for high precision.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
   },
-  "name": "Garmin",
-  "avatar": "/uploads/brands/garmin.png"
-},
-{
-  "_id": {
-    "$oid": "68ea69849b9e5db9e147fed8"
-  },
-  "name": "Fossil",
-  "avatar": "/uploads/brands/fossil.png"
-}]
+  {
+    "name": "Fossil",
+    "banner": "uploads/brands/fossil_banner.png",
+    "thumbnail": "uploads/brands/fossil_thumbnail.jpg",
+    "description": "An American fashion company. Fossil watches blend vintage-inspired aesthetics with modern design, offering stylish and accessible timepieces for men and women.",
+    "createdAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-11-14T16:00:00.000Z"
+    }
+  }
+]

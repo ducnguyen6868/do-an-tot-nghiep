@@ -20,7 +20,8 @@ const orderSchema = new Schema({
     time: { type: Date, default: Date.now() }
   }],
   products: [{
-    code: { type: String },
+    code:{type:String},
+    slug: { type: String },
     name: { type: String },
     image: { type: String },
     quantity: { type: Number },

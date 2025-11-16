@@ -1,27 +1,34 @@
 const mongoose = require('mongoose');
-require('./Detail');
 require('./Brand');
 require('./Category');
 require('./Review');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-  code:{type:String , default:"TPxxxx"},
-  name: { type: String, required: true , unique:true },
+  code: { type: String, default: "TPxxxx" },
+  name: { type: String, required: true, unique: true },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+  },
   description: { type: String },
-  detail:[{
-    currentPrice:{type:Number},
-    flashSalePrice:{type:Number},
-    originalPrice:{type:Number},
-    color:{type:String},
-    colorCode:{type:String},
-    quantity:{type:Number},
-    stock:{type:Number},
-    sold:{type:Number}
+  detail: [{
+    currentPrice: { type: Number },
+    flashSalePrice: { type: Number },
+    originalPrice: { type: Number },
+    color: { type: String },
+    colorCode: { type: String },
+    quantity: { type: Number },
+    stock: { type: Number },
+    sold: { type: Number }
   }],
   images: [{ type: String }], // Danh sách đường dẫn hình ảnh
   category: { type: Schema.Types.ObjectId, ref: 'Category' },
-  brand: { type: Schema.Types.ObjectId , ref:'Brand' },             // Thương hiệu
+  brand: { type: Schema.Types.ObjectId, ref: 'Brand' },             // Thương hiệu
+  origin: { type: String },
   target_audience: { type: String },     // Đối tượng sử dụng (nam, nữ, unisex, …)
   water_resistance: { type: String },    // Kháng nước (ví dụ: 5 ATM, 10 ATM, …)
   movement_type: { type: String },       // Loại máy (cơ, quartz, tự động, …)
@@ -32,9 +39,11 @@ const productSchema = new Schema({
   power_reserve: { type: String },       // Khoảng trữ cót (ví dụ: 40 giờ, 50 giờ, …)
   features: { type: String },            // Tiện ích, tính năng bổ sung
   ratings: { type: Number, default: 0 },
-  flashSale:{type:Boolean},
-  flashSaleEnd:{type:Date},
-  reviews:{type:Number , default:0}
+  flashSale: { type: Boolean },
+  flashSaleEnd: { type: Date },
+  reviews: { type: Number, default: 0 },
+  vectors:[[Number]],
+  vector:[Number]
 
 }, { timestamps: true });
 

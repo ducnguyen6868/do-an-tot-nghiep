@@ -5,6 +5,7 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { UserContext } from '../../contexts/UserContext';
+import {Icon} from '@iconify/react';
 import productApi from '../../api/productApi';
 import userApi from '../../api/userApi';
 
@@ -19,7 +20,7 @@ export default function TrendingProduct() {
         const getTrendingProducts = async () => {
             try {
                 const page = 1;
-                const limit = 3;
+                const limit = 5;
                 const response = await productApi.getTrending(page, limit);
                 setTrendingProducts(response.products);
             } catch (err) {
@@ -49,15 +50,12 @@ export default function TrendingProduct() {
         if (!detail) return toast.error("Product detail not found!");
 
         const cartItem = {
-            id: product._id,
-            code: product.code,
+            slug: product.slug,
             name: product.name,
             image: product.images[0],
-            description: product.description,
             quantity: 1,
             color: detail.color,
             price: detail.currentPrice,
-            index:0
         };
 
         const token = localStorage.getItem("token");
@@ -126,11 +124,21 @@ export default function TrendingProduct() {
         }
     };
 
+
+    const getRankTag = (rank) => {
+        switch (rank) {
+            case 1: return <Icon icon="noto:1st-place-medal" width="42" height="42" />;
+            case 2: return <Icon icon="noto:2nd-place-medal" width="42" height="42" />;
+            case 3: return <Icon icon="noto:3rd-place-medal" width="42" height="42" />;
+            default: return null;
+        }
+    };
+
     return (
         <>
             {/* Trending Products */}
-            <section className=" min-w-96 flex-1 py-6 transition-colors duration-500 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg" id='trending-container'>
-                <div className="max-w-7xl mx-auto px-4">
+            <section className=" min-w-96 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
+                <div className="mx-auto py-4 px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"
                         data-animate
@@ -140,20 +148,28 @@ export default function TrendingProduct() {
                         <p className="text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-4">
                         {trendingProducts.map((product, idx) => (
                             <div
                                 key={product._id}
                                 data-animate
-                                className={`bg-bg-primary bg-bgs rounded-lg overflow-hidden border border-border transition-all duration-300 transform hover:translate-y-1 hover:shadow-xl animate-cardSlideInUp visible`}
+                                className={`bg-bg-primary rounded-lg overflow-hidden border h-max
+                                    border-border transition-all duration-300 transform 
+                                    hover:translate-y-1 hover:shadow-xl animate-cardSlideInUp visible
+                                    }`}
                             >
+
                                 <div className="relative bg-bg-secondary overflow-hidden">
+                                    <div className='absolute top-2 left-0 z-30'>
+                                        {getRankTag(idx+1)}
+                                    </div>
                                     <img
-                                        src={`http://localhost:5000${product?.images[0]}`}
+                                        src={`http://localhost:5000/${product?.images[0]}`}
                                         alt={product.name}
                                         loading='lazy'
                                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch'; }}
                                         className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500 "
+                            
                                         style={{ animationDelay: `${idx * 0.1}s` }}
                                     />
                                     <button className="absolute top-2 right-2 w-7 h-7 bg-bg-primary rounded-full flex items-center justify-center shadow hover:bg-error hover:text-text-primary transition-all transform hover:scale-110 animate-badgeSlideIn"
@@ -164,8 +180,10 @@ export default function TrendingProduct() {
                                     </button>
                                 </div>
                                 <div className="p-3">
-                                    <Link to={`/product?code=${product.code}`} className="font-semibold text-sm mb-1 text-text-primary truncate animate-textSlideLeft translate-x-6"
+                                    <Link to={`/product/${product.slug}`} 
+                                    className="font-semibold text-sm mb-1 text-text-primary truncate animate-textSlideLeft translate-x-6 line-clamp-1"
                                         style={{ animationDelay: `${idx * 0.15}s` }}
+
                                     >{product.name}</Link>
                                     <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
                                     <div className='flex items-center justify-center gap-2'>
@@ -186,6 +204,7 @@ export default function TrendingProduct() {
                     </div>
                 </div>
             </section>
+
         </>
 
     )

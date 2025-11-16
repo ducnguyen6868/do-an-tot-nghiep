@@ -40,7 +40,7 @@ export default function FlashSale() {
             try {
                 const page = 1;
                 const limit = 5;
-                const response = await productApi.getFlashsale(page, limit);
+                const response = await productApi.getFlashSale(page, limit);
                 let updatedProducts = response.flashsales;
 
                 updatedProducts = updatedProducts.map(product => {
@@ -59,8 +59,8 @@ export default function FlashSale() {
         getFlashSales();
     }, []);
 
-    const handleNavigate = (code) => {
-        navigate(`/product?code=${code}`);
+    const handleNavigate = (slug) => {
+        navigate(`/product/${slug}`);
     }
 
     return (
@@ -96,7 +96,7 @@ export default function FlashSale() {
                                 data-animate
                                 className={`bg-white cursor-pointer rounded-xl max-w-80 overflow-hidden shadow-2xl border border-sale-color/30 transform transition-all duration-500 hover:scale-[1.02] animate-fadeInUp visible`}
                                 style={{ animationDelay: `${idx * 0.15 + 0.3}s` }}
-                                onClick={() => handleNavigate(product.code)}
+                                onClick={() => handleNavigate(product.slug)}
                             >
 
                                 <div className="relative group overflow-hidden shadow-lg bg-white border border-gray-100">
@@ -112,12 +112,13 @@ export default function FlashSale() {
                                     {/* Product Image */}
                                     <div className="relative overflow-hidden">
                                         <img
-                                            src={`http://localhost:5000${product?.images[0]}`}
+                                            src={`http://localhost:5000/${product?.images[0]}`}
                                             alt={product.name}
                                             onError={(e) => {
                                                 e.target.onerror = null;
                                                 e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
                                             }}
+                                            loading='lazy'
                                             className="w-full aspect-square object-cover transition-all duration-700 group-hover:scale-110"
                                         />
 
@@ -160,6 +161,7 @@ export default function FlashSale() {
                     </div>
                 </div>
             </section>
+            
         </>
     )
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate ,useParams} from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ShoppingCart, Heart,Zap,Truck,ShieldCheck, Gem, Minus, Plus, Star} from 'lucide-react';
+import { ShoppingCart, Heart, Zap, Truck, ShieldCheck, Gem, Minus, Plus, Star } from 'lucide-react';
 import { UserContext } from '../contexts/UserContext';
 import { formatCurrency } from '../utils/formatCurrency';
 import userApi from '../api/userApi';
@@ -11,10 +11,8 @@ import Review from '../components/common/Review';
 export default function ProductPage() {
   const { setInfoUser, locale, currency } = useContext(UserContext);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const queryParams = new URLSearchParams(location.search);
-  const code = queryParams.get('code');
+  
+  const {slug} = useParams();
 
   const [quantity, setQuantity] = useState(1);
   const [selectedDetailIndex, setSelectedDetailIndex] = useState(0);
@@ -24,10 +22,11 @@ export default function ProductPage() {
   const [stars, setStars] = useState();
 
   useEffect(() => {
+    if(!slug || slug==='') return;
     const getProduct = async () => {
       try {
         setLoading(true);
-        const response = await productApi.detail(code);
+        const response = await productApi.getProduct(slug);
         setProduct(response.product);
         setStars(response.stars);
       } catch (err) {
@@ -37,7 +36,7 @@ export default function ProductPage() {
       }
     };
     getProduct();
-  }, [code]);
+  }, [slug]);
 
   const handleQuantityChange = (action) => {
     const selectedDetail = product.detail?.[selectedDetailIndex];
@@ -56,7 +55,7 @@ export default function ProductPage() {
         brand: product.brand.name,
         image: product.images[0],
         price: selectedDetail.currentPrice,
-        index : selectedDetailIndex,
+        index: selectedDetailIndex,
         color: selectedDetail.color,
         quantity: quantity,
 
@@ -124,7 +123,7 @@ export default function ProductPage() {
   const selectedDetail = product.detail?.[selectedDetailIndex] || {};
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-4">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -132,8 +131,13 @@ export default function ProductPage() {
           <div>
             <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow">
               <img
-                src={`http://localhost:5000${product.images[selectedDetailIndex]}`}
+                src={`http://localhost:5000/${product.images[selectedDetailIndex]}`}
                 alt={product.name}
+                loading='lazy'
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
+                }}
                 className="w-full aspect-square object-cover"
               />
             </div>
@@ -142,15 +146,20 @@ export default function ProductPage() {
                 <button
                   key={i}
                   onClick={() => setSelectedDetailIndex(i)}
-                  className={`border-2 rounded-lg overflow-hidden transition-all ${
-                    selectedDetailIndex === i
-                      ? 'border-blue-500'
-                      : 'border-gray-200 hover:border-blue-300'
-                  }`}
+                  className={`border-2 rounded-lg overflow-hidden transition-all ${selectedDetailIndex === i
+                    ? 'border-blue-500'
+                    : 'border-gray-200 hover:border-blue-300'
+                    }`}
                 >
                   <img
-                    src={`http://localhost:5000${img}`}
-                    alt=""
+                    src={`http://localhost:5000/${img}`}
+                    alt={product.name}
+                    title={product.name}
+                    loading='lazy'
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
+                    }}
                     className="w-20 h-20 object-cover"
                   />
                 </button>
@@ -208,11 +217,10 @@ export default function ProductPage() {
                         setSelectedDetailIndex(index);
                         setQuantity(1);
                       }}
-                      className={`w-10 h-10 rounded-full border-2 transition-transform ${
-                        selectedDetailIndex === index
-                          ? 'border-blue-600 scale-110'
-                          : 'border-gray-300'
-                      }`}
+                      className={`w-10 h-10 rounded-full border-2 transition-transform ${selectedDetailIndex === index
+                        ? 'border-blue-600 scale-110'
+                        : 'border-gray-300'
+                        }`}
                       style={{
                         backgroundColor: item.colorCode || '#ccc'
                       }}
@@ -289,25 +297,24 @@ export default function ProductPage() {
         </div>
 
         {/* Tabs */}
-        <div className="mt-4 bg-white rounded-xl shadow p-8">
+        <div className="mt-4 bg-white rounded-xl shadow px-8 py-4">
           <div className="flex border-b mb-6">
             {['description', 'specifications', 'features', 'reviews'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2 text-sm font-medium border-b-2 transition-all ${
-                  activeTab === tab
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-800'
-                }`}
+                className={`px-6 py-2 text-sm font-medium border-b-2 transition-all ${activeTab === tab
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-800'
+                  }`}
               >
                 {tab === 'description'
                   ? 'Description'
                   : tab === 'specifications'
-                  ? 'Specifications'
-                  : tab === 'features'
-                  ? 'Features'
-                  : `Reviews (${product.reviews || 0})`}
+                    ? 'Specifications'
+                    : tab === 'features'
+                      ? 'Features'
+                      : `Reviews (${product.reviews || 0})`}
               </button>
             ))}
           </div>
@@ -327,8 +334,8 @@ export default function ProductPage() {
               <ul className="list-disc pl-5 text-gray-600 space-y-1">
                 {product.features
                   ? product.features
-                      .split(',')
-                      .map((f, i) => <li key={i}>✓ {f.trim()}</li>)
+                    .split(',')
+                    .map((f, i) => <li key={i}>✓ {f.trim()}</li>)
                   : 'No features available'}
               </ul>
             </div>

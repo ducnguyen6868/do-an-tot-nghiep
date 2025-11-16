@@ -10,6 +10,8 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import ProductPage from './pages/ProductPage';
+import BrandPage from './pages/BrandPage';
+import CollectionPage from './pages/CollectionPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import AddressPage from './pages/AddressPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -46,7 +48,9 @@ function App() {
           <Route path="register" element={<RegisterPage />}></Route>
           <Route path='/' element={<Public />}>
             <Route index element={<HomePage />}></Route>
-            <Route path="product" element={<ProductPage />}></Route>
+            <Route path="collection/:slug" element={<CollectionPage />}></Route>
+            <Route path="brand/:slug" element={<BrandPage />}></Route>
+            <Route path="product/:slug" element={<ProductPage />}></Route>
             <Route path="search" element={<SearchResultsPage />}></Route>
             <Route path="product/checkout" element={<CheckoutPage />}></Route>
             <Route path="payment-result" element={<PaymentResultPage />}></Route>

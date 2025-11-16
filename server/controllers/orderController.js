@@ -55,16 +55,16 @@ const createOrder = async (req, res) => {
         const { total_amount, discount_amount, final_amount } = orderData;
         // Update quantity
         for (const product of productData) {
-           const newProduct = await Product.findById(product.id);
-           if(!newProduct) continue;
+            const newProduct = await Product.findOne(product.slug);
+            if (!newProduct) continue;
             const newQuantity = newProduct.detail[product.index].quantity - product.quantity;
             if (newQuantity < 0) {
                 return res.status(403).json({
                     message: "Quantity exceeds product in stock."
                 })
             }
-            newProduct.detail[product.index].quantity=newQuantity;
-            newProduct.detail[product.index].sold  += product.quantity;
+            newProduct.detail[product.index].quantity = newQuantity;
+            newProduct.detail[product.index].sold += product.quantity;
             await newProduct.save();
         };
 
@@ -82,6 +82,7 @@ const createOrder = async (req, res) => {
             paymentMethod: infoPayment.payment,
             products: productData.map(p => ({
                 code: p.code,
+                slug: p.slug,
                 name: p.name,
                 image: p.image,
                 quantity: p.quantity,
@@ -131,9 +132,7 @@ const payment = async (req, res) => {
     var orderInfo = "pay with MoMo";
     var redirectUrl = "http://localhost:3000/payment-result";
     var ipnUrl = "https://acinaceous-zara-sheerly.ngrok-free.dev/order/callback";
-    const rawTotal = (final_amount || "50").toString().trim();
-    const totalNumber = parseFloat(rawTotal);
-    const amount = Math.round(totalNumber * 25).toString();
+    const amount = final_amount * 26000;
 
     var requestType = "captureWallet"
     var extraData = "";
@@ -171,7 +170,7 @@ const payment = async (req, res) => {
         const response = await axios(options);
         return res.status(200).json(response.data);
     } catch (err) {
-        return res.status(500).json({ message: 'Server error : ' + err.message });
+        return res.status(500).json({ message: 'Error payment : ' + err });
     }
 };
 

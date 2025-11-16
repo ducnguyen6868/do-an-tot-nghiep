@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import productApi from '../api/productApi';
 import brandApi from '../api/brandApi';
 import ProductCard from '../components/common/ProductCard';
 import LoadingAnimations from '../components/common/LoadingAnimations';
+import Notification from '../components/common/Notification';
 import { motion, AnimatePresence } from "framer-motion";
 
 
@@ -16,6 +16,11 @@ export default function SearchResultsPage() {
 
   const [results, setResults] = useState([]);
   const [brands, setBrands] = useState([]);
+
+  //Notification
+  const [show, setShow] = useState(false);
+  const [type, setType] = useState('');
+  const [message, setMessage] = useState('');
 
   const [filteredResults, setFilteredResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -86,6 +91,7 @@ export default function SearchResultsPage() {
 
   useEffect(() => {
     setFilteredResults([]);
+    if (keyword === ' ') return;
     const getProducts = async () => {
       try {
         setLoading(true);
@@ -99,8 +105,13 @@ export default function SearchResultsPage() {
           return { ...pro, sold, stock, reviewCount }
         });
         setResults(update);
+        setType('success');
+        setMessage(response.message);
+        setShow(true);
       } catch (err) {
-        toast.error(err.response?.data?.message || err.message);
+        setType('error');
+        setMessage(err.response?.data?.message || err.message);
+        setShow(true);
       } finally {
         setLoading(false);
       }
@@ -111,11 +122,15 @@ export default function SearchResultsPage() {
   useEffect(() => {
     const getBrands = async () => {
       try {
-        const response = await brandApi.brand();
-        setBrands(response.brand);
-
+        const response = await brandApi.getBrands();
+        setBrands(response.brands);
+        setType('success');
+        setMessage(response.message);
+        setShow(true);
       } catch (err) {
-        toast.error(err.response?.data?.message || err.message);
+        setType('error');
+        setMessage(err.response?.data?.message || err.message);
+        setShow(true);
       }
     }
     getBrands();
@@ -146,6 +161,8 @@ export default function SearchResultsPage() {
 
   return (
     <>
+      <Notification type={type} message={message} show={show} onClose={() => setShow(false)} />
+
       {/* Container chính, padding nhỏ (p-4) và chữ nhỏ lại (text-sm) */}
       <div className="container mx-auto p-4 text-sm flex flex-row gap-4 flex-wrap">
         {/* Sidebar Filter */}
@@ -208,7 +225,7 @@ export default function SearchResultsPage() {
                   onChange={(e) => handleFilterChange("brand", e.target.value)}
                 >
                   <option value="all">All Brands</option>
-                  {brands.map((brand) => (
+                  {brands?.map((brand) => (
                     <option key={brand._id} value={brand.name}>
                       {brand.name}
                     </option>
@@ -336,13 +353,13 @@ export default function SearchResultsPage() {
 
           {/* Results Grid/List */}
           {!loading && filteredResults.length > 0 &&
-          <div className=' grid lg:grid-cols-3 gap-4'>
-            {
-              filteredResults.map((product,index)=>(
-                <ProductCard key={index} product={product}/>
-              ))
-            }
-          </div>
+            <div className=' grid lg:grid-cols-3 gap-4'>
+              {
+                filteredResults.map((product, index) => (
+                  <ProductCard key={index} product={product} />
+                ))
+              }
+            </div>
           }
         </main>
       </div>

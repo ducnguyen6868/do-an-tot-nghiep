@@ -4,6 +4,7 @@ const path = require("path");
 const { Server } = require("socket.io");
 const http = require("http");
 
+
 const app = express();
 
 
@@ -22,6 +23,9 @@ const chatRoutes = require('./routers/chatRoutes');
 
 const connectDB = require('./config/db');
 connectDB();
+
+// Cấu hình Multer để lưu file trong bộ nhớ (Buffer)
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Middleware
 app.use(cors()); // cho phép frontend gọi API

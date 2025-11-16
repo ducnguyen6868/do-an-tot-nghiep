@@ -4,8 +4,9 @@ const { forgotPassword, verifyOtp, resetPassword } = require('../controllers/otp
 const { 
     addCart, viewCart, deleteCart,updateCartQuantity,
     addWishlist,getWishlist,removeWishlist,
-    getList,patchStatusUser} = require('../controllers/userController');
+    getList,patchStatusUser ,patchAvatarUser} = require('../controllers/userController');
 const verifyUser = require('../middlewares/authUser');
+
 const express = require('express');
 
 const router = express.Router();
@@ -23,4 +24,5 @@ router.get('/wishlist', verifyUser, getWishlist);
 router.post('/wishlist/delete', verifyUser, removeWishlist);
 router.get('/user',getList);
 router.patch('/user/change',patchStatusUser);
+
 module.exports = router;

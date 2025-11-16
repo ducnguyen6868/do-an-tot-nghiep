@@ -54,4 +54,55 @@ const changePassword = async (req, res) => {
         });
     }
 }
-module.exports = {profile,changePassword};
+
+
+const patchAvatar = async (req, res) => {
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      user.avatar = 'uploads/avatars/'+ req.file.filename;
+      await user.save();
+
+      res.json({ avatar: user.avatar });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+
+};
+
+const patchPersonal = async(req,res)=>{
+    try{
+
+        const userId = req.user.id;
+        const {fullName,phone}=req.body;
+        if(!fullName||!phone){
+            return res.status(400).json({
+                message:'Missing feilds from data.'
+            });
+        }
+        const user= await User.findById(userId);
+        if(!user){
+            return res.status(404).json({
+                message:'User not found'
+            });
+        }
+
+        user.fullName=fullName;
+        user.phone=phone;
+        
+        await user.save();
+        
+        return res.status(200).json({
+            message:'Updated personal info'
+        });
+
+    }catch(err){
+        return res.status(500).json({
+            message:'Server error: '+ err.message
+        });
+    }
+}
+
+module.exports = {profile,changePassword , patchAvatar ,patchPersonal};

@@ -43,7 +43,7 @@ export default function WishlistPage() {
     return (
         <>
             {products.length > 0 ? (
-                <div className='flex flex-row gap-4 justify-center py-4'>
+                <div className='flex flex-row gap-4 justify-center py-4 px-12'>
                     {products.map((product, index) => 
                         (
                             <ProductCard key={index} product={product} onChange={()=>setChange(!change)} />

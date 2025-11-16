@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import productApi from '../api/productApi';
-import orderApi from '../api/orderApi';
-import LoadingAnimations from '../components/common/LoadingAnimations';
-import ListProduct from '../components/common/ListProduct';
 import { formatCurrency } from '../utils/formatCurrency';
 import { CheckCircle2, XCircle, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
+import orderApi from '../api/orderApi';
+import productApi from '../api/productApi';
+import LoadingAnimations from '../components/common/LoadingAnimations';
+import ProductCard from '../components/common/ProductCard';
 
 export default function PaymentResultPage() {
   const navigate = useNavigate();
@@ -53,8 +53,10 @@ export default function PaymentResultPage() {
   // ✅ Fetch products
   useEffect(() => {
     const getProducts = async () => {
+      const page = 1;
+      const limit = 5;
       try {
-        const response = await productApi.product();
+        const response = await productApi.getProducts(page, limit);
         setProducts(response.products);
       } catch (err) {
         toast.error(err.response?.data?.message || err.message);
@@ -68,8 +70,6 @@ export default function PaymentResultPage() {
     if (token) navigate('/user/orders');
     else navigate('/order');
   };
-
-  const currentProducts = products.slice(0, 5);
 
   // ✅ UI Animation Variants
   const fadeIn = {
@@ -159,7 +159,13 @@ export default function PaymentResultPage() {
                 You may also like
               </h2>
             </div>
-            <ListProduct products={currentProducts} />
+            <div className='grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 gap-4'>
+              {products && (
+                products?.map((product, index) => (
+                  <ProductCard key={index} product={product} />
+                ))
+              )}
+            </div>
           </motion.div>
         </>
       )}
