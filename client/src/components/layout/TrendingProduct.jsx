@@ -1,6 +1,8 @@
 
 import { useState, useEffect, useContext } from 'react';
-import { Heart, ShoppingCart } from 'lucide-react';
+import {
+    Heart, ShoppingCart, Bookmark, Award, Crown, Star
+} from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -21,7 +23,11 @@ export default function TrendingProduct() {
                 const page = 1;
                 const limit = 3;
                 const response = await productApi.getTrending(page, limit);
-                setTrendingProducts(response.products);
+                const rank = [2, 1, 3];
+                const updatedProducts = response.products.map((product, index) => {
+                    return { ...product, rank: rank[index] }
+                })
+                setTrendingProducts(updatedProducts);
             } catch (err) {
                 console.log(err.response?.data?.message || err.message);
             }
@@ -57,7 +63,7 @@ export default function TrendingProduct() {
             quantity: 1,
             color: detail.color,
             price: detail.currentPrice,
-            index:0
+            index: 0
         };
 
         const token = localStorage.getItem("token");
@@ -126,11 +132,34 @@ export default function TrendingProduct() {
         }
     };
 
+
+    const getRankTag = (rank) => {
+        switch (rank) {
+            case 1: return <div className='relative mt-[-8px] ml-[-15px]'>
+                <Bookmark fill='yellow' className=' w-24 h-24 text-white' />
+                <div className='absolute inset-0 z-40 flex gap-1 justify-center mt-5'>
+                    <Crown className="w-8 h-8 text-red-600" />                                            </div>
+            </div>;
+            case 2: return <div className='relative mt-[-6px] ml-[-12px]'>
+                <Bookmark fill='gray' className=' w-20 h-20  text-white' />
+                <div className='absolute inset-0 z-40 flex gap-1 justify-center mt-5'>
+                    <Award className="w-6 h-6 text-white" />                                        </div>
+            </div>;
+            case 3: return <div className='relative mt-[-6px] ml-[-10px]'>
+                <Bookmark fill='orange' className=' w-16 h-16  text-white' />
+                <div className='absolute inset-0 z-40 flex gap-1 justify-center mt-5'>
+                    <Star className="w-4 h-4 text-white" />
+                </div>
+            </div>;
+            default: return null;
+        }
+    };
+
     return (
         <>
             {/* Trending Products */}
-            <section className=" min-w-96 flex-1 py-6 transition-colors duration-500 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg" id='trending-container'>
-                <div className="max-w-7xl mx-auto px-4">
+            <section className=" min-w-96 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
+                <div className="max-w-4xl mx-auto p-4 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
                     <div
                         id="trending-header"
                         data-animate
@@ -145,15 +174,24 @@ export default function TrendingProduct() {
                             <div
                                 key={product._id}
                                 data-animate
-                                className={`bg-bg-primary bg-bgs rounded-lg overflow-hidden border border-border transition-all duration-300 transform hover:translate-y-1 hover:shadow-xl animate-cardSlideInUp visible`}
+                                className={`bg-bg-primary rounded-lg overflow-hidden border h-max
+                                    border-border transition-all duration-300 transform 
+                                    hover:translate-y-1 hover:shadow-xl animate-cardSlideInUp visible
+                ${product.rank === 1 ? 'md:scale-110 md:mt-0' : 'md:mt-12'
+                                    }`}
                             >
+
                                 <div className="relative bg-bg-secondary overflow-hidden">
+                                    <div className='absolute top-0 left-0 z-30'>
+                                        {getRankTag(product.rank)}
+                                    </div>
                                     <img
-                                        src={`http://localhost:5000${product?.images[0]}`}
+                                        src={`http://localhost:5000/${product?.images[0]}`}
                                         alt={product.name}
                                         loading='lazy'
                                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch'; }}
                                         className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500 "
+                            
                                         style={{ animationDelay: `${idx * 0.1}s` }}
                                     />
                                     <button className="absolute top-2 right-2 w-7 h-7 bg-bg-primary rounded-full flex items-center justify-center shadow hover:bg-error hover:text-text-primary transition-all transform hover:scale-110 animate-badgeSlideIn"
@@ -186,6 +224,7 @@ export default function TrendingProduct() {
                     </div>
                 </div>
             </section>
+
         </>
 
     )

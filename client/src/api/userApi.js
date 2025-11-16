@@ -10,6 +10,7 @@ const userApi= {
     deleteCart:(cartId)=>axiosClient.delete(`/cart/${cartId}`),
     changeQuantity:(cartId,quantity) =>axiosClient.patch('/cart/change-quantity',{cartId,quantity}),
     getList:(role, page,limit)=>axiosClient.get(`/user?role=${role}&&page=${page}&&limit=${limit}`),
-    patchStatusUser:(userId,status)=>axiosClient.patch(`/user/change?status=${status}`,{userId})
+    patchStatusUser:(userId,status)=>axiosClient.patch(`/user/change?status=${status}`,{userId}),
+   
 }
 export default userApi;

@@ -1,7 +1,8 @@
 import {
-    ShoppingCart, MapPin, Zap, Heart, Award, BarChart2, Tag
+    ShoppingCart, MapPin, Zap, Heart, Award, BarChart2, Tag, Camera, PencilLine
 } from 'lucide-react';
-import {useState  , useEffect} from 'react';
+import { useState, useEffect ,useContext} from 'react';
+import {UserContext} from '../contexts/UserContext';
 import profileApi from '../api/profileApi';
 
 // ************************************************
@@ -9,18 +10,40 @@ import profileApi from '../api/profileApi';
 // ************************************************
 export default function ProfilePage() {
 
-    const [user , setUser ] = useState({});
-    useEffect(()=>{
-        const getProfile = async()=>{
-            try{
+    const [user, setUser] = useState({});
+    const {setInfoUser}  = useContext(UserContext);
+
+    useEffect(() => {
+        const getProfile = async () => {
+            try {
                 const response = await profileApi.profile();
                 setUser(response.user);
-            }catch(err){
-                console.log(err.response?.data?.message||err.message);
+            } catch (err) {
+                console.log(err.response?.data?.message || err.message);
             }
         }
         getProfile();
-    },[]);
+    }, []);
+
+    const handleAvatarChange = async (e) => {
+        const file = e.target.files[0];
+
+
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        try {
+            const response = await profileApi.patchAvatar(formData);
+
+            // Update user avatar locally
+            setUser(prev => ({ ...prev, avatar: response.avatar }));
+            setInfoUser(prev => ({ ...prev, avatar: response.avatar }));
+        } catch (err) {
+            console.error(err.response?.data?.message||err.message);
+        }
+    };
 
     return (
         <>
@@ -29,15 +52,23 @@ export default function ProfilePage() {
 
                 {/* User Card */}
                 <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
-                    <img src={`http://localhost:5000/${user?.avatar}`} 
-                    alt={user.name} className="w-20 h-20 rounded-full object-cover border-4 border-teal-500"
-                    onError={(e)=>e.target.src=user?.avatar} />
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
-                        <p className="text-gray-600 mb-1">{user.email}</p>
+                    <div className='relative rounded-full overflow-hidden'>
+                        <img src={`http://localhost:5000/${user?.avatar}`}
+                            alt={user.name} className="w-24 h-24 rounded-full object-cover border-4 border-teal-500"
+                            onError={(e) => e.target.src = user?.avatar} />
+                        <button className='w-full absolute bottom-0 flex justify-center backdrop-blur-[2px]'>
+                            <Camera className='w-6 h-6 text-gray-400' />
+                        </button>
+                        <input name='avatar' type='file' acept='.png , .jpg , .jpeg' className='absolute inset-0 visibility opacity-0 cursor-pointer' onChange={(e) => handleAvatarChange(e)} />
+                    </div>
+                    <div className='flex flex-col justify-center gap-1'>
+                        <h2 className="text-xl font-bold text-gray-900 flex gap-4 items-end">
+                            <span>{user.fullName}</span>
+                        </h2>
+                        <p className="text-gray-600 mb-1 text-base ">{user.email}</p>
                         <span className="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                             <Award className="w-3 h-3 mr-1" />
-                            {user.memberStatus||'Gold member'}
+                            {user.memberStatus || 'Gold member'}
                         </span>
                     </div>
                 </div>

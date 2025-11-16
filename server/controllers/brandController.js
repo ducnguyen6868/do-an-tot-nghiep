@@ -1,11 +1,11 @@
 const Brand = require('../models/Brand');
 
-const brand = async(req , res)=>{
+const getBrands = async(req , res)=>{
     try{
-        const brand = await Brand.find();
-        if(brand){
+        const brands = await Brand.find();
+        if(brands){
             return res.status(200).json({
-                message:"Get brand successul",brand
+                message:"Get brand successul",brands
             });
         }else{
             return res.status(400).json({
@@ -19,4 +19,4 @@ const brand = async(req , res)=>{
     }
 }
 
-module.exports = {brand};
+module.exports = {getBrands};

@@ -1,8 +1,8 @@
-const {brand} =require('../controllers/brandController');
+const {getBrands} =require('../controllers/brandController');
 
 const express  = require("express");
 const router = express.Router();
 
-router.get("/",brand);
+router.get("/",getBrands);
 
 module.exports = router;

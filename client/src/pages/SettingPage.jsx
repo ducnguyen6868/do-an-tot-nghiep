@@ -1,37 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-    Settings, User, Lock, Bell, Mail, Smartphone, Save , Tag
+    Settings, User, Lock, Bell, Mail, Smartphone, Save, Tag
 } from 'lucide-react';
 import PasswordChangeModal from '../components/common/PasswordChangeModal';
-
-// Dữ liệu giả lập người dùng hiện tại (Giả sử lấy từ state/props)
-const currentUserData = {
-    name: 'Jane Doe',
-    email: 'jane.doe@example.com',
-    phone: '090-123-4567',
-    currentPassword: '••••••••',
-    notifications: {
-        email_updates: true,
-        sms_alerts: false,
-        promo_offers: true,
-    }
-};
+import profileApi from '../api/profileApi';
+import LoadingAnimations from '../components/common/LoadingAnimations';
 
 // ************************************************
 // Sub-Component: 1. Personal Info Tab
 // ************************************************
 const PersonalInfoTab = ({ data }) => {
-    const [formData, setFormData] = useState(data);
+    const [fullName, setFullName] = useState(data?.fullName||'');
+    const [phone, setPhone] = useState(data?.phone||'');
+    const [email, setEmail] = useState(data?.email||'');
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSave = (e) => {
+    const handleSave =async (e) => {
         e.preventDefault();
-        // Giả lập lưu dữ liệu
-        console.log('Saving personal info:', formData);
-        alert('Personal information updated successfully!');
+        if (fullName === data?.fullName && phone === data?.phone) return;
+        try{
+            const response = await profileApi.patchPersonal(fullName,phone);
+            alert(response.message);
+        }catch(err){
+            alert(err.response?.data?.message||err.message);
+        }
+      
     };
 
     return (
@@ -45,13 +37,13 @@ const PersonalInfoTab = ({ data }) => {
                         type="text"
                         name="name"
                         id="name"
-                        value={formData.name}
-                        onChange={handleChange}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                         required
                     />
                 </div>
-                
+
                 {/* Email */}
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
@@ -59,8 +51,8 @@ const PersonalInfoTab = ({ data }) => {
                         type="email"
                         name="email"
                         id="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        value={email}
+                        onChange={(e)=>setEmail(e.target.value)}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg bg-gray-50 cursor-not-allowed"
                         disabled // Thường email không cho phép đổi dễ dàng
                     />
@@ -74,8 +66,8 @@ const PersonalInfoTab = ({ data }) => {
                         type="tel"
                         name="phone"
                         id="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                     />
                 </div>
@@ -99,12 +91,12 @@ const PersonalInfoTab = ({ data }) => {
 // Sub-Component: 3. Notification Preferences Tab
 // ************************************************
 const NotificationPreferencesTab = ({ data }) => {
-    const [prefs, setPrefs] = useState(data.notifications);
+    const [prefs, setPrefs] = useState(data?.notifications);
 
     const togglePref = (key) => {
         setPrefs({ ...prefs, [key]: !prefs[key] });
     };
-    
+
     const handleSave = () => {
         // Giả lập lưu dữ liệu
         console.log('Saving notification preferences:', prefs);
@@ -114,7 +106,7 @@ const NotificationPreferencesTab = ({ data }) => {
     return (
         <div className="space-y-2">
             <div className="space-y-4 max-w-lg">
-                
+
                 {/* Email Updates */}
                 <div className="flex justify-between items-center p-4 border border-gray-200 rounded-lg bg-gray-50">
                     <div className="flex items-start space-x-3">
@@ -125,11 +117,11 @@ const NotificationPreferencesTab = ({ data }) => {
                         </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                        <input 
-                            type="checkbox" 
-                            checked={prefs.email_updates}
+                        <input
+                            type="checkbox"
+                            checked={prefs?.email_updates}
                             onChange={() => togglePref('email_updates')}
-                            className="sr-only peer" 
+                            className="sr-only peer"
                         />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
                     </label>
@@ -145,11 +137,11 @@ const NotificationPreferencesTab = ({ data }) => {
                         </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                        <input 
-                            type="checkbox" 
-                            checked={prefs.sms_alerts}
+                        <input
+                            type="checkbox"
+                            checked={prefs?.sms_alerts}
                             onChange={() => togglePref('sms_alerts')}
-                            className="sr-only peer" 
+                            className="sr-only peer"
                         />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
                     </label>
@@ -165,11 +157,11 @@ const NotificationPreferencesTab = ({ data }) => {
                         </div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                        <input 
-                            type="checkbox" 
-                            checked={prefs.promo_offers}
+                        <input
+                            type="checkbox"
+                            checked={prefs?.promo_offers}
                             onChange={() => togglePref('promo_offers')}
-                            className="sr-only peer" 
+                            className="sr-only peer"
                         />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
                     </label>
@@ -194,6 +186,9 @@ const NotificationPreferencesTab = ({ data }) => {
 // Main Component: Account Settings Content
 // ************************************************
 export default function SettingPage() {
+    const [user, setUser] = useState({});
+    const [loading, setLoading] = useState(false);
+
     const [activeSetting, setActiveSetting] = useState('personal');
 
     const settingTabs = [
@@ -201,6 +196,23 @@ export default function SettingPage() {
         { key: 'security', name: 'Password & Security', icon: Lock, content: PasswordChangeModal },
         { key: 'notifications', name: 'Notifications', icon: Bell, content: NotificationPreferencesTab },
     ];
+
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                setLoading(true);
+                const response = await profileApi.profile();
+                setUser(response.user);
+            } catch (err) {
+                localStorage.removeItem('token');
+                console.log(err.response?.data?.message || err.message);
+            } finally {
+                setLoading(false);
+            }
+
+        }
+        getUser();
+    }, []);
 
     const CurrentContent = settingTabs.find(tab => tab.key === activeSetting)?.content;
 
@@ -210,7 +222,7 @@ export default function SettingPage() {
                 <Settings className="w-6 h-6 mr-3 text-teal-600" />
                 Account Settings
             </h2>
-            
+
             <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
                 {/* Internal Tabs Navigation */}
                 <div className="flex space-x-4 border-b border-gray-200">
@@ -229,11 +241,14 @@ export default function SettingPage() {
                         </button>
                     ))}
                 </div>
-
-                {/* Content Area */}
-                <div className="p-4">
-                    {CurrentContent && <CurrentContent data={currentUserData} />}
-                </div>
+                {loading ? (
+                    <LoadingAnimations option='dots' />
+                ) : (
+                    <div className="p-4">
+                        {/* Content Area */}
+                        {CurrentContent && <CurrentContent data={user} />}
+                    </div>
+                )}
             </div>
         </div>
     );

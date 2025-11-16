@@ -257,8 +257,11 @@ const patchStatusUser = async (req, res) => {
   }
 
 }
+
+
+
 module.exports = {
   addCart, viewCart, deleteCart,
   updateCartQuantity, addWishlist, getWishlist, removeWishlist,
-  getList,patchStatusUser
+  getList,patchStatusUser 
 };

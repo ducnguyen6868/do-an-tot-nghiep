@@ -112,12 +112,13 @@ export default function FlashSale() {
                                     {/* Product Image */}
                                     <div className="relative overflow-hidden">
                                         <img
-                                            src={`http://localhost:5000${product?.images[0]}`}
+                                            src={`http://localhost:5000/${product?.images[0]}`}
                                             alt={product.name}
                                             onError={(e) => {
                                                 e.target.onerror = null;
                                                 e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
                                             }}
+                                            loading='lazy'
                                             className="w-full aspect-square object-cover transition-all duration-700 group-hover:scale-110"
                                         />
 
@@ -160,6 +161,7 @@ export default function FlashSale() {
                     </div>
                 </div>
             </section>
+            
         </>
     )
 }

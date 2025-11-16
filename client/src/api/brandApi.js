@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 
 const brandApi = {
-    brand:()=>axiosClient.get("/brand")
+    getBrands:()=>axiosClient.get("/brand")
 }
 
 export default brandApi;
