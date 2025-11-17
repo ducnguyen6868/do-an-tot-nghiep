@@ -42,8 +42,6 @@ const productSchema = new Schema({
   flashSale: { type: Boolean },
   flashSaleEnd: { type: Date },
   reviews: { type: Number, default: 0 },
-  vectors:[[Number]],
-  vector:[Number]
 
 }, { timestamps: true });
 
