@@ -1,4 +1,4 @@
-import {AlertTriangle,Plus} from 'lucide-react';
+import { AlertTriangle, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import orderApi from '../api/orderApi';
 import RevenueChart from '../components/layout/RevenueChart';
@@ -50,9 +50,9 @@ export default function Overview() {
     return (
         <>
             <RevenueChart />
-           
+
             {/* Top-Selling Watches */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+            <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-gray-200 my-4">
                 <div className='flex justify-between items-center mb-4 border-b border-gray-100 pb-2'>
                     <h2 className="text-xl font-bold text-gray-900 outline-none border-none">Top-Selling Watches</h2>
                     <select
@@ -75,7 +75,14 @@ export default function Overview() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {topProducts?.map(product => (
                         <div key={product._id} className="flex flex-col items-center text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <img src={`http://localhost:5000${product.image}`} alt={product.name} className="w-20 h-20 object-cover rounded-lg mb-2 border border-gray-300" />
+                            <img src={`http://localhost:5000/${product.image}`} alt={product.name}
+                                className="w-20 h-20 object-cover rounded-lg mb-2 border border-gray-300"
+                                loading="lazy"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
+                                }}
+                            />
                             <p className="text-sm font-medium text-gray-900 truncate w-full px-1">{product.name}</p>
                             <span className="text-xs text-gray-600 mt-1">{product.totalSold} units sold</span>
                         </div>
