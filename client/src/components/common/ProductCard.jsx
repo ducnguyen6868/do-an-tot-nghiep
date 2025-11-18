@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { UserContext } from "../../contexts/UserContext";
 import { formatCurrency } from "../../utils/formatCurrency";
 
-export default function ProductCard({ product}) {
+export default function ProductCard({ product }) {
     const { locale, currency } = useContext(UserContext);
     const renderStars = (rating) => "⭐".repeat(Math.floor(rating || 0));
 
@@ -29,6 +29,9 @@ export default function ProductCard({ product}) {
                             e.target.src = "https://placehold.co/300x300/e2e8f0/64748b?text=Watch";
                         }}
                     />
+                    {product?.similarity && (
+                        <span className="absolute top-0 right-0 p-2 text-white text-xs bg-brand rounded-bl-2xl">{product?.similarity}</span>
+                    )}
                 </div>
 
                 <div className="p-4">
@@ -55,7 +58,7 @@ export default function ProductCard({ product}) {
                                 currency
                             ) || "N/A"}
                         </span>
-                       
+
                     </div>
                 </div>
             </motion.div>

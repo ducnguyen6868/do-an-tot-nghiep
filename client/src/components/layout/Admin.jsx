@@ -109,7 +109,7 @@ export default function Admin() {
                     </div>
                 </header>
                 {/* Main Content Area */}
-                <main className="flex-1 p-4 overflow-y-auto space-y-2">
+                <main className="flex-1 p-4">
                     <Outlet />
                 </main>
             </div>

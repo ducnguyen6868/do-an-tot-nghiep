@@ -3,6 +3,7 @@ import {
 } from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {formatDate} from '../../utils/formatDate';
+import {formatTime} from '../../utils/formatTime';
 
 // ************************************************
 // Reusable Component: Order Status Badge
@@ -51,7 +52,12 @@ export default function OrderDetail({ order, onClose }) {
               Order Details
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              Code: <span className="font-mono font-semibold text-teal-700 dark:text-teal-400">{order.code}</span>
+              <span>
+              Code: <span className="font-mono font-semibold text-teal-700 dark:text-teal-400">{order.code}  </span>
+              </span>
+              <span>
+                {formatDate(order?.createdAt)} - {formatTime(order?.createdAt)}
+              </span>
             </p>
           </div>
           {onClose && (
@@ -64,13 +70,6 @@ export default function OrderDetail({ order, onClose }) {
             </button>
           )}
         </header>
-
-        {/* Overview Info */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InfoCard title="Current Status" icon={<OrderStatusBadge status={order?.status?.at(-1).present} />} highlight />
-          <InfoCard title="Order Date" value={formatDate(order?.createdAt)} />
-          <InfoCard title="Total Amount" value={`$${order?.final_amount?.toFixed(2)}`} highlight />
-        </section>
 
         {/* Shipping Info */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -119,7 +118,7 @@ export default function OrderDetail({ order, onClose }) {
                 className="flex items-center border border-gray-100 dark:border-gray-700 p-3 rounded-lg shadow-sm hover:shadow-md transition"
               >
                 <img
-                  src={`http://localhost:5000${product.image}`}
+                  src={`http://localhost:5000/${product.image}`}
                   alt={product.name}
                   className="w-16 h-16 object-cover rounded-md border border-gray-200 dark:border-gray-700 mr-4"
                 />
@@ -161,20 +160,6 @@ export default function OrderDetail({ order, onClose }) {
   );
 }
 
-/* -------------------- Sub Components -------------------- */
-
-const InfoCard = ({ title, value, icon, highlight }) => (
-  <div
-    className={`p-4 rounded-lg border shadow-sm ${
-      highlight
-        ? "bg-teal-50 border-teal-200 dark:bg-teal-900/20"
-        : "bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-    }`}
-  >
-    <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">{title}</p>
-    {icon || <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{value}</p>}
-  </div>
-);
 
 const InfoBox = ({ title, icon, children }) => (
   <div className="space-y-3 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">

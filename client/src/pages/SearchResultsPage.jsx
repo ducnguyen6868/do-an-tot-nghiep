@@ -14,6 +14,8 @@ export default function SearchResultsPage() {
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get("keyword");
 
+  const products = location.state?.products;
+
   const [results, setResults] = useState([]);
   const [brands, setBrands] = useState([]);
 
@@ -36,6 +38,10 @@ export default function SearchResultsPage() {
     minRating: 0
   });
 
+  useEffect(() => {
+    if (!products || products?.length === 0) return;
+    setFilteredResults(products);
+  })
   useEffect(() => {
     // Simulate API call
     setLoading(true);
@@ -109,9 +115,12 @@ export default function SearchResultsPage() {
         setMessage(response.message);
         setShow(true);
       } catch (err) {
-        setType('error');
-        setMessage(err.response?.data?.message || err.message);
-        setShow(true);
+        if (filteredResults?.length === 0) {
+          setType('error');
+          setMessage(err.response?.data?.message || err.message);
+          setShow(true);
+
+        }
       } finally {
         setLoading(false);
       }

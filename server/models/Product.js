@@ -5,13 +5,12 @@ require('./Review');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-  code: { type: String, default: "TPxxxx" },
-  name: { type: String, required: true, unique: true },
+  code: { type: String, default: "TPxxxx"  },
+  name: { type: String },
   slug: {
     type: String,
-    required: true,
-    unique: true,
     lowercase: true,
+    unique:true,
     trim: true,
   },
   description: { type: String },
@@ -42,7 +41,10 @@ const productSchema = new Schema({
   flashSale: { type: Boolean },
   flashSaleEnd: { type: Date },
   reviews: { type: Number, default: 0 },
+  imageVector:{type:[Number],default:[]}
 
 }, { timestamps: true });
 
+productSchema.index({ name: 'text', description: 'text' });
+ 
 module.exports = mongoose.model('Product', productSchema);

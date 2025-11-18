@@ -98,18 +98,18 @@ export default function ProductCard2({ product, onChange }) {
                             <div className="flex items-center gap-2">
                                 <div
                                     className="w-5 h-5 rounded-full border-2 border-white shadow-md"
-                                    style={{ backgroundColor: product.detail[selectedIndex].colorCode }}
+                                    style={{ backgroundColor: product.detail[selectedIndex]?.colorCode }}
                                 ></div>
                                 <span className="text-sm font-semibold text-gray-800">
-                                    {product.detail[selectedIndex].color}
+                                    {product.detail[selectedIndex]?.color}
                                 </span>
                             </div>
                             <div className="text-right">
                                 <div className="text-lg font-bold text-cyan-600">
-                                    {formatCurrency(product.detail[selectedIndex].currentPrice, 'en-US', 'USD')}
+                                    {formatCurrency(product.detail[selectedIndex]?.currentPrice, 'en-US', 'USD')}
                                 </div>
                                 <div className="text-xs text-gray-500 line-through">
-                                    {formatCurrency(product.detail[selectedIndex].originalPrice, 'en-US', 'USD')}
+                                    {formatCurrency(product.detail[selectedIndex]?.originalPrice, 'en-US', 'USD')}
                                 </div>
                             </div>
                         </div>
@@ -118,7 +118,7 @@ export default function ProductCard2({ product, onChange }) {
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-gray-600 font-medium">Colors:</span>
                             <div className="flex gap-2">
-                                {product.detail.map((detail, idx) => (
+                                {product.detail?.map((detail, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setSelectedIndex(idx)}
@@ -141,13 +141,13 @@ export default function ProductCard2({ product, onChange }) {
                             <div className="flex gap-4 items-center text-xl font-bold text-green-700"
                                 onClick={() => handleChangeStock(product)}
                             >
-                                {product.detail[selectedIndex].quantity}
+                                {product.detail[selectedIndex]?.quantity}
                                 <Edit className="w-4 h-4 text-gray-600" />
                             </div>
                         </div>
                         <div className="p-3 bg-blue-200 rounded-lg animate-cardSlideInUp">
                             <div className="text-xs text-blue-600 font-medium mb-1">Sold</div>
-                            <div className="text-xl font-bold text-blue-700">{product.detail[selectedIndex].sold}</div>
+                            <div className="text-xl font-bold text-blue-700">{product.detail[selectedIndex]?.sold}</div>
                         </div>
                     </div>
 
@@ -159,7 +159,7 @@ export default function ProductCard2({ product, onChange }) {
                         </div>
                         <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            <span>{new Date(product.createdAt).toLocaleDateString('vi-VN')}</span>
+                            <span>{new Date(product.createdAt)?.toLocaleDateString('vi-VN')}</span>
                         </div>
                     </div>
 

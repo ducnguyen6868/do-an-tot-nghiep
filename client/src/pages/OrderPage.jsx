@@ -3,6 +3,8 @@ import { Package, Truck, CheckCircle, XCircle, Clock, Loader2, AlertTriangle } f
 import OrderDetail from '../components/layout/OrderDetail';
 import orderApi from '../api/orderApi';
 import ReviewModal from '../components/common/ReviewModal';
+import { formatDate } from '../utils/formatDate';
+import { formatTime } from '../utils/formatTime';
 
 // ************************************************
 // Reusable Component: Order Status Badge
@@ -113,7 +115,7 @@ export default function OrderPage() {
         const name = order.name;
         const codeProduct = order.products[0].code;
         const codeOrder = order.code;
-        setData({ user, name , codeProduct , codeOrder });
+        setData({ user, name, codeProduct, codeOrder });
         setReview(true);
     }
 
@@ -224,7 +226,9 @@ export default function OrderPage() {
                                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                                             <div>
                                                 <p className="text-gray-500">Order Date</p>
-                                                <p className="font-medium text-gray-800">{new Date(order.createdAt).toLocaleDateString()}</p>
+                                                <span>
+                                                    {formatDate(order?.createdAt)} - {formatTime(order?.createdAt)}
+                                                </span>
                                             </div>
                                             <div>
                                                 <p className="text-gray-500">Total</p>
@@ -291,7 +295,7 @@ export default function OrderPage() {
             {detail && <OrderDetail order={order} onClose={() => setDetail(false)} />}
             {review && (
                 <div className='fixed z-40 backdrop-blur-sm top-0 bottom-0 left-0 right-0 flex justify-center' onClick={() => setReview(false)}>
-                    <div className='' onClick={(e)=>e.stopPropagation()}>
+                    <div className='' onClick={(e) => e.stopPropagation()}>
                         <ReviewModal data={data} onClose={() => setReview(false)} onChange={() => setLogged(!logged)} />
                     </div>
                 </div>

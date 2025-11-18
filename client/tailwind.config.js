@@ -83,8 +83,17 @@ module.exports = {
         fadeInDown: {
           '0%': { opacity: '0', transform: 'translateY(-10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' }
-        }
-
+        },
+        scan: {
+          '0%': { top: '0', opacity: '0' },
+          '10%': { opacity: '1' },
+          '90%': { opacity: 1 },
+          '100%': { top: '100%', opacity: 0 }
+        },
+        progress: {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' }
+        },
       },
       animation: {
         cardSlideInUp: 'cardSlideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
@@ -93,6 +102,8 @@ module.exports = {
         textSlideLeft: 'textSlideLeft 0.6s ease-out 0.35s forwards',
         fadeInUp: 'fadeInUp 0.6s ease-out 0.4s forwards',
         fadeInDown: 'fadeInDown 0.6s ease-out 0.4s forwards',
+        scan: 'scan 2s ease-in-out infinite',
+        progress: 'progress 2.5s ease-out forwards'
       },
     },
   },
