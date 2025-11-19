@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Flame, BadgePercent,ChevronsRight } from "lucide-react";
+import { Flame, BadgePercent, ChevronsRight } from "lucide-react";
 import { formatCurrency } from '../../utils/formatCurrency';
-import { Link ,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icon } from '@iconify/react';
 import productApi from "../../api/productApi";
 
@@ -65,95 +65,119 @@ export default function FlashSale() {
 
     return (
         <>
+            {/* Flash Sale Products (RESPONSIVE VERSION) */}
+            <section className="mx-4 rounded-xl py-6 bg-gradient-to-r from-red-500 to-orange-400 transition-colors duration-500">
+                <div className="max-w-7xl mx-auto px-2 sm:px-4">
+                    {/* Header Section */}
+                    {/* Mobile: Stack dọc hoặc wrap. Desktop: Nằm ngang, căn 2 bên */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 text-white">
 
-            {/* Flash Sale Products (NEW SECTION) */}
-            <section className="py-6 bg-bg-secondary transition-colors duration-500 bg-gradient-to-r from-red-500 to-orange-400">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex items-center space-x-1.5 relative text-white">
-                        <Icon icon="noto:fire" width="18" height="18" />
-                        <span className='font-bold text-xl '>FLASH SALE</span>
-                        <Icon icon="noto:fire" width="18" height="18" />
+                        {/* Title & Timer Group */}
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                            <div className="flex items-center gap-1">
+                                <Icon icon="noto:fire" width="20" height="20" className="shrink-0" />
+                                <span className='font-bold text-lg sm:text-xl whitespace-nowrap'>FLASH SALE</span>
+                            </div>
 
-                        {/* Hours */}
-                        <span className="text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.hours).padStart(2, '0')}</span>
+                            {/* Timer Blocks */}
+                            <div className="flex items-center gap-1 text-black">
+                                {/* Hours */}
+                                <span className="text-sm sm:text-base bg-gray-100 font-bold text-brand px-2 py-0.5 rounded shadow-sm">
+                                    {String(timeLeft.hours).padStart(2, '0')}
+                                </span>
+                                <span className="text-white font-bold">:</span>
+                                {/* Minutes */}
+                                <span className="text-sm sm:text-base bg-gray-100 font-bold text-brand px-2 py-0.5 rounded shadow-sm">
+                                    {String(timeLeft.minutes).padStart(2, '0')}
+                                </span>
+                                <span className="text-white font-bold">:</span>
+                                {/* Seconds */}
+                                <span className="text-sm sm:text-base bg-gray-100 font-bold text-brand px-2 py-0.5 rounded shadow-sm">
+                                    {String(timeLeft.seconds).padStart(2, '0')}
+                                </span>
+                            </div>
+                        </div>
 
-                        {/* Minutes */}
-                        <span className="text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.minutes).padStart(2, '0')}</span>
-
-
-                        {/* Seconds */}
-                        <span className="text-base bg-gray-200 font-bold text-brand px-2 rounded ">{String(timeLeft.seconds).padStart(2, '0')}</span>
-
-                        <Link to='#' className='absolute right-0 flex flex-row gap-1 text-base hover:text-red-600 hover:underline'>
-                        View all <ChevronsRight/>
+                        {/* View All Link */}
+                        <Link to='#' className='flex items-center gap-1 text-sm sm:text-base font-medium hover:text-yellow-200 transition-colors self-end sm:self-auto'>
+                            View all <ChevronsRight size={18} />
                         </Link>
                     </div>
 
-                    <div className="flex flex-row justify-center items-center gap-2 mt-2">
+                    {/* Product Grid */}
+                    {/* Mobile: 2 cột, Tablet: 3 cột, Desktop: 4-5 cột */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4">
                         {flashSaleProducts?.map((product, idx) => (
                             <div
                                 key={product._id}
                                 data-animate
-                                className={`bg-white cursor-pointer rounded-xl max-w-80 overflow-hidden shadow-2xl border border-sale-color/30 transform transition-all duration-500 hover:scale-[1.02] animate-fadeInUp visible`}
-                                style={{ animationDelay: `${idx * 0.15 + 0.3}s` }}
+                                className={`
+                        bg-white cursor-pointer rounded-lg overflow-hidden shadow-xl border border-white/20 
+                        transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl
+                        flex flex-col h-full animate-fadeInUp
+                    `}
+                                style={{ animationDelay: `${idx * 0.1}s` }}
                                 onClick={() => handleNavigate(product.slug)}
                             >
-
-                                <div className="relative group overflow-hidden shadow-lg bg-white border border-gray-100">
+                                {/* Image Container */}
+                                <div className="relative group overflow-hidden aspect-square bg-gray-50">
                                     {/* Discount Badge */}
-                                    <span
-                                        className="absolute top-0 right-0 flex items-center gap-1
-                                     text-white text-xs font-bold px-3 py-1 z-20
-                                        bg-gradient-to-r from-red-500 to-orange-400 shadow-lg rounded-bl-lg">
-                                        <BadgePercent size={14} />
-                                        - {Math.ceil((1 - product.detail[0].flashSalePrice / product.detail[0].originalPrice) * 100)}%
+                                    <span className="absolute top-0 right-0 z-10 flex items-center gap-0.5 text-white text-[10px] sm:text-xs font-bold px-2 py-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-bl-lg shadow-md">
+                                        <BadgePercent size={12} />
+                                        -{Math.ceil((1 - product.detail[0].flashSalePrice / product.detail[0].originalPrice) * 100)}%
                                     </span>
 
-                                    {/* Product Image */}
-                                    <div className="relative overflow-hidden">
-                                        <img
-                                            src={`http://localhost:5000/${product?.images[0]}`}
-                                            alt={product.name}
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
-                                            }}
-                                            loading='lazy'
-                                            className="w-full aspect-square object-cover transition-all duration-700 group-hover:scale-110"
-                                        />
+                                    <img
+                                        src={`http://localhost:5000/${product?.images[0]}`}
+                                        alt={product.name}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "https://placehold.co/300x300/dc2626/ffffff?text=FLASH+SALE";
+                                        }}
+                                        loading='lazy'
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
 
+                                    {/* Flash Sale Ribbon (ẩn trên mobile quá nhỏ nếu cần thiết) */}
+                                    <div className="absolute bottom-1 left-1 right-1">
+                                        <span className="bg-orange-500/90 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] sm:text-xs flex items-center justify-center gap-1 shadow w-max">
+                                            <Flame size={12} className="text-yellow-300 fill-yellow-300" />
+                                            <span className="hidden xs:inline">Hot Deal</span>
+                                        </span>
                                     </div>
-
-                                    {/* Flash Sale Ribbon */}
-                                    <span className="absolute bottom-1 left-1 bg-orange-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 text-xs shadow-md">
-                                        <Flame size={14} className="text-yellow-300" />
-                                        Flash Sale
-                                    </span>
                                 </div>
 
-
-                                <div className="p-4 flex flex-col items-center text-center">
-                                    <div className="text-2xl font-black text-red-600">
-                                        {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
+                                {/* Content Container */}
+                                <div className="p-2 sm:p-3 flex flex-col flex-grow justify-end">
+                                    {/* Price */}
+                                    <div className="text-center mb-2">
+                                        <div className="text-base sm:text-lg md:text-xl font-black text-red-600 leading-tight">
+                                            {formatCurrency(product.detail[0]?.flashSalePrice, 'en-Us', 'USD')}
+                                        </div>
+                                        {/* Original Price (Optional - adds value) */}
+                                        <div className="text-xs text-gray-400 line-through mt-0.5">
+                                            {formatCurrency(product.detail[0]?.originalPrice, 'en-Us', 'USD')}
+                                        </div>
                                     </div>
-                                    <div
-                                        className="w-full relative rounded-full bg-gray-300 h-5 mt-2 overflow-hidden shadow-inner"
-                                    >
+
+                                    {/* Progress Bar */}
+                                    <div className="relative w-full bg-gray-200 rounded-full h-3 sm:h-4 overflow-hidden">
                                         <div
-                                            className="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center"
+                                            className="h-full rounded-full bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center transition-all duration-1000"
                                             style={{ width: `${product.percent}%` }}
                                         >
-                                            {product.percent !== '0%' && (
-                                                <Icon icon="noto:fire" width="12" height="12" />
+                                            {/* Fire icon inside bar - only show if wide enough */}
+                                            {parseInt(product.percent) > 20 && (
+                                                <Icon icon="noto:fire" width="10" height="10" className="hidden sm:block" />
                                             )}
                                         </div>
-                                        {/* Hiển thị văn bản "Đã bán" */}
-                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <span className="text-xs font-semibold text-gray-800">
-                                                SOLD <span className='text-red-700'>{product.sold}</span>
+
+                                        {/* Sold Text Overlay */}
+                                        <div className="absolute inset-0 flex items-center justify-center z-10">
+                                            <span className="text-[9px] sm:text-[10px] font-bold text-gray-800 uppercase drop-shadow-sm bg-white/40 px-1 rounded-sm backdrop-blur-[1px]">
+                                                Sold <span className='text-red-700'>{product.sold}</span>
                                             </span>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +185,6 @@ export default function FlashSale() {
                     </div>
                 </div>
             </section>
-            
         </>
     )
 }

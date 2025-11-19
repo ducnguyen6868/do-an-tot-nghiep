@@ -20,6 +20,7 @@ const pointRoutes = require('./routers/pointRoutes');
 const promotionRoutes = require('./routers/promotionRoutes');
 const collectionRoutes = require('./routers/collectionRoutes');
 const chatRoutes = require('./routers/chatRoutes');
+const communityRoutes = require('./routers/communitiyRoutes');
 
 const connectDB = require('./config/db');
 connectDB();
@@ -54,6 +55,8 @@ app.use('/promotion', promotionRoutes);
 app.use('/collection', collectionRoutes);
 
 app.use('/chat', chatRoutes);
+
+app.use('/community',communityRoutes);
 
 
 // Create HTTP + Socket server

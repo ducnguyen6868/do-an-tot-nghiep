@@ -52,15 +52,7 @@ export default function Footer() {
                         <div className="flex flex-row gap-2 ">
                             <img className='w-7' src={websiteLogo} alt='Logo' title='Logo' />
                             <Link to='/'
-                                className="text-xl font-extrabold tracking-widest"
-                                style={{
-                                    // Sử dụng linear-gradient tùy chỉnh của bạn
-                                    background: 'linear-gradient(90deg, var(--brand-light, #3355ff), var(--brand-color, #00bcd4))',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    filter: 'drop-shadow(0 0 2px rgba(0, 188, 212, 0.4))'
-                                }}
-                            >
+                                className="text-xl font-extrabold tracking-widesttracking-wider sm:tracking-widest bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
                                 TIMEPIECE
                             </Link>
                         </div>

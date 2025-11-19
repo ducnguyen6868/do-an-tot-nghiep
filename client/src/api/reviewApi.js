@@ -6,7 +6,8 @@ const reviewApi = {
             "Content-Type": "multipart/form-data"
         }
     }),
-    get:(code,page,limit)=>axiosClient.get(`review?code=${code}&&page=${page}&&limit=${limit}`),
+    get:(code,page,limit)=>axiosClient.get(`/review?code=${code}&&page=${page}&&limit=${limit}`),
+    getBestReview:()=>axiosClient.get('/review/best'),
 }
 
 export default reviewApi;

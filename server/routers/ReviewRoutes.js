@@ -1,4 +1,4 @@
-const {review ,list} = require('../controllers/reviewController');
+const {postReview ,getReviews} = require('../controllers/reviewController');
 
 const multer = require("multer");
 const path = require("path");
@@ -56,10 +56,10 @@ const upload = multer({
   },
 });
 
-router.get('/',list);
+router.get('/',getReviews);
 
 router.post('/',upload.fields([
     { name: "images", maxCount: 5 },
     { name: "videos", maxCount: 2 }
-  ]),review);
+  ]),postReview);
 module.exports = router;

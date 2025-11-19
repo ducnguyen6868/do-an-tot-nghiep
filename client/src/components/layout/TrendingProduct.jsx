@@ -20,13 +20,9 @@ export default function TrendingProduct() {
         const getTrendingProducts = async () => {
             try {
                 const page = 1;
-                const limit = 5;
+                const limit = 4;
                 const response = await productApi.getTrending(page, limit);
-                const rank = [2, 1, 3];
-                const updatedProducts = response.products.map((product, index) => {
-                    return { ...product, rank: rank[index] }
-                })
-                setTrendingProducts(updatedProducts);
+                setTrendingProducts(response.products);
             } catch (err) {
                 console.log(err.response?.data?.message || err.message);
             }
@@ -129,88 +125,148 @@ export default function TrendingProduct() {
         }
     };
 
-
     const getRankTag = (rank) => {
+        // Định nghĩa size responsive cho từng breakpoint
+        const sizes = {
+            mobile: 20,      // < 640px
+            sm: 24,          // >= 640px
+            md: 32,          // >= 768px
+            lg: 42,          // >= 1024px
+        };
+
+        // Sử dụng CSS class để responsive thay vì fixed size
+        const MedalIcon = ({ icon }) => (
+            <Icon
+                icon={icon}
+                className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 xl:w-[42px] xl:h-[42px]"
+            />
+        );
+
         switch (rank) {
-            case 1: return <Icon icon="noto:1st-place-medal" width="42" height="42" />;
-            case 2: return <Icon icon="noto:2nd-place-medal" width="42" height="42" />;
-            case 3: return <Icon icon="noto:3rd-place-medal" width="42" height="42" />;
-            default: return null;
+            case 1:
+                return <MedalIcon icon="noto:1st-place-medal" />;
+            case 2:
+                return <MedalIcon icon="noto:2nd-place-medal" />;
+            case 3:
+                return <MedalIcon icon="noto:3rd-place-medal" />;
+            default:
+                return null;
         }
     };
 
     return (
         <>
-            {/* Trending Products */}
-            <section className=" min-w-96 flex justify-center py-6 transition-colors duration-500" id='trending-container'>
-    <div className="mx-auto py-4 px-12 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg">
-            <div
-                id="trending-header"
-                data-animate
-                className={`text-center text-white mb-4 animate-fadeInUp visible`}
-            >
-                <h2 className="text-3xl font-bold mb-2">Our Best Seller</h2>
-                <p className="text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
-            </div>
+            {/* Trending Products - Single Row */}
+            <section className="py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 transition-colors duration-500" id='trending-container'>
+                <div className="w-full max-w-[95vw] mx-auto py-3 sm:py-4 md:py-6 px-3 sm:px-4 md:px-6 lg:px-8 bg-gradient-to-r from-blue-500 to-violet-400 rounded-lg sm:rounded-xl">
 
-            <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-4">
-                {trendingProducts.map((product, idx) => (
+                    {/* Header */}
                     <div
-                        key={product._id}
+                        id="trending-header"
                         data-animate
-                        className={`bg-bg-primary rounded-lg overflow-hidden border h-max
-                                    border-border transition-all duration-300 transform 
-                                    hover:translate-y-1 hover:shadow-xl animate-cardSlideInUp visible
-                            }`}
+                        className="text-center text-white mb-3 sm:mb-4 md:mb-6 animate-fadeInUp visible"
                     >
+                        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1">Our Best Seller</h2>
+                        <p className="text-[10px] sm:text-xs md:text-sm">Our top-selling timepieces, trusted by the TIMEPIECE community</p>
+                    </div>
 
-                        <div className="relative bg-bg-secondary overflow-hidden">
-                                    <div className='absolute top-2 left-0 z-30'>
-                                        {getRankTag(idx+1)}
-        </div>
-        <img
-            src={`http://localhost:5000/${product?.images[0]}`}
-            alt={product.name}
-            loading='lazy'
-            onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch'; }}
-            className="w-full aspect-square object-cover transform hover:scale-110 transition-transform duration-500 "
+                    {/* Products Grid - Always 5 columns */}
+                    <div className="grid grid-cols-4 gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
+                        {trendingProducts.map((product, idx) => (
+                            <div
+                                key={product._id}
+                                data-animate
+                                className="bg-bg-primary rounded-md sm:rounded-lg overflow-hidden border border-border 
+                               transition-all duration-300 transform hover:-translate-y-1 
+                               hover:shadow-xl animate-cardSlideInUp visible flex flex-col"
+                            >
+                                {/* Image Container */}
+                                <div className="relative bg-bg-secondary overflow-hidden group">
+                                    {/* Rank Badge */}
+                                    <div className='absolute top-0.5 sm:top-1 md:top-2 left-0 z-30 text-[8px] sm:text-[10px] md:text-xs'>
+                                        {getRankTag(idx + 1)}
+                                    </div>
 
-            style={{ animationDelay: `${idx * 0.1}s` }}
-        />
-        <button className="absolute top-2 right-2 w-7 h-7 bg-bg-primary rounded-full flex items-center justify-center shadow hover:bg-error hover:text-text-primary transition-all transform hover:scale-110 animate-badgeSlideIn"
-            style={{ animationDelay: `${idx * 0.2}s` }}
-            onClick={() => toggleWishlist(product.code)}
-        >
-            <Heart className="w-4 h-4 text-text-primary" />
-        </button>
-    </div>
-        <div className="p-3">
-            <Link to={`/product/${product.slug}`}
-                className="font-semibold text-sm mb-1 text-text-primary truncate animate-textSlideLeft translate-x-6 line-clamp-1"
-                style={{ animationDelay: `${idx * 0.15}s` }}
+                                    {/* Product Image */}
+                                    <img
+                                        src={`http://localhost:5000/${product?.images[0]}`}
+                                        alt={product.name}
+                                        loading='lazy'
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = 'https://placehold.co/300x300/e2e8f0/64748b?text=Watch';
+                                        }}
+                                        className="w-full aspect-square object-cover transform group-hover:scale-110 
+                                       transition-transform duration-500"
+                                        style={{ animationDelay: `${idx * 0.1}s` }}
+                                    />
 
-            >{product.name}</Link>
-            <p className="text-lg font-bold mb-3 text-brand animate-fadeInUp">{formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}</p>
-            <div className='flex items-center justify-center gap-2'>
-                <button
-                    className="py-1 px-4 bg-gray-400 text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCart(product)}
-                >
-                    <ShoppingCart className='w-4' />
-                </button>
-                <button
-                    className="flex-1 py-2 bg-brand text-white text-xs rounded transition-all transform hover:scale-[1.02] btn-brand shadow" onClick={() => handleCheckout(product)}
-                >
-                    Buy now
-                </button>
-            </div>
-        </div>
-                            </div >
-                        ))
-}
-                    </div >
-                </div >
-            </section >
+                                    {/* Wishlist Button */}
+                                    <button
+                                        className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 md:top-2 md:right-2 
+                                       w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8
+                                       bg-bg-primary rounded-full flex items-center justify-center 
+                                       shadow hover:bg-error hover:text-text-primary 
+                                       transition-all transform hover:scale-110 active:scale-95
+                                       animate-badgeSlideIn opacity-0 group-hover:opacity-100"
+                                        style={{ animationDelay: `${idx * 0.2}s` }}
+                                        onClick={() => toggleWishlist(product.code)}
+                                        aria-label="Add to wishlist"
+                                    >
+                                        <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4" />
+                                    </button>
+                                </div>
 
+                                {/* Product Info */}
+                                <div className="p-1.5 sm:p-2 md:p-3 flex flex-col flex-1">
+                                    {/* Product Name */}
+                                    <Link
+                                        to={`/product/${product.slug}`}
+                                        className="font-semibold text-[9px] sm:text-[10px] md:text-xs lg:text-sm 
+                                       mb-1 text-text-primary line-clamp-1 hover:text-brand 
+                                       transition-colors animate-textSlideLeft 
+                                       min-h-[1.8rem] sm:min-h-[2rem] md:min-h-[2.5rem]"
+                                        style={{ animationDelay: `${idx * 0.15}s` }}
+                                        title={product.name}
+                                    >
+                                        {product.name}
+                                    </Link>
+
+                                    {/* Price */}
+                                    <p className="text-[10px] sm:text-xs md:text-sm lg:text-base font-bold mb-1.5 sm:mb-2 text-brand animate-fadeInUp">
+                                        {formatCurrency(product.detail[0]?.currentPrice, 'en-Us', 'USD')}
+                                    </p>
+
+                                    {/* Action Buttons */}
+                                    <div className='flex items-center justify-center gap-1 sm:gap-1.5 mt-auto'>
+                                        {/* Add to Cart */}
+                                        <button
+                                            className="p-1 sm:p-1.5 md:py-1 md:px-2 bg-gray-400 text-white 
+                                           rounded transition-all transform hover:scale-105 
+                                           active:scale-95 btn-brand shadow flex items-center justify-center"
+                                            onClick={() => handleCart(product)}
+                                            aria-label="Add to cart"
+                                        >
+                                            <ShoppingCart className='w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4' />
+                                        </button>
+
+                                        {/* Buy Now */}
+                                        <button
+                                            className="flex-1 py-1 sm:py-1.5 md:py-2 bg-brand text-white 
+                                           text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs 
+                                           rounded transition-all transform hover:scale-105 active:scale-95 
+                                           btn-brand shadow font-medium leading-tight"
+                                            onClick={() => handleCheckout(product)}
+                                        >
+                                            Buy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
         </>
 
     )

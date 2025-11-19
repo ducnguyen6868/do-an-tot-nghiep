@@ -3,7 +3,7 @@ const Review = require('../models/Review');
 const User = require('../models/User');
 const Order = require('../models/Order');
 
-const review = async (req, res) => {
+const postReview = async (req, res) => {
     const { user, name, codeProduct, codeOrder, rating, reviewText } = req.body;
     const { images, videos } = req.files;
 
@@ -73,7 +73,7 @@ const review = async (req, res) => {
 
 }
 
-const list = async (req, res) => {
+const getReviews = async (req, res) => {
     try {
         const code = req.query.code;
         const page = parseInt(req.query.page) || 1;
@@ -97,4 +97,5 @@ const list = async (req, res) => {
     }
 }
 
-module.exports = { review, list };
+
+module.exports = { postReview, getReviews  };

@@ -1,166 +1,50 @@
-[{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2cd"
+[
+  {
+    "name": "Kai",
+    "avatar": "uploads/communities/kai.jpg",
+    "image": "uploads/communities/kai-recommend.jpeg",
+    "comment": "Just picked up the Midnight Series diver. The build quality is insane – feels solid on the wrist without being too heavy. The lume is super bright, perfect for night drives. If you want a daily beater that looks premium, I highly recommend going for the steel bracelet option. 10/10 durability.",
+    "createdAt": {
+      "$date": "2023-11-15T08:30:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2023-11-15T08:30:00.000Z"
+    }
   },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a1"
+  {
+    "name": "Lucas",
+    "avatar": "uploads/communities/lucas.jpg",
+    "image": "uploads/communities/lucas-recommend.jpeg",
+    "comment": "I was looking for a minimalist dress watch for the office, and this piece exceeded my expectations. It's incredibly elegant and fits perfectly under a shirt cuff. The customer service at Timepiece Luxury Watches was top-notch. My advice: visit the showroom to see the dial texture in person!",
+    "createdAt": {
+      "$date": "2023-11-15T09:45:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2023-11-15T09:45:00.000Z"
+    }
   },
-  "product": {
-    "$oid": "68ea84959b9e5db9e147feee"
+  {
+    "name": "Chloe",
+    "avatar": "uploads/communities/chloe.jpg",
+    "image": "uploads/communities/chloe-recommend.jpeg",
+    "comment": "Literally obsessed with this watch! ✨ The packaging was so aesthetic, unboxing it felt like a total treat. It goes perfectly with my streetwear outfits. Super fast shipping too! If you're on the fence about buying it, just do it – you won't regret it! 💜",
+    "createdAt": {
+      "$date": "2023-11-15T11:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2023-11-15T11:00:00.000Z"
+    }
   },
-  "rating": 5,
-  "comment": "Thiết kế thể thao và mạnh mẽ, dây da rất chất lượng. Rất đáng tiền!",
-  "images": [
-    "/uploads/reviews/tissot-1.jpg"
-  ],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2ce"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a2"
-  },
-  "product": {
-    "$oid": "68ea84959b9e5db9e147feef"
-  },
-  "rating": 4,
-  "comment": "Đồng hồ đẹp, tinh tế. Tuy nhiên mặt hơi nhỏ hơn mong đợi.",
-  "images": [
-    "/uploads/reviews/omega-1.jpg"
-  ],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2cf"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a3"
-  },
-  "product": {
-    "$oid": "68ea84959b9e5db9e147fef0"
-  },
-  "rating": 5,
-  "comment": "Seiko Prospex cực kỳ bền bỉ, đi lặn thoải mái. Mặt sáng đẹp.",
-  "images": [],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d0"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a4"
-  },
-  "product": {
-    "$oid": "68ea84959b9e5db9e147fef1"
-  },
-  "rating": 4,
-  "comment": "Nhỏ gọn và nữ tính, tuy nhiên pin hơi yếu khi bật nhiều tính năng.",
-  "images": [
-    "/uploads/reviews/garmin-1.jpg"
-  ],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d1"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a5"
-  },
-  "product": {
-    "$oid": "68ea84959b9e5db9e147fef2"
-  },
-  "rating": 5,
-  "comment": "Rolex khỏi bàn, đẳng cấp và sang trọng. Giao hàng rất nhanh.",
-  "images": [
-    "/uploads/reviews/rolex-1.jpg"
-  ],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d2"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a6"
-  },
-  "product": {
-    "$oid": "68ea85049b9e5db9e147fef3"
-  },
-  "rating": 5,
-  "comment": "Citizen Eco-Drive chính xác và thân thiện môi trường, quá tuyệt!",
-  "images": [],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d3"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a7"
-  },
-  "product": {
-    "$oid": "68ea85049b9e5db9e147fef4"
-  },
-  "rating": 4,
-  "comment": "Casio Edifice nhìn rất nam tính, dây kim loại chắc chắn.",
-  "images": [
-    "/uploads/reviews/casio-1.jpg"
-  ],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d4"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a8"
-  },
-  "product": {
-    "$oid": "68ea85049b9e5db9e147fef5"
-  },
-  "rating": 5,
-  "comment": "Thiết kế tối giản đúng gu của tôi, dây da mềm, dễ phối đồ.",
-  "images": [],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d5"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45a9"
-  },
-  "product": {
-    "$oid": "68ea85049b9e5db9e147fef6"
-  },
-  "rating": 4,
-  "comment": "Longines rất thanh lịch, tuy nhiên mặt kính dễ bám vân tay.",
-  "images": [
-    "/uploads/reviews/longines-1.jpg"
-  ],
-  "videos": []
-},
-{
-  "_id": {
-    "$oid": "68eb21c54291f61f213bd2d6"
-  },
-  "user": {
-    "$oid": "6712fa8d8e9e2b00123a45aa"
-  },
-  "product": {
-    "$oid": "68ea85049b9e5db9e147fef7"
-  },
-  "rating": 5,
-  "comment": "Apple Watch Ultra đúng chất lượng cao cấp, pin khỏe và GPS chính xác.",
-  "images": [
-    "/uploads/reviews/apple-ultra-1.jpg"
-  ],
-  "videos": [
-    "/uploads/reviews/apple-ultra.mp4"
-  ]
-}]
+  {
+    "name": "Bella",
+    "avatar": "uploads/communities/bella.jpg",
+    "image": "uploads/communities/bella-recommend.jpeg",
+    "comment": "An absolute masterpiece. I wore this to a gala last night and received so many compliments. It sparkles beautifully in the sunlight and adds such a touch of sophistication to any outfit. Definitely a worthy investment for anyone who appreciates timeless luxury.",
+    "createdAt": {
+      "$date": "2023-11-15T12:15:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2023-11-15T12:15:00.000Z"
+    }
+  }
+]
